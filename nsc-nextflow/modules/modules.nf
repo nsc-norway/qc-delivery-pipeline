@@ -1,0 +1,263 @@
+process MD5SUM_FASTQ {
+    tag "$NewSampleID"
+    // publishDir "$data_project_folder" , mode:'link',  overwrite: false
+
+    input:
+    tuple val(NSC_ProjectName), val(NewSampleID), path(fastq)
+    val data_project_folder
+
+    output:
+    path "${fastq}.md5", emit: MD5SUM_FASTQ_out
+
+    script:
+    """
+    md5sum $fastq > ${fastq}.md5
+    """
+}
+
+process CAT_MD5SUM {
+    tag "$data_project_folder"
+    publishDir "$data_project_folder" , mode:'link',  overwrite: false
+
+    input:
+    val data_project_folder
+    path MD5SUM_FASTQ_out
+
+    output:
+    path "md5sum.txt"
+
+    script:
+    """
+    cat *md5 > md5sum.txt
+    """
+}
+
+process SUPRDUPR {
+    container "/data/runScratch.boston/analysis/pipelines/container-images/suprdupr-v1.4.1.sif"
+    tag "$NewSampleID"
+    publishDir "$qcfolder/suprDUPr", mode:'link',  overwrite: false
+
+    input:
+    tuple val(NSC_ProjectName), val(NewSampleID), path(fastq)
+    val qcfolder
+    
+    when:
+    fastq.name =~ /.*R1_001.*/ 
+
+    output:
+    path "${NSC_ProjectName}_${fastq}.suprDUPr.txt"
+    val "suprdupr complete", emit: SUPRDUPR_out
+
+    script:
+    """
+    suprDUPr -r $fastq > ${NSC_ProjectName}_${fastq}.suprDUPr.txt
+    """
+}
+
+process FASTQC {
+    container "/data/runScratch.boston/analysis/pipelines/container-images/fastqc_0.11.9.sif"
+    tag "$NewSampleID"
+    publishDir "$output_folder", mode:'link',  overwrite: false
+    errorStrategy 'ignore'
+
+    input:
+    tuple val(NSC_ProjectName), val(NewSampleID), path(fastq)
+    val output_folder
+    
+    output:
+    path "${fastq.getSimpleName()}_fastqc.zip",        emit: FASTQC_ZIP_out
+    path "${fastq.getSimpleName()}_fastqc.html",       emit: FASTQC_HTML_out
+
+    script:
+    """
+    fastqc ${fastq}
+    """
+}
+
+process MULTIQC {
+    container "/data/common/tools/multiqc/current.sif"
+    //tag "$multiqc_inputs"
+    publishDir "$data_project_folder" , mode:'link',  overwrite: false
+
+    input:
+    path multiqc_inputs
+    val data_project_folder
+    val multiqc_module
+    
+    output:
+    path "multiqc_data"
+    path "multiqc_report.html", emit: MULTIQC_out
+
+    script:
+    """
+    multiqc --module $multiqc_module .
+    """
+}
+
+
+process TAR_FOLDER {
+    tag "$data_project_folder"
+//    publishDir "$runfolder" + "$NSC_ProjectName", mode:'link',  overwrite: false
+
+    input:
+    val data_project_folder
+    val runfolder
+    path MULTIQC_out
+    path MD5SUM_FASTQ_out
+
+    output:
+    val "tar_complete", emit: TAR_FOLDER_out
+
+    script:
+    """
+    tar.sh $runfolder $data_project_folder
+    """
+}
+
+process LINK_FOLDER {
+    tag "$project_dir_name"
+    publishDir "$params.deliverydir", mode:'move',  overwrite: false
+
+    input:
+    val project_dir_name
+    path samples
+    path MULTIQC_out
+    path MD5SUM_FASTQ_out
+
+    output:
+    path "$project_dir_name"
+
+    script:
+    """
+    mkdir $project_dir_name
+    # Hard link all files to work folder (follows symbolic links)
+    cp -l $samples             $project_dir_name
+    cp -l  $MULTIQC_out        $project_dir_name
+    cp -l $MD5SUM_FASTQ_out    $project_dir_name
+    # Note: mode "move" is used in publishDir, we shouldn't leave big files in work
+    """
+}
+
+process JSON_GENERATOR {
+    tag "$project_name"
+    publishDir "$qcfolder/lims" , mode:'link',  overwrite: false
+    container "$params.containerdir/lims-environment.sif"
+    containerOptions "-B /data/runScratch.boston/scripts/etc/seq-user/apiuser-password.txt:/etc/apiuser-pw.txt"
+
+    input:
+    val project_name
+    val qcfolder
+   
+    output:
+    path "${project_name}.lims.json", emit: JSON_GENERATOR_out
+
+    script:
+    """
+    get-project-info.py $project_name > ${project_name}.lims.json
+    """
+}
+
+process EMAIL_PROJECT {
+    tag "$project_name"
+    //publishDir "$qcfolder" + "lims" , mode:'link',  overwrite: false
+    container "$params.containerdir/emailscripts-environment.sif"
+
+    input:
+    val project_name
+    path runfolder
+    path qcfolder
+    path project_lims_json
+
+    output:
+    val "email_project_complete", emit: EMAIL_PROJECT_out
+
+    script:
+    """
+    username=\$(echo "$project_name" | sed -n 's/^\\(.*\\)-[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}/\\1/p' | tr '[:upper:]' '[:lower:]')
+    password=\$(echo "\$username" | cut -d'-' -f2)
+    cat > credentials.json <<EOF
+        {"NIRD password": "\$password", "NIRD username": "\$username"}
+EOF
+    jq -s add "$project_lims_json" credentials.json > project.json
+
+    make-emails.py \
+            --run-dir=$runfolder \
+            --demultiplex-stats=$qcfolder/Demux/Demultiplex_Stats.csv \
+            --bclconvert-version=$params.bcl_convert_version \
+            --pipeline-version=$params.pipeline_version \
+            --output-email-dir=$qcfolder/Delivery \
+            --create-project-emails \
+            project.json
+    """
+}
+
+process EMAIL_SUMMARY_RUN {
+    tag "$runfolder"
+    //publishDir "$qcfolder" + "Delivery" , mode:'link',  overwrite: false
+    container "$params.containerdir/emailscripts-environment.sif"
+
+    input:
+    path runfolder
+    path qcfolder
+    path project_lims_json
+
+    output:
+    val "email_summary_run_complete", emit: EMAIL_SUMMARY_RUN_out
+
+    script:
+    """
+    make-emails.py \
+            --run-dir=$runfolder \
+            --demultiplex-stats=$qcfolder/Demux/Demultiplex_Stats.csv \
+            --suprdupr-dir=$qcfolder/suprDUPr \
+            --bclconvert-version=$params.bcl_convert_version \
+            --pipeline-version=$params.pipeline_version \
+            --output-email-dir=$qcfolder/Delivery \
+            --create-summary \
+            $project_lims_json
+    """
+}
+
+process DECOMPRESS_ORA {
+    tag "$NewSampleID"
+    publishDir "$data_project_folder" , mode:'link',  overwrite: false
+
+    cpus 8
+    memory 32.GB
+
+    input:
+    tuple val(NSC_ProjectName), val(NewSampleID), path(fastq_ora)
+    val data_project_folder
+
+    output:
+    tuple val(NSC_ProjectName), val(NewSampleID), path("${fastq_ora.name[0..-5]}.gz"), emit: DECOMPRESS_ORA_out
+
+    script:
+    """
+    /data/common/tools/orad/orad.2.7.0.linux/orad \
+        -q -t $task.cpus \
+        --ora-reference /data/common/tools/orad/orad.2.7.0.linux/oradata \
+        --path . \
+        $fastq_ora
+    """
+}
+
+process MAKE_SENSITIVE_DATA_LOG_FILE {
+    publishDir "$runfolder", mode: 'link'
+
+    container "$params.containerdir/emailscripts-environment.sif"
+    
+    input:
+    val project_dir_name
+    path json
+    val runfolder
+
+    output:
+    path "${project_dir_name}.sensitive.tsv", emit: tsv, optional: true
+
+    script:
+    """
+    make-sensitive-data-tsv.py $project_dir_name $json ${project_dir_name}.sensitive.tsv
+    """
+}
+
