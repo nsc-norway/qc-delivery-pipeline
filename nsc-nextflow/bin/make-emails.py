@@ -488,10 +488,10 @@ def get_project_data(project_file, demultiplex_stats, run_id):
 
 
 def get_nsc_project_name(run_id, project_name):
-    run_match = re.match(r"^\d{0,2}(\d{6}_[A-Z0-9]+)_.*_([AB])[A-Z0-9]+$", run_id)
-    if not run_match:
+    run_id_parts = run_id.split("_")
+    if len(run_id_parts) < 3 or not run_id_parts[-1]:
         raise ValueError(f"Invalid run ID {run_id}.")
-    return run_match.group(1) + "." + run_match.group(2) + ".Project_" + project_name
+    return run_id_parts[0][-6:] + "_" + run_id_parts[1] + "." + run_id_parts[-1][0] + ".Project_" + project_name
 
 
 def get_data_size(bc_dir, project):

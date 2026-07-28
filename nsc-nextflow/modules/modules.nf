@@ -40,9 +40,6 @@ process SUPRDUPR {
     input:
     tuple val(NSC_ProjectName), val(NewSampleID), path(fastq)
     val qcfolder
-    
-    when:
-    fastq.name =~ /.*R1_001.*/ 
 
     output:
     path "${NSC_ProjectName}_${fastq}.suprDUPr.txt"
@@ -95,13 +92,44 @@ process MULTIQC {
 }
 
 
+process PROJECT_CREDENTIALS {
+    tag "$project_name"
+
+    input:
+    val project_name
+    val data_project_folder
+    val password_tool
+
+    output:
+    path "credentials.json", emit: credentials_json
+    path "username.txt", emit: username_txt
+    path "htpasswd", emit: htpasswd
+
+    script:
+    """
+    username=\$(echo "$project_name" | sed -n 's/^\\(.*\\)-[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}/\\1/p' | tr '[:upper:]' '[:lower:]')
+    password=\$("$password_tool" "$data_project_folder" "\$username")
+
+    printf '%s\\n' "\$username" > username.txt
+    hashed_password=\$(openssl passwd -apr1 "\$password")
+    printf '%s:%s\\n' "\$username" "\$hashed_password" > htpasswd
+
+    cat > credentials.json <<EOF
+        {"NIRD password": "\$password", "NIRD username": "\$username"}
+EOF
+    """
+}
+
 process TAR_FOLDER {
-    tag "$data_project_folder"
+    tag "$project_dir_name"
 //    publishDir "$runfolder" + "$NSC_ProjectName", mode:'link',  overwrite: false
 
     input:
-    val data_project_folder
+    val project_dir_name
     val runfolder
+    val deliverydir
+    path username_txt
+    path htpasswd
     path MULTIQC_out
     path MD5SUM_FASTQ_out
 
@@ -110,7 +138,7 @@ process TAR_FOLDER {
 
     script:
     """
-    tar.sh $runfolder $data_project_folder
+    tar.sh "$runfolder" "$project_dir_name" "$deliverydir" "$username_txt" "$htpasswd"
     """
 }
 
@@ -167,18 +195,14 @@ process EMAIL_PROJECT {
     path runfolder
     path qcfolder
     path project_lims_json
+    path credentials_json
 
     output:
     val "email_project_complete", emit: EMAIL_PROJECT_out
 
     script:
     """
-    username=\$(echo "$project_name" | sed -n 's/^\\(.*\\)-[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}/\\1/p' | tr '[:upper:]' '[:lower:]')
-    password=\$(echo "\$username" | cut -d'-' -f2)
-    cat > credentials.json <<EOF
-        {"NIRD password": "\$password", "NIRD username": "\$username"}
-EOF
-    jq -s add "$project_lims_json" credentials.json > project.json
+    jq -s add "$project_lims_json" "$credentials_json" > project.json
 
     make-emails.py \
             --run-dir=$runfolder \
@@ -260,4 +284,3 @@ process MAKE_SENSITIVE_DATA_LOG_FILE {
     make-sensitive-data-tsv.py $project_dir_name $json ${project_dir_name}.sensitive.tsv
     """
 }
-

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunParameters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Application>MiSeqi100Series Control Software</Application>
+  <SystemSuiteVersion>1.1.0.26158</SystemSuiteVersion>
+  <OutputFolder>boston.ous.nsc.local:/ifs/nsc/data/runScratch/MiSeqi100/20260414_SH01006_0013_ASC2174608-SC3</OutputFolder>
+  <CustomPrimerSelections>
+    <ReadOnePrimer>false</ReadOnePrimer>
+    <ReadTwoPrimer>false</ReadTwoPrimer>
+    <IndexOnePrimer>false</IndexOnePrimer>
+    <IndexTwoPrimer>false</IndexTwoPrimer>
+  </CustomPrimerSelections>
+  <CloudUploadMode>InstrumentPerformance</CloudUploadMode>
+  <RunSetupMode>Manual</RunSetupMode>
+  <SecondaryAnalysisMode>None</SecondaryAnalysisMode>
+  <InstrumentType>MiSeqi100Plus</InstrumentType>
+  <InstrumentSerialNumber>SH01006</InstrumentSerialNumber>
+  <RunId>20260414_SH01006_0013_ASC2174608-SC3</RunId>
+  <ConsumableInfo>
+    <ConsumableInfo>
+      <SerialNumber>SC2174608-SC3</SerialNumber>
+      <LotNumber>21025992</LotNumber>
+      <PartNumber>20100086</PartNumber>
+      <ExpirationDate>2026-11-14T00:00:00+01:00</ExpirationDate>
+      <Type>DryCartridge</Type>
+      <Mode>25M</Mode>
+      <Version>1</Version>
+    </ConsumableInfo>
+    <ConsumableInfo>
+      <SerialNumber>SC2160019-SC1</SerialNumber>
+      <LotNumber>21000140</LotNumber>
+      <PartNumber>20079638</PartNumber>
+      <ExpirationDate>2026-10-21T00:00:00+02:00</ExpirationDate>
+      <Type>WetCartridge</Type>
+      <Mode>A</Mode>
+      <Version>1</Version>
+    </ConsumableInfo>
+    <ConsumableInfo>
+      <SerialNumber>BXB58820-2231</SerialNumber>
+      <Type>FlowCell_1</Type>
+      <Mode>2</Mode>
+      <Version>1</Version>
+    </ConsumableInfo>
+  </ConsumableInfo>
+  <PlannedReads>
+    <Read ReadName="Read1" Cycles="151" />
+    <Read ReadName="Index1" Cycles="9" />
+    <Read ReadName="Index2" Cycles="9" />
+    <Read ReadName="Read2" Cycles="151" />
+  </PlannedReads>
+  <SecondaryAnalysisInfo />
+  <RunCounter>13</RunCounter>
+  <RecipeName>25M/300_A_Recipe</RecipeName>
+  <RecipeVersion>2.2_RF</RecipeVersion>
+  <ExperimentName>Stensrud-amplicon6-14-04-26</ExperimentName>
+  <PurgeReagentCartridge>true</PurgeReagentCartridge>
+</RunParameters>

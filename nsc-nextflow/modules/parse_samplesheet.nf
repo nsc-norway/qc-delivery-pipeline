@@ -5,11 +5,13 @@
  * @param sheetFile       Path to SampleSheet.csv
  * @return                A Channel emitting tuple( lane, sampleName, projectName )
  */
-def parseBclConvertData( Path sheetFile ) {
+def parseBclConvertData( sheetFile ) {
     def rows         = []
-    boolean inData   = false
-    List<String> hdr = null
-    int idxLane = -1, idxId = -1, idxProj = -1
+    def inData   = false
+    def hdr = null
+    def idxLane = -1
+    def idxId = -1
+    def idxProj = -1
     def useProjectColumn = false // to be determined
 
     sheetFile.toFile().eachLine { line ->
@@ -48,7 +50,8 @@ def parseBclConvertData( Path sheetFile ) {
             else if( ! t.replaceAll(',', '').isEmpty() ) {
                 def vals = t.split(',')
                 def lane = vals[idxLane].toInteger()
-                def sampleName, projectName
+                def sampleName = null
+                def projectName = null
 
                 if( useProjectColumn ) {
                     sampleName   = vals[idxId]
@@ -67,7 +70,7 @@ def parseBclConvertData( Path sheetFile ) {
     return rows
 }
 
-def getProjectDirName( String projectName, String runId ) {
+def getProjectDirName( projectName, runId ) {
     // Example runId: 20250502_LH00534_0135_B22LCYYLT4 
     // Example Long projectName: 250502_LH00534.B.Project_Christophersen-DNA2-2025-04-10
     def runIdParts = runId.split('_')
@@ -88,10 +91,7 @@ def getProjectDirName( String projectName, String runId ) {
  * @param isOraCompressed  (Boolean)  True if ora compressed, otherwise gz
  * @return                 List<String> of 1 (unpaired) or 2 (paired) paths
  */
-def getFastqPaths( Integer lane,
-                   Path    fastqDir,
-                   String  sampleName,
-                   Boolean isOraCompressed ) {
+def getFastqPaths( lane, fastqDir, sampleName, isOraCompressed ) {
     // decide which reads to look for
     def extensionPattern = "\\.fastq\\.gz"
     if (isOraCompressed) {
@@ -102,8 +102,8 @@ def getFastqPaths( Integer lane,
     //   <sampleName>_S<digits>_L00<lane>_R<read>_001.fastq.gz
     [1, 2].collect { read ->
         // build a Groovy regex to match the unpredictable S<digits> part
-        def pattern = /^${sampleName}_S\d+_L00${lane}_R${read}_001${extensionPattern}$/
-        def match = fastqDir.listFiles().find { it.name ==~ pattern }
+        def pattern = "^${sampleName}_S\\d+_L00${lane}_R${read}_001${extensionPattern}\$"
+        def match = fastqDir.listDirectory().find { fastq_file -> fastq_file.name ==~ pattern }
         if( ! match ) {
             if (read == 1) {
                 throw new FileNotFoundException("No FASTQ file matching $pattern in $fastqDir")

@@ -1,15 +1,3 @@
-process SPLIT_PROJECT {
-    input:
-    path(samplesheet)
-
-    output:
-    path "*_${samplesheet}", emit: SPLIT_PROJECT_out
-
-    script:
-    """
-    split_samplesheet.py $samplesheet
-    """
-}
 
 process MD5SUM_FASTQ {
     tag "$NewSampleID"
