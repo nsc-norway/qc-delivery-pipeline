@@ -2,6 +2,7 @@ import argparse
 import os
 import sys
 import requests
+from requests.auth import HTTPBasicAuth
 import xml.etree.ElementTree as ET
 import yaml
 
@@ -22,10 +23,11 @@ def get_flowcell_id(runinfo_path):
     return fcid_elem.text.strip()
 
 
-def get_sapio_child_record_fields(sapio_url_base, sapio_headers, record_id, child_type_name):
+def get_sapio_child_record_fields(sapio_url_base, sapio_headers, sapio_auth, record_id, child_type_name):
     response = requests.get(
         f"{sapio_url_base}/webservice/api/datarecord/children",
         headers=sapio_headers,
+        auth=sapio_auth,
         params={"recordId": record_id, "childTypeName": child_type_name},
     )
     response.raise_for_status()
@@ -35,11 +37,12 @@ def get_sapio_child_record_fields(sapio_url_base, sapio_headers, record_id, chil
     return child_records[0].get("fields", {})
 
 
-def get_sapio_project_forms(sapio_url_base, sapio_headers, record_id):
+def get_sapio_project_forms(sapio_url_base, sapio_headers, sapio_auth, record_id):
     return {
         form_name: get_sapio_child_record_fields(
             sapio_url_base,
             sapio_headers,
+            sapio_auth,
             record_id,
             child_type_name,
         )
@@ -50,11 +53,12 @@ def get_sapio_project_forms(sapio_url_base, sapio_headers, record_id):
     }
 
 
-def get_sapio_lane_projects(sapio_url_base, sapio_headers, lane_record_id):
+def get_sapio_lane_projects(sapio_url_base, sapio_headers, sapio_auth, lane_record_id):
     # Get all Project ancestors of this lane and add them to the results
     r = requests.get(
         f"{sapio_url_base}/webservice/api/datarecord/ancestors",
         headers=sapio_headers,
+        auth=sapio_auth,
         params={"recordId": lane_record_id, "ancestorTypeName": "Project"},
     )
     r.raise_for_status()
@@ -65,16 +69,17 @@ def get_sapio_lane_projects(sapio_url_base, sapio_headers, lane_record_id):
             {
                 "record_id": record_id,
                 "fields": ancestor["fields"],
-                **get_sapio_project_forms(sapio_url_base, sapio_headers, record_id),
+                **get_sapio_project_forms(sapio_url_base, sapio_headers, sapio_auth, record_id),
             }
         )
     return result_project_list
 
 
-def get_sapio_flowcell_projects(sapio_url_base, sapio_headers, fcid):
+def get_sapio_flowcell_projects(sapio_url_base, sapio_headers, sapio_auth, fcid):
     r = requests.post(
         f"{sapio_url_base}/webservice/api/datarecordmanager/querydatarecords",
         headers=sapio_headers,
+        auth=sapio_auth,
         params={"dataTypeName": "FlowCellLane", "dataFieldName": "FlowcellId"},
         json=[fcid],
     )
@@ -83,7 +88,7 @@ def get_sapio_flowcell_projects(sapio_url_base, sapio_headers, fcid):
     projects = {}
     for lane in lane_list:
         lane_id = lane["recordId"]
-        for project in get_sapio_lane_projects(sapio_url_base, sapio_headers, lane_id):
+        for project in get_sapio_lane_projects(sapio_url_base, sapio_headers, sapio_auth, lane_id):
             project_name = project["fields"].get("ProjectName")
             if project_name:
                 projects[project_name] = project
@@ -92,17 +97,27 @@ def get_sapio_flowcell_projects(sapio_url_base, sapio_headers, fcid):
 
 
 def get_sapio_api_headers(app_key, api_token):
-    return {
-        "X-APP-KEY": app_key,
-        "X-API-TOKEN": api_token,
-    }
+    headers = {}
+    if app_key:
+        headers["X-APP-KEY"] = app_key
+    if api_token:
+        headers["X-API-TOKEN"] = api_token
+    return headers
 
 
-def get_sapio_details_for_run(sapio_url_base, sapio_app_key, sapio_api_token, runinfo_path):
+def get_sapio_details_for_run(
+    sapio_url_base,
+    sapio_app_key,
+    sapio_api_token,
+    sapio_username,
+    sapio_password,
+    runinfo_path,
+):
     fcid = get_flowcell_id(runinfo_path)
 
     sapio_headers = get_sapio_api_headers(sapio_app_key, sapio_api_token)
-    projects = get_sapio_flowcell_projects(sapio_url_base, sapio_headers, fcid)
+    sapio_auth = None if sapio_api_token else HTTPBasicAuth(sapio_username, sapio_password)
+    projects = get_sapio_flowcell_projects(sapio_url_base, sapio_headers, sapio_auth, fcid)
 
     return {
         'run': { # Placeholder for potetial future run information from Sapio.
@@ -119,8 +134,17 @@ def main(
     sapio_url_base=None,
     sapio_app_key=None,
     sapio_api_token=None,
+    sapio_username=None,
+    sapio_password=None,
 ):
-    sapio_details = get_sapio_details_for_run(sapio_url_base, sapio_app_key, sapio_api_token, runinfo_path)
+    sapio_details = get_sapio_details_for_run(
+        sapio_url_base,
+        sapio_app_key,
+        sapio_api_token,
+        sapio_username,
+        sapio_password,
+        runinfo_path,
+    )
     output_yaml_file.write(yaml.safe_dump(sapio_details, sort_keys=False))
 
 
@@ -153,15 +177,26 @@ def parse_args(argv=None):
         default=os.environ.get("SAPIO_API_TOKEN"),
         help="Sapio API token (defaults to SAPIO_API_TOKEN env).",
     )
+    parser.add_argument(
+        "--sapio-username",
+        default=os.environ.get("SAPIO_USERNAME"),
+        help="Sapio username (defaults to SAPIO_USERNAME env).",
+    )
+    parser.add_argument(
+        "--sapio-password",
+        default=os.environ.get("SAPIO_PASSWORD"),
+        help="Sapio password (defaults to SAPIO_PASSWORD env).",
+    )
     args = parser.parse_args(argv)
 
     missing = []
     if not args.sapio_url_base:
         missing.append("--sapio-url-base or SAPIO_URL_BASE")
-    if not args.sapio_app_key:
-        missing.append("--sapio-app-key or SAPIO_APP_KEY")
-    if not args.sapio_api_token:
-        missing.append("--sapio-api-token or SAPIO_API_TOKEN")
+    if not (args.sapio_api_token or (args.sapio_username and args.sapio_password)):
+        missing.append(
+            "--sapio-api-token or SAPIO_API_TOKEN, or both --sapio-username and "
+            "--sapio-password (SAPIO_USERNAME and SAPIO_PASSWORD)"
+        )
     if missing:
         parser.error(
             "Sapio connection details are required: provide " + ", ".join(missing)
@@ -178,4 +213,6 @@ if __name__ == "__main__":
         sapio_url_base=args.sapio_url_base,
         sapio_app_key=args.sapio_app_key,
         sapio_api_token=args.sapio_api_token,
+        sapio_username=args.sapio_username,
+        sapio_password=args.sapio_password,
     )
