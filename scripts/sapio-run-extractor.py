@@ -1,10 +1,12 @@
 import argparse
+import base64
+import json
 import os
 import sys
-import requests
-from requests.auth import HTTPBasicAuth
 import xml.etree.ElementTree as ET
-import yaml
+from urllib.error import HTTPError
+from urllib.parse import urlencode
+from urllib.request import Request, urlopen
 
 # Sapio Run Extractor
 # usage: python sapio-run-extractor.py runinfo_path [--output-yaml-path OUTPUT] [--sapio-api-token TOKEN]
@@ -23,15 +25,39 @@ def get_flowcell_id(runinfo_path):
     return fcid_elem.text.strip()
 
 
+def sapio_request(url, headers, auth, params=None, json_body=None):
+    if params:
+        url = f"{url}?{urlencode(params)}"
+
+    request_headers = dict(headers)
+    data = None
+    if auth:
+        username, password = auth
+        credentials = f"{username}:{password}".encode("utf-8")
+        request_headers["Authorization"] = (
+            f"Basic {base64.b64encode(credentials).decode('ascii')}"
+        )
+    if json_body is not None:
+        data = json.dumps(json_body).encode("utf-8")
+        request_headers["Content-Type"] = "application/json"
+
+    request = Request(url, data=data, headers=request_headers)
+    try:
+        with urlopen(request) as response:
+            return json.load(response)
+    except HTTPError as error:
+        message = error.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"Sapio API request failed ({error.code}): {message}") from error
+
+
 def get_sapio_child_record_fields(sapio_url_base, sapio_headers, sapio_auth, record_id, child_type_name):
-    response = requests.get(
+    response = sapio_request(
         f"{sapio_url_base}/webservice/api/datarecord/children",
-        headers=sapio_headers,
-        auth=sapio_auth,
-        params={"recordId": record_id, "childTypeName": child_type_name},
+        sapio_headers,
+        sapio_auth,
+        {"recordId": record_id, "childTypeName": child_type_name},
     )
-    response.raise_for_status()
-    child_records = response.json().get("resultList", [])
+    child_records = response.get("resultList", [])
     if not child_records:
         return {}
     return child_records[0].get("fields", {})
@@ -55,15 +81,14 @@ def get_sapio_project_forms(sapio_url_base, sapio_headers, sapio_auth, record_id
 
 def get_sapio_lane_projects(sapio_url_base, sapio_headers, sapio_auth, lane_record_id):
     # Get all Project ancestors of this lane and add them to the results
-    r = requests.get(
+    response = sapio_request(
         f"{sapio_url_base}/webservice/api/datarecord/ancestors",
-        headers=sapio_headers,
-        auth=sapio_auth,
-        params={"recordId": lane_record_id, "ancestorTypeName": "Project"},
+        sapio_headers,
+        sapio_auth,
+        {"recordId": lane_record_id, "ancestorTypeName": "Project"},
     )
-    r.raise_for_status()
     result_project_list = []
-    for ancestor in r.json().get("resultList", []):
+    for ancestor in response.get("resultList", []):
         record_id = ancestor["recordId"]
         result_project_list.append(
             {
@@ -76,15 +101,14 @@ def get_sapio_lane_projects(sapio_url_base, sapio_headers, sapio_auth, lane_reco
 
 
 def get_sapio_flowcell_projects(sapio_url_base, sapio_headers, sapio_auth, fcid):
-    r = requests.post(
+    response = sapio_request(
         f"{sapio_url_base}/webservice/api/datarecordmanager/querydatarecords",
-        headers=sapio_headers,
-        auth=sapio_auth,
-        params={"dataTypeName": "FlowCellLane", "dataFieldName": "FlowcellId"},
-        json=[fcid],
+        sapio_headers,
+        sapio_auth,
+        {"dataTypeName": "FlowCellLane", "dataFieldName": "FlowcellId"},
+        [fcid],
     )
-    r.raise_for_status()
-    lane_list = r.json().get("resultList", [])
+    lane_list = response.get("resultList", [])
     projects = {}
     for lane in lane_list:
         lane_id = lane["recordId"]
@@ -116,7 +140,7 @@ def get_sapio_details_for_run(
     fcid = get_flowcell_id(runinfo_path)
 
     sapio_headers = get_sapio_api_headers(sapio_app_key, sapio_api_token)
-    sapio_auth = None if sapio_api_token else HTTPBasicAuth(sapio_username, sapio_password)
+    sapio_auth = None if sapio_api_token else (sapio_username, sapio_password)
     projects = get_sapio_flowcell_projects(sapio_url_base, sapio_headers, sapio_auth, fcid)
 
     return {
@@ -145,7 +169,8 @@ def main(
         sapio_password,
         runinfo_path,
     )
-    output_yaml_file.write(yaml.safe_dump(sapio_details, sort_keys=False))
+    json.dump(sapio_details, output_yaml_file, indent=2, ensure_ascii=False)
+    output_yaml_file.write("\n")
 
 
 def parse_args(argv=None):
