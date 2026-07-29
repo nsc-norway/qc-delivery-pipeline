@@ -243,18 +243,17 @@ process EMAIL_SUMMARY_RUN {
 }
 
 process DECOMPRESS_ORA {
-    tag "$NewSampleID"
+    tag "$sampleKey"
     publishDir "$data_project_folder" , mode:'link',  overwrite: false
 
     cpus 8
     memory 32.GB
 
     input:
-    tuple val(NSC_ProjectName), val(NewSampleID), path(fastq_ora)
-    val data_project_folder
+    tuple val(sampleKey), val(readLabel), path(fastq_ora)
 
     output:
-    tuple val(NSC_ProjectName), val(NewSampleID), path("${fastq_ora.name[0..-5]}.gz"), emit: DECOMPRESS_ORA_out
+    tuple val(sampleKey), val(readLabel), path("${fastq_ora.name[0..-5]}.gz"), emit: DECOMPRESS_ORA_out
 
     script:
     """
