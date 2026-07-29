@@ -33,7 +33,7 @@ process CAT_MD5SUM {
 }
 
 process SUPRDUPR {
-    container "/data/runScratch.boston/analysis/pipelines/container-images/suprdupr-v1.4.1.sif"
+    container "ghcr.io/nsc-norway/suprdupr:v1.4.1"
     tag "$NewSampleID"
     publishDir "$qcfolder/suprDUPr", mode:'link',  overwrite: false
 
@@ -52,7 +52,7 @@ process SUPRDUPR {
 }
 
 process FASTQC {
-    container "/data/runScratch.boston/analysis/pipelines/container-images/fastqc_0.11.9.sif"
+    container "biocontainers/fastqc:v0.11.9_cv8"
     tag "$NewSampleID"
     publishDir "$output_folder", mode:'link',  overwrite: false
     errorStrategy 'ignore'
@@ -72,7 +72,7 @@ process FASTQC {
 }
 
 process MULTIQC {
-    container "/data/common/tools/multiqc/current.sif"
+    container "multiqc/multiqc:v1.35"
     //tag "$multiqc_inputs"
     publishDir "$data_project_folder" , mode:'link',  overwrite: false
 
@@ -188,7 +188,7 @@ process JSON_GENERATOR {
 process EMAIL_PROJECT {
     tag "$project_name"
     //publishDir "$qcfolder" + "lims" , mode:'link',  overwrite: false
-    container "$params.containerdir/emailscripts-environment.sif"
+    container "ghcr.io/nsc-norway/qc-delivery-email-scripts:1.0.0"
 
     input:
     val project_name
@@ -218,7 +218,7 @@ process EMAIL_PROJECT {
 process EMAIL_SUMMARY_RUN {
     tag "$runfolder"
     //publishDir "$qcfolder" + "Delivery" , mode:'link',  overwrite: false
-    container "$params.containerdir/emailscripts-environment.sif"
+    container "ghcr.io/nsc-norway/qc-delivery-email-scripts:1.0.0"
 
     input:
     path runfolder
@@ -269,7 +269,7 @@ process DECOMPRESS_ORA {
 process MAKE_SENSITIVE_DATA_LOG_FILE {
     publishDir "$runfolder", mode: 'link'
 
-    container "$params.containerdir/emailscripts-environment.sif"
+    container "ghcr.io/nsc-norway/qc-delivery-email-scripts:1.0.0"
     
     input:
     val project_dir_name
