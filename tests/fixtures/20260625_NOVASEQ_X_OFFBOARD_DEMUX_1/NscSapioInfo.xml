@@ -1,0 +1,54 @@
+run:
+  flowcell_id: 22JKHGLT1
+projects:
+- record_id: 7773833
+  fields:
+    CreatedBy: paabjo
+    RelatedRecord113: null
+    Leader: ''
+    RelatedRecord112: NSC
+    ProjectName: Example-test1-2026-07-28
+    RelatedRecord3: null
+    RelatedRecord111: null
+    ProjectId: '10227'
+    DateCreated: 1785236490862
+    EndDate: null
+    StartDate: 1785236490862
+    IsSharedResourceProject: false
+    InheritRolesFromParent: true
+    DataRecordName: 10227 Example-test1-2026-07-28
+    Classification: Research
+    ProjectType: Sequencing (Short Read)
+    ProjectDesc: ''
+    VeloxLastModifiedDate: 1785241091228
+    VeloxLastModifiedBy: paabjo
+    RecordId: 7773833
+    SDMSSubdirectory: ''
+  evaluation_form: {}
+  submission_form: {}
+- record_id: 7774167
+  fields:
+    CreatedBy: paabjo
+    RelatedRecord113: null
+    Leader: ''
+    RelatedRecord112: NSC
+    ProjectName: Testcase-test2-2026-07-28
+    RelatedRecord3: null
+    RelatedRecord111: null
+    ProjectId: '10228'
+    DateCreated: 1785237129099
+    EndDate: null
+    StartDate: 1785237129099
+    IsSharedResourceProject: false
+    InheritRolesFromParent: true
+    DataRecordName: 10228 Testcase-test2-2026-07-28
+    Classification: Research
+    ProjectType: Sequencing (Short Read)
+    ProjectDesc: ''
+    VeloxLastModifiedDate: 1785237273241
+    VeloxLastModifiedBy: paabjo
+    RecordId: 7774167
+    SDMSSubdirectory: ''
+  evaluation_form: {}
+  submission_form: {}
+samples: []

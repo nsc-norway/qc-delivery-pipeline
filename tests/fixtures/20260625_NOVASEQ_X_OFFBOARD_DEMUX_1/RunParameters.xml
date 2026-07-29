@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunParameters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Side>A</Side>
+  <Application>NovaSeqXSeries Control Software</Application>
+  <SystemSuiteVersion>1.4.0.20115</SystemSuiteVersion>
+  <OutputFolder>boston-nfs.ous.nsc.local:/ifs/nsc/data/runScratch/NovaSeqX/20260625_LH00534_0319_A22JKHGLT1</OutputFolder>
+  <CustomPrimerSelections>
+    <ReadOnePrimer>false</ReadOnePrimer>
+    <ReadTwoPrimer>false</ReadTwoPrimer>
+    <IndexOnePrimer>false</IndexOnePrimer>
+    <IndexTwoPrimer>false</IndexTwoPrimer>
+  </CustomPrimerSelections>
+  <CloudUploadMode>None</CloudUploadMode>
+  <RunSetupMode>LocalOrchestrated</RunSetupMode>
+  <SecondaryAnalysisMode>LocalAnalysis</SecondaryAnalysisMode>
+  <InstrumentType>NovaSeqXPlus</InstrumentType>
+  <InstrumentSerialNumber>LH00534</InstrumentSerialNumber>
+  <RunId>20260625_LH00534_0319_A22JKHGLT1</RunId>
+  <FlowCellName>NovaSeqXSeries B1</FlowCellName>
+  <FlowCellType>NovaSeqXSeriesB1</FlowCellType>
+  <ConsumableInfo>
+    <ConsumableInfo>
+      <SerialNumber>LC1033269-LS2</SerialNumber>
+      <LotNumber>1000029548</LotNumber>
+      <PartNumber>20072272</PartNumber>
+      <ExpirationDate>2027-09-02T00:00:00+02:00</ExpirationDate>
+      <Type>SampleTube</Type>
+      <Mode>6</Mode>
+      <Version>1.5</Version>
+      <Name>2 Lane</Name>
+    </ConsumableInfo>
+    <ConsumableInfo>
+      <SerialNumber>LC4533617-15B3</SerialNumber>
+      <LotNumber>21025017</LotNumber>
+      <PartNumber>20066617</PartNumber>
+      <ExpirationDate>2027-07-12T00:00:00+02:00</ExpirationDate>
+      <Type>Reagent</Type>
+      <Mode>1</Mode>
+      <Version>1.5</Version>
+      <Name>1.5B 300c</Name>
+    </ConsumableInfo>
+    <ConsumableInfo>
+      <SerialNumber>LC2351586-LI4</SerialNumber>
+      <LotNumber>18433037</LotNumber>
+      <PartNumber>20090569</PartNumber>
+      <ExpirationDate>2027-05-26T00:00:00+02:00</ExpirationDate>
+      <Type>Lyo</Type>
+      <Mode>9</Mode>
+      <Version>1.5</Version>
+      <Name>Low</Name>
+    </ConsumableInfo>
+    <ConsumableInfo>
+      <SerialNumber>LC2511170169-1</SerialNumber>
+      <LotNumber>25111401</LotNumber>
+      <PartNumber>20089853</PartNumber>
+      <ExpirationDate>2027-05-08T00:00:00+02:00</ExpirationDate>
+      <Type>Buffer</Type>
+      <Mode>3</Mode>
+      <Version>1.0</Version>
+      <Name>Universal</Name>
+    </ConsumableInfo>
+    <ConsumableInfo>
+      <SerialNumber>22JKHGLT1</SerialNumber>
+      <LotNumber>21027238</LotNumber>
+      <PartNumber>20083896</PartNumber>
+      <ExpirationDate>2027-07-13T00:00:00+02:00</ExpirationDate>
+      <Type>FlowCell</Type>
+      <Mode>1</Mode>
+      <Version>1.0</Version>
+      <Name>1.5B</Name>
+    </ConsumableInfo>
+  </ConsumableInfo>
+  <PlannedReads>
+    <Read ReadName="Read1" Cycles="151" />
+    <Read ReadName="Index1" Cycles="9" />
+    <Read ReadName="Index2" Cycles="9" />
+    <Read ReadName="Read2" Cycles="151" />
+  </PlannedReads>
+  <SecondaryAnalysisInfo>
+    <SecondaryAnalysisInfo>
+      <SecondaryAnalysisPlatformVersion>4.4.12</SecondaryAnalysisPlatformVersion>
+      <SecondaryAnalysisWorkflow>
+        <string>DRAGEN BCL Convert</string>
+      </SecondaryAnalysisWorkflow>
+    </SecondaryAnalysisInfo>
+  </SecondaryAnalysisInfo>
+  <DisableBclCopy>false</DisableBclCopy>
+  <RunCounter>319</RunCounter>
+  <RecipeName>1.5B Sequencing</RecipeName>
+  <RecipeVersion>1.5B-01.04.04</RecipeVersion>
+  <ExperimentName>Potolitsyna-YLibs-25-06-2026</ExperimentName>
+  <PlannedAutoDetectionMode>CorrectAndExtendSamples</PlannedAutoDetectionMode>
+</RunParameters>
