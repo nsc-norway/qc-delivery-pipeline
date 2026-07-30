@@ -1,0 +1,2 @@
+bcl-convert Version 4.3.6
+2026-07-30T13:35:20Z,Fastq generation complete

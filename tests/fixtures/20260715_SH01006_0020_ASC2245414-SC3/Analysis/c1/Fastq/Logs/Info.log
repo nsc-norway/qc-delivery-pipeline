@@ -1,0 +1,37 @@
+2026-07-30T13:26:09Z thread 1597279 Index Read 2 is marked as Reverse Complement in RunInfo.xml: The barcode and UMI outputs will be output in Reverse Complement of Sample Sheet inputs.
+2026-07-30T13:26:09Z thread 1597279 Sample sheet being processed by common lib? Yes
+2026-07-30T13:26:09Z thread 1597279 SampleSheet Settings: 
+2026-07-30T13:26:09Z thread 1597279   FastqCompressionFormat = gzip
+2026-07-30T13:26:09Z thread 1597279   GenerateFastqcMetrics = true
+2026-07-30T13:26:09Z thread 1597279   SoftwareVersion = 4.4.6
+2026-07-30T13:26:09Z thread 1597279 
+2026-07-30T13:26:09Z thread 1597279 Sample Sheet Warning: Command line indicates to create per-project subdirectories, but 'Sample_Project' is not a column in the provided sample sheet.
+2026-07-30T13:26:09Z thread 1597279 shared-thread-linux-native-asio output is disabled
+2026-07-30T13:26:09Z thread 1597279 bcl-convert Version 4.3.6
+2026-07-30T13:26:09Z thread 1597279 Copyright (c) 2014-2022 Illumina, Inc.
+2026-07-30T13:26:09Z thread 1597279 Command Line: --bcl-input-directory /boston/runScratch/MiSeqi100/20260715_SH01006_0020_ASC2245414-SC3 --output-directory /boston/runScratch/MiSeqi100/20260715_SH01006_0020_ASC2245414-SC3/Analysis/c1/Fastq --bcl-sampleproject-subdirectories true --sample-sheet /boston/runScratch/MiSeqi100/20260715_SH01006_0020_ASC2245414-SC3/Analysis/c1/SampleSheet.csv 
+2026-07-30T13:26:09Z thread 1597279 Conversion Begins.
+2026-07-30T13:26:09Z thread 1597279 Input BCL Information:
+2026-07-30T13:26:09Z thread 1597279     Read Structure: 2026-07-30T13:26:09Z thread 1597279 Y1512026-07-30T13:26:09Z thread 1597279 ;2026-07-30T13:26:09Z thread 1597279 I112026-07-30T13:26:09Z thread 1597279 ;2026-07-30T13:26:09Z thread 1597279 I112026-07-30T13:26:09Z thread 1597279 ;2026-07-30T13:26:09Z thread 1597279 Y1512026-07-30T13:26:09Z thread 1597279 
+2026-07-30T13:26:09Z thread 1597279     RunInfo.xml file lists: 1 lanes, 18 tiles
+2026-07-30T13:26:09Z thread 1597279     BCL file format: cbcl
+2026-07-30T13:26:09Z thread 1597279     Positions file format: slocs
+2026-07-30T13:26:09Z thread 1597279     Filter file format: filter
+2026-07-30T13:26:09Z thread 1597279 Conversion Information:
+2026-07-30T13:26:09Z thread 1597279     Sample Count for Lane 1: 22
+2026-07-30T13:26:09Z thread 1597279     Per-sample settings active: 2 distinct settings groups detected
+2026-07-30T13:26:09Z thread 1597279     Expected number of sample FASTQ files to be created: 44
+2026-07-30T13:26:09Z thread 1597279 # CPU hw threads available: 64
+2026-07-30T13:26:09Z thread 1597279 Parallel Tiles: 4. Threads Per Tile: 16
+2026-07-30T13:26:09Z thread 1597279 SW compressors: 64
+2026-07-30T13:26:09Z thread 1597279 SW decompressors: 32
+2026-07-30T13:26:09Z thread 1597279 SW FASTQ compression level: 1
+2026-07-30T13:26:15Z thread 1597279 Lane 1 Post-run Information:
+2026-07-30T13:26:15Z thread 1597279     Total clusters: 5567926
+2026-07-30T13:26:15Z thread 1597279     Total Genomic Reads: 11135852
+2026-07-30T13:26:15Z thread 1597279     Total Genomic Input Gigabases 1.68
+2026-07-30T13:26:15Z thread 1597279     Minimum reads for a sample: 10214
+2026-07-30T13:26:15Z thread 1597279     Maximum reads for a sample: 184312
+2026-07-30T13:26:15Z thread 1597279     Average reads per sample: 105350.27
+2026-07-30T13:26:15Z thread 1597279     Undetermined reads: 8818146
+2026-07-30T13:26:15Z thread 1597279 Conversion Complete.
