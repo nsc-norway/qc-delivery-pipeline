@@ -1,13 +1,12 @@
-/*
 
 process MD5SUM_FASTQ {
-    tag "$sampleKey"
+    tag "$meta.sample_id"
 
     input:
-    tuple val(sampleKey), path(fastq)
+    tuple val(meta), path(fastq)
 
     output:
-    path "${fastq}.md5", emit: MD5SUM_FASTQ_out
+    tuple val(meta), path("${fastq}.md5"), emit: MD5SUM_FASTQ_out
 
     script:
     """
@@ -16,55 +15,51 @@ process MD5SUM_FASTQ {
 }
 
 process CAT_MD5SUM {
-    tag "$data_project_folder"
-    // TODO enable publishDir
-    //publishDir "$data_project_folder" , mode:'link',  overwrite: false
+    tag "$meta.project_name"
+    publishDir { "${params.outdir}/${meta.project_dir_name}" }, mode:'link', overwrite: true
 
     input:
-    val data_project_folder
-    path MD5SUM_FASTQ_out
+    tuple val(meta), path(fastq_md5)
 
     output:
     path "md5sum.txt"
 
     script:
     """
-    cat *md5 > md5sum.txt
+    cat *.md5 > md5sum.txt
     """
 }
 
 process SUPRDUPR {
+    tag "$meta.sample_id"
+
     container "ghcr.io/nsc-norway/suprdupr:v1.4.1"
-    tag "$NewSampleID"
-    publishDir "$qcfolder/suprDUPr", mode:'link',  overwrite: false
+    publishDir { "${params.outdir}/QualityControl/${meta.project_name}/suprdupr" }, mode:'link',  overwrite: true
 
     input:
-    tuple val(NSC_ProjectName), val(NewSampleID), path(fastq)
-    val qcfolder
+    tuple val(meta), path(fastq)
 
     output:
-    path "${NSC_ProjectName}_${fastq}.suprDUPr.txt"
-    val "suprdupr complete", emit: SUPRDUPR_out
+    path "${meta.sample_id}.suprDUPr.txt"
 
     script:
     """
-    suprDUPr -r $fastq > ${NSC_ProjectName}_${fastq}.suprDUPr.txt
+    suprDUPr -r $fastq > ${meta.sample_id}.suprDUPr.txt
     """
 }
 
 process FASTQC {
+    tag "$meta.sample_id"
+
     container "biocontainers/fastqc:v0.11.9_cv8"
-    tag "$NewSampleID"
-    publishDir "$output_folder", mode:'link',  overwrite: false
-    errorStrategy 'ignore'
+    publishDir { "${params.outdir}/QualityControl/${meta.project_name}/fastqc" }, mode:'link',  overwrite: true
 
     input:
-    tuple val(NSC_ProjectName), val(NewSampleID), path(fastq)
-    val output_folder
+    tuple val(meta), path(fastq)
     
     output:
-    path "${fastq.getSimpleName()}_fastqc.zip",        emit: FASTQC_ZIP_out
-    path "${fastq.getSimpleName()}_fastqc.html",       emit: FASTQC_HTML_out
+    tuple val(meta), path("${fastq.getSimpleName()}_fastqc.zip"),  emit: FASTQC_ZIP_out
+    tuple val(meta), path("${fastq.getSimpleName()}_fastqc.html"), emit: FASTQC_HTML_out
 
     script:
     """
@@ -73,18 +68,18 @@ process FASTQC {
 }
 
 process MULTIQC {
+    tag "$meta.project_name"
+
     container "multiqc/multiqc:v1.35"
-    //tag "$multiqc_inputs"
-    publishDir "$data_project_folder" , mode:'link',  overwrite: false
+
+    publishDir { "${params.outdir}/${meta.project_dir_name}" }, mode:'link',  overwrite: true
 
     input:
-    path multiqc_inputs
-    val data_project_folder
+    tuple val(meta), path(multiqc_inputs)
     val multiqc_module
     
     output:
-    path "multiqc_data"
-    path "multiqc_report.html", emit: MULTIQC_out
+    tuple val(meta), path("multiqc_report.html"), emit: MULTIQC_out
 
     script:
     """
@@ -92,7 +87,7 @@ process MULTIQC {
     """
 }
 
-
+/*
 process PROJECT_CREDENTIALS {
     tag "$project_name"
 
@@ -123,7 +118,7 @@ EOF
 
 process TAR_FOLDER {
     tag "$project_dir_name"
-//    publishDir "$runfolder" + "$NSC_ProjectName", mode:'link',  overwrite: false
+//    publishDir "$runfolder" + "$NSC_ProjectName", mode:'link',  overwrite: true
 
     input:
     val project_dir_name
@@ -145,7 +140,7 @@ process TAR_FOLDER {
 
 process LINK_FOLDER {
     tag "$project_dir_name"
-    publishDir "$params.deliverydir", mode:'move',  overwrite: false
+    publishDir "$params.deliverydir", mode:'move',  overwrite: true
 
     input:
     val project_dir_name
@@ -169,7 +164,7 @@ process LINK_FOLDER {
 
 process JSON_GENERATOR {
     tag "$project_name"
-    publishDir "$qcfolder/lims" , mode:'link',  overwrite: false
+    publishDir "$qcfolder/lims" , mode:'link',  overwrite: true
     container "$params.containerdir/lims-environment.sif"
     containerOptions "-B /data/runScratch.boston/scripts/etc/seq-user/apiuser-password.txt:/etc/apiuser-pw.txt"
 
@@ -188,7 +183,7 @@ process JSON_GENERATOR {
 
 process EMAIL_PROJECT {
     tag "$project_name"
-    //publishDir "$qcfolder" + "lims" , mode:'link',  overwrite: false
+    //publishDir "$qcfolder" + "lims" , mode:'link',  overwrite: true
     container "ghcr.io/nsc-norway/qc-delivery-email-scripts:1.0.0"
 
     input:
@@ -218,7 +213,7 @@ process EMAIL_PROJECT {
 
 process EMAIL_SUMMARY_RUN {
     tag "$runfolder"
-    //publishDir "$qcfolder" + "Delivery" , mode:'link',  overwrite: false
+    //publishDir "$qcfolder" + "Delivery" , mode:'link',  overwrite: true
     container "ghcr.io/nsc-norway/qc-delivery-email-scripts:1.0.0"
 
     input:
@@ -244,18 +239,18 @@ process EMAIL_SUMMARY_RUN {
 }
 */
 process DECOMPRESS_ORA {
-    tag "$sampleKey"
-    // TODO enable publishDir
-    //publishDir "$data_project_folder" , mode:'link',  overwrite: false
+    tag "$meta.sample_id"
+    
+    publishDir { "${params.outdir}/${meta.project_dir_name}" }, mode:'link', overwrite: true
 
     cpus 8
     memory 32.GB
 
     input:
-    tuple val(sampleKey), val(readLabel), path(fastq_ora)
+    tuple val(meta), path(fastq_ora)
 
     output:
-    tuple val(sampleKey), val(readLabel), path("${fastq_ora.name[0..-5]}.gz"), emit: DECOMPRESS_ORA_out
+    tuple val(meta), path("${fastq_ora.name[0..-5]}.gz"), emit: DECOMPRESS_ORA_out
 
     script:
     """
@@ -266,6 +261,38 @@ process DECOMPRESS_ORA {
         $fastq_ora
     """
 }
+
+/**
+ * Get a simple fastq name, replacing the the Sample_ID file name.
+ * Removes project name and GUID if they were present.
+ */
+def getNewFastqName(originalFastq, sampleId, sampleName) {
+    if (originalFastq.startsWith(sampleId + "_S")) {
+        return sampleName + originalFastq.substring(sampleId.length())
+    }
+    return originalFastq
+}
+
+process RENAME_AND_SAVE_FASTQS {
+    tag "$meta.sample_id"
+    
+    publishDir { "${params.outdir}/${meta.project_dir_name}" }, mode:'link', overwrite: true
+
+    input:
+    tuple val(meta), path(fastq)
+
+    output:
+    tuple val(meta), path(newName), emit: RENAME_AND_SAVE_FASTQS_out
+
+    script:
+    newName = getNewFastqName(fastq.getName(), meta.sample_id, meta.sample_name)
+    """
+    if [ "${fastq}" != "$newName" ]; then
+        mv $fastq $newName
+    fi
+    """
+}
+
 /*
 process MAKE_SENSITIVE_DATA_LOG_FILE {
     publishDir "$runfolder", mode: 'link'

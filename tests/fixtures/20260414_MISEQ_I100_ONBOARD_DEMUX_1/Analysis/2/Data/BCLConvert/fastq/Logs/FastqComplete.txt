@@ -1,2 +1,0 @@
-/opt/edico/bin/dragen Version 
-2026-05-21T12:32:45Z,Fastq generation complete

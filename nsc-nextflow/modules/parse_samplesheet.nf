@@ -51,20 +51,15 @@ def parseBclConvertData( sheetFile ) {
             else if( ! t.replaceAll(',', '').isEmpty() ) {
                 def vals = t.split(',')
                 def lane = idxLane >= 0 ? vals[idxLane].toInteger() : 1
-                def sampleName = null
+                def sampleId = vals[idxId]
                 def projectName = null
-
                 if( useProjectColumn ) {
-                    sampleName   = vals[idxId]
                     projectName  = vals[idxProj]
                 }
                 else {
-                    def parts       = vals[idxId].split('_')
-                    projectName     = parts[0..-2].join('_')
-                    sampleName      = parts[-1]
+                    projectName  = null
                 }
-
-                rows << tuple( lane, projectName, sampleName )
+                rows << tuple( lane, projectName, sampleId )
             }
         }
     }
@@ -73,7 +68,7 @@ def parseBclConvertData( sheetFile ) {
 
 def unpackSampleIds( projectName, sampleId ) {
     // If no Project_Name is given in the SampleSheet, the project name should be included in the Sample_ID column.
-    // GUID may be included at the end of the Sample_ID value (sampleName).
+    // GUID may be included at the end of the Sample_ID value (sampleId).
     // This function returns: (projectName, sampleName, guid)
 
     // First strip and extract the GUID if it appears to be in GUID format.
@@ -113,11 +108,11 @@ def getProjectDirName( projectName, runId ) {
  *
  * @param lane             (Integer)  the lane number (e.g. 1, 2, …)
  * @param fastqDir         (Path)     Fastq directory
- * @param sampleName       (String)   Sample name
+ * @param sampleId         (String)   Sample ID
  * @param isOraCompressed  (Boolean)  True if ora compressed, otherwise gz
  * @return                 Tuples of (readLabel, fastq_path) for each FASTQ file found for the sample.
  */
-def getFastqReadLabelsAndPaths( lane, fastqDir, sampleName, isOraCompressed ) {
+def getFastqReadLabelsAndPaths( lane, fastqDir, sampleId, isOraCompressed ) {
     // decide which reads to look for
     def extensionPattern = "\\.fastq\\.gz"
     if (isOraCompressed) {
@@ -125,11 +120,11 @@ def getFastqReadLabelsAndPaths( lane, fastqDir, sampleName, isOraCompressed ) {
     }
 
     // For each read (1 or 2), pick the one file matching
-    //   <sampleName>_S<digits>_L00<lane>_<read>_001.fastq.gz
+    //   <sampleId>_S<digits>_L00<lane>_<read>_001.fastq.gz
     ["R1", "I1", "I2", "R2"].collect { readLabel ->
         // build a Groovy regex to match the unpredictable S<digits> part
-        def pattern = "^${sampleName}_S\\d+_L00${lane}_${readLabel}_001${extensionPattern}\$"
-        def match = fastqDir.listDirectory().find { fastq_file -> fastq_file.name ==~ pattern }
+        def pattern = "^${sampleId}_S\\d+_L00${lane}_${readLabel}_001${extensionPattern}\$"
+        def match = fastqDir.listDirectory().find { fastqFile -> fastqFile.name ==~ pattern }
         if( ! match ) {
             if (readLabel == "R1") {
                 throw new FileNotFoundException("No FASTQ file matching $pattern in $fastqDir")
@@ -139,5 +134,17 @@ def getFastqReadLabelsAndPaths( lane, fastqDir, sampleName, isOraCompressed ) {
             }
         }
         return [ readLabel, match.toString() ]
-    }.filter { _readLabel, fastqPath -> fastqPath } // remove any empty matches
+    }.findAll { _readLabel, fastqPath -> fastqPath } // remove any empty matches
+}
+
+/**
+ * Group the channel elements by project name.
+ */
+def groupByProject( files_ch ) {
+    return files_ch.map { meta, fastqPath -> [meta.project_name, meta, fastqPath] }
+                   .groupTuple()
+                   .map { projectName, metas, fastqs -> [[
+                            project_name: projectName,
+                            project_dir_name: metas[0].project_dir_name,
+                        ], fastqs] }
 }
