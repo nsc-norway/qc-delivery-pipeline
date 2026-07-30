@@ -1,10 +1,10 @@
+/*
+
 process MD5SUM_FASTQ {
-    tag "$NewSampleID"
-    // publishDir "$data_project_folder" , mode:'link',  overwrite: false
+    tag "$sampleKey"
 
     input:
-    tuple val(NSC_ProjectName), val(NewSampleID), path(fastq)
-    val data_project_folder
+    tuple val(sampleKey), path(fastq)
 
     output:
     path "${fastq}.md5", emit: MD5SUM_FASTQ_out
@@ -17,7 +17,8 @@ process MD5SUM_FASTQ {
 
 process CAT_MD5SUM {
     tag "$data_project_folder"
-    publishDir "$data_project_folder" , mode:'link',  overwrite: false
+    // TODO enable publishDir
+    //publishDir "$data_project_folder" , mode:'link',  overwrite: false
 
     input:
     val data_project_folder
@@ -241,10 +242,11 @@ process EMAIL_SUMMARY_RUN {
             $project_lims_json
     """
 }
-
+*/
 process DECOMPRESS_ORA {
     tag "$sampleKey"
-    publishDir "$data_project_folder" , mode:'link',  overwrite: false
+    // TODO enable publishDir
+    //publishDir "$data_project_folder" , mode:'link',  overwrite: false
 
     cpus 8
     memory 32.GB
@@ -264,7 +266,7 @@ process DECOMPRESS_ORA {
         $fastq_ora
     """
 }
-
+/*
 process MAKE_SENSITIVE_DATA_LOG_FILE {
     publishDir "$runfolder", mode: 'link'
 
@@ -283,3 +285,4 @@ process MAKE_SENSITIVE_DATA_LOG_FILE {
     make-sensitive-data-tsv.py $project_dir_name $json ${project_dir_name}.sensitive.tsv
     """
 }
+*/

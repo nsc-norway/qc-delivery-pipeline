@@ -1,6 +1,7 @@
 /**
  * Parse an Illumina SampleSheet v2 and extract only the [BCLConvert_Data] rows,
- * emitting tuples of ( Lane, Sample_Name, Sample_Project ).
+ * emitting tuples of ( Lane, Sample_Name, Sample_Project ). Sheets without a
+ * Lane column (NoLaneSplitting) are assigned lane 1.
  *
  * @param sheetFile       Path to SampleSheet.csv
  * @return                A Channel emitting tuple( lane, sampleName, projectName )
@@ -37,9 +38,9 @@ def parseBclConvertData( sheetFile ) {
                 idxLane  = hdr.indexOf('Lane')
                 idxId    = hdr.indexOf('Sample_ID')
                 idxProj = hdr.indexOf('Sample_Project')
-                if( idxLane < 0 || idxId < 0 ) {
+                if( idxId < 0 ) {
                     throw new IllegalArgumentException(
-                        "Missing 'Lane' or 'Sample_ID' in header: $t"
+                        "Missing 'Sample_ID' in header: $t"
                     )
                 }
                 if( idxProj >= 0 ) {
@@ -49,7 +50,7 @@ def parseBclConvertData( sheetFile ) {
             // 4) data rows
             else if( ! t.replaceAll(',', '').isEmpty() ) {
                 def vals = t.split(',')
-                def lane = vals[idxLane].toInteger()
+                def lane = idxLane >= 0 ? vals[idxLane].toInteger() : 1
                 def sampleName = null
                 def projectName = null
 
@@ -70,10 +71,10 @@ def parseBclConvertData( sheetFile ) {
     return rows
 }
 
-def unpackSampleIds( lane, projectName, sampleId ) {
+def unpackSampleIds( projectName, sampleId ) {
     // If no Project_Name is given in the SampleSheet, the project name should be included in the Sample_ID column.
     // GUID may be included at the end of the Sample_ID value (sampleName).
-    // This function returns: (lane, projectName, sampleName, guid)
+    // This function returns: (projectName, sampleName, guid)
 
     // First strip and extract the GUID if it appears to be in GUID format.
     def parts = sampleId.split('_')
@@ -92,7 +93,7 @@ def unpackSampleIds( lane, projectName, sampleId ) {
             sampleName = sampleParts[-1]
         }
     }
-    return tuple( lane, projectName, sampleId, sampleName, guid )
+    return tuple( projectName, sampleName, guid )
 }
 
 def getProjectDirName( projectName, runId ) {
@@ -125,7 +126,7 @@ def getFastqReadLabelsAndPaths( lane, fastqDir, sampleName, isOraCompressed ) {
 
     // For each read (1 or 2), pick the one file matching
     //   <sampleName>_S<digits>_L00<lane>_<read>_001.fastq.gz
-    [("R1", false), ("I1", true), ("I2", true), ("R2", false)].collect { readLabel, isIndex ->
+    ["R1", "I1", "I2", "R2"].collect { readLabel ->
         // build a Groovy regex to match the unpredictable S<digits> part
         def pattern = "^${sampleName}_S\\d+_L00${lane}_${readLabel}_001${extensionPattern}\$"
         def match = fastqDir.listDirectory().find { fastq_file -> fastq_file.name ==~ pattern }
@@ -137,6 +138,6 @@ def getFastqReadLabelsAndPaths( lane, fastqDir, sampleName, isOraCompressed ) {
                 match = ""
             }
         }
-        return [ isIndex, match.toString() ]
-    }.filter { readLabel, fastqPath -> fastqPath } // remove any empty matches
+        return [ readLabel, match.toString() ]
+    }.filter { _readLabel, fastqPath -> fastqPath } // remove any empty matches
 }
