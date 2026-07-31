@@ -1,6 +1,7 @@
 
 process MD5SUM_FASTQ {
     tag "$meta.sample_id"
+    container "ghcr.io/nsc-norway/qc-delivery-pipeline-tools:1.0.0"
 
     input:
     tuple val(meta), path(fastq)
@@ -16,6 +17,7 @@ process MD5SUM_FASTQ {
 
 process CAT_MD5SUM {
     tag "$meta.project_name"
+    container "ghcr.io/nsc-norway/qc-delivery-pipeline-tools:1.0.0"
     publishDir { "${params.outdir}/${meta.project_dir_name}" }, mode:'link', overwrite: true
 
     input:
@@ -87,21 +89,23 @@ process MULTIQC {
     """
 }
 
-/*
+
 process PROJECT_CREDENTIALS {
-    tag "$project_name"
+    tag "$meta.project_name"
+    container "ghcr.io/nsc-norway/qc-delivery-pipeline-tools:1.0.0"
 
     input:
-    val project_name
-    val data_project_folder
+    val meta
     val password_tool
 
     output:
-    path "credentials.json", emit: credentials_json
-    path "username.txt", emit: username_txt
-    path "htpasswd", emit: htpasswd
+    tuple val(meta), path("credentials.json"),  emit: PROJECT_CREDENTIALS_json_out
+    tuple val(meta), path("username.txt"),      emit: PROJECT_CREDENTIALS_username_out
+    tuple val(meta), path("htpasswd"),          emit: PROJECT_CREDENTIALS_htpasswd_out
 
     script:
+    def project_name = meta.project_name
+    def data_project_folder = meta.data_project_folder
     """
     username=\$(echo "$project_name" | sed -n 's/^\\(.*\\)-[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}/\\1/p' | tr '[:upper:]' '[:lower:]')
     password=\$("$password_tool" "$data_project_folder" "\$username")
@@ -115,9 +119,10 @@ process PROJECT_CREDENTIALS {
 EOF
     """
 }
-
+/*
 process TAR_FOLDER {
     tag "$project_dir_name"
+    container "ghcr.io/nsc-norway/qc-delivery-pipeline-tools:1.0.0"
 //    publishDir "$runfolder" + "$NSC_ProjectName", mode:'link',  overwrite: true
 
     input:
@@ -140,6 +145,7 @@ process TAR_FOLDER {
 
 process LINK_FOLDER {
     tag "$project_dir_name"
+    container "ghcr.io/nsc-norway/qc-delivery-pipeline-tools:1.0.0"
     publishDir "$params.deliverydir", mode:'move',  overwrite: true
 
     input:
@@ -159,25 +165,6 @@ process LINK_FOLDER {
     cp -l  $MULTIQC_out        $project_dir_name
     cp -l $MD5SUM_FASTQ_out    $project_dir_name
     # Note: mode "move" is used in publishDir, we shouldn't leave big files in work
-    """
-}
-
-process JSON_GENERATOR {
-    tag "$project_name"
-    publishDir "$qcfolder/lims" , mode:'link',  overwrite: true
-    container "$params.containerdir/lims-environment.sif"
-    containerOptions "-B /data/runScratch.boston/scripts/etc/seq-user/apiuser-password.txt:/etc/apiuser-pw.txt"
-
-    input:
-    val project_name
-    val qcfolder
-   
-    output:
-    path "${project_name}.lims.json", emit: JSON_GENERATOR_out
-
-    script:
-    """
-    get-project-info.py $project_name > ${project_name}.lims.json
     """
 }
 
@@ -275,7 +262,7 @@ def getNewFastqName(originalFastq, sampleId, sampleName) {
 
 process RENAME_AND_SAVE_FASTQS {
     tag "$meta.sample_id"
-    
+    container "ghcr.io/nsc-norway/qc-delivery-pipeline-tools:1.0.0"
     publishDir { "${params.outdir}/${meta.project_dir_name}" }, mode:'link', overwrite: true
 
     input:
@@ -296,7 +283,6 @@ process RENAME_AND_SAVE_FASTQS {
 /*
 process MAKE_SENSITIVE_DATA_LOG_FILE {
     publishDir "$runfolder", mode: 'link'
-
     container "ghcr.io/nsc-norway/qc-delivery-email-scripts:1.0.0"
     
     input:

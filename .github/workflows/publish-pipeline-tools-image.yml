@@ -1,0 +1,40 @@
+name: Publish pipeline tools image
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - dockerfiles/pipeline-tools.dockerfile
+      - dockerfiles/pipeline-tools.version
+      - .github/workflows/publish-pipeline-tools-image.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: version
+        run: echo "value=$(tr -d '\n' < dockerfiles/pipeline-tools.version)" >> "$GITHUB_OUTPUT"
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: dockerfiles/pipeline-tools.dockerfile
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/qc-delivery-pipeline-tools:${{ steps.version.outputs.value }}
+            ghcr.io/${{ github.repository_owner }}/qc-delivery-pipeline-tools:latest
