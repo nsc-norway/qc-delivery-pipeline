@@ -4,6 +4,8 @@ Needed test data:
 NovaSeq X - onboard demultiplexing
 NovaSeq X 25 B ?
 CreateFastsForIndexReads
+Single-end read data? If we have any at all....
+Multiple single index (i7 index) for each sample (10X)
 
 Project missing from Sapio (fallback delivery method)
 
