@@ -1,0 +1,9 @@
+Needed test data:
+
+
+NovaSeq X - onboard demultiplexing
+NovaSeq X 25 B ?
+CreateFastsForIndexReads
+
+Project missing from Sapio (fallback delivery method)
+

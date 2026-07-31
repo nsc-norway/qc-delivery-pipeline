@@ -148,3 +148,5 @@ def groupByProject( files_ch ) {
                             project_dir_name: metas[0].project_dir_name,
                         ], fastqs] }
 }
+
+

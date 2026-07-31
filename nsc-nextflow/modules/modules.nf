@@ -24,7 +24,7 @@ process CAT_MD5SUM {
     tuple val(meta), path(fastq_md5)
 
     output:
-    path "md5sum.txt"
+    tuple val(meta), path("md5sum.txt"), emit: CAT_MD5SUM_out
 
     script:
     """
@@ -34,7 +34,6 @@ process CAT_MD5SUM {
 
 process SUPRDUPR {
     tag "$meta.sample_id"
-
     container "ghcr.io/nsc-norway/suprdupr:v1.4.1"
     publishDir { "${params.outdir}/QualityControl/${meta.project_name}/suprdupr" }, mode:'link',  overwrite: true
 
@@ -52,7 +51,6 @@ process SUPRDUPR {
 
 process FASTQC {
     tag "$meta.sample_id"
-
     container "biocontainers/fastqc:v0.11.9_cv8"
     publishDir { "${params.outdir}/QualityControl/${meta.project_name}/fastqc" }, mode:'link',  overwrite: true
 
@@ -71,9 +69,7 @@ process FASTQC {
 
 process MULTIQC {
     tag "$meta.project_name"
-
     container "multiqc/multiqc:v1.35"
-
     publishDir { "${params.outdir}/${meta.project_dir_name}" }, mode:'link',  overwrite: true
 
     input:
@@ -96,78 +92,80 @@ process PROJECT_CREDENTIALS {
 
     input:
     val meta
-    val password_tool
 
     output:
-    tuple val(meta), path("credentials.json"),  emit: PROJECT_CREDENTIALS_json_out
-    tuple val(meta), path("username.txt"),      emit: PROJECT_CREDENTIALS_username_out
-    tuple val(meta), path("htpasswd"),          emit: PROJECT_CREDENTIALS_htpasswd_out
+    tuple val(meta), eval('cat username.txt'), path('password.txt'),  emit: PROJECT_CREDENTIALS_out
 
     script:
-    def project_name = meta.project_name
-    def data_project_folder = meta.data_project_folder
+    //def username = meta.project_name.matches(/^(.*)-\d{4}-\d{2}-\d{2}.*/) ? meta.project_name.replaceFirst(/^(.*)-\d{4}-\d{2}-\d{2}.*/, '$1').toLowerCase() : ''
     """
-    username=\$(echo "$project_name" | sed -n 's/^\\(.*\\)-[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}/\\1/p' | tr '[:upper:]' '[:lower:]')
-    password=\$("$password_tool" "$data_project_folder" "\$username")
-
-    printf '%s\\n' "\$username" > username.txt
-    hashed_password=\$(openssl passwd -apr1 "\$password")
-    printf '%s:%s\\n' "\$username" "\$hashed_password" > htpasswd
-
-    cat > credentials.json <<EOF
-        {"NIRD password": "\$password", "NIRD username": "\$username"}
-EOF
+    echo "${meta.project_name}" | sed -n 's/^\\(.*\\)-[0-9]\\{4\\}-[0-9]\\{2\\}-[0-9]\\{2\\}/\\1/p' | tr '[:upper:]' '[:lower:]' > username.txt
+    "${params.passwordTool}" "${meta.project_dir_name}" \$( cat username.txt ) > password.txt
     """
 }
-/*
+
+
 process TAR_FOLDER {
-    tag "$project_dir_name"
+    tag "${meta.project_name}"
     container "ghcr.io/nsc-norway/qc-delivery-pipeline-tools:1.0.0"
-//    publishDir "$runfolder" + "$NSC_ProjectName", mode:'link',  overwrite: true
+    publishDir "${params.deliveryDir}", mode:'link',  overwrite: true
 
     input:
-    val project_dir_name
-    val runfolder
-    val deliverydir
-    path username_txt
-    path htpasswd
-    path MULTIQC_out
-    path MD5SUM_FASTQ_out
+    tuple val(meta), path("tar/${meta.project_dir_name}/*"), val(username), path(password_file)
 
     output:
-    val "tar_complete", emit: TAR_FOLDER_out
+    tuple val(meta), path("${meta.project_dir_name}"), emit: TAR_FOLDER_out
 
     script:
+    def delivery_dir = meta.project_dir_name
     """
-    tar.sh "$runfolder" "$project_dir_name" "$deliverydir" "$username_txt" "$htpasswd"
+    # Create the tar file
+    (cd tar && tar -hcf "${delivery_dir}.tar" "${delivery_dir}" )
+
+    # Create delivery directory
+    mkdir "${delivery_dir}"
+
+    # Move the tar file to the delivery directory
+    mv "tar/${delivery_dir}.tar" "${delivery_dir}/"
+
+    # Compute md5sum for the tar file
+    md5sum "${delivery_dir}/${delivery_dir}.tar" > "${delivery_dir}/${delivery_dir}.tar.md5"
+
+    # Create .htaccess
+cat <<EOL > "${delivery_dir}/.htaccess"
+AuthUserFile /data/${delivery_dir}/.htpasswd
+AuthGroupFile /dev/null
+AuthName ByPassword
+AuthType Basic
+
+<Limit GET>
+require user $username
+</Limit>
+EOL
+
+    # Create .htpasswd with content: username:hashed_password
+    echo -n "${username}:" > "${delivery_dir}/.htpasswd"
+    openssl passwd -apr1 -in "$password_file" >> "${delivery_dir}/.htpasswd"
     """
 }
 
 process LINK_FOLDER {
-    tag "$project_dir_name"
+    tag "${meta.project_name}"
     container "ghcr.io/nsc-norway/qc-delivery-pipeline-tools:1.0.0"
-    publishDir "$params.deliverydir", mode:'move',  overwrite: true
+    publishDir { "${params.deliveryDir}" }, mode:'link', overwrite: true
 
     input:
-    val project_dir_name
-    path samples
-    path MULTIQC_out
-    path MD5SUM_FASTQ_out
+    tuple val(meta), path("${meta.project_dir_name}/*")
 
     output:
-    path "$project_dir_name"
+    path "${meta.project_dir_name}"
 
     script:
     """
-    mkdir $project_dir_name
-    # Hard link all files to work folder (follows symbolic links)
-    cp -l $samples             $project_dir_name
-    cp -l  $MULTIQC_out        $project_dir_name
-    cp -l $MD5SUM_FASTQ_out    $project_dir_name
-    # Note: mode "move" is used in publishDir, we shouldn't leave big files in work
     """
 }
 
+/*
 process EMAIL_PROJECT {
     tag "$project_name"
     //publishDir "$qcfolder" + "lims" , mode:'link',  overwrite: true
@@ -183,9 +181,16 @@ process EMAIL_PROJECT {
     output:
     val "email_project_complete", emit: EMAIL_PROJECT_out
 
+
+        
+
+
     script:
     """
+    // TODO: Project details file needs to change to Sapio format
     jq -s add "$project_lims_json" "$credentials_json" > project.json
+
+    //{"NIRD password": "\$password", "NIRD username": "\$username"}
 
     make-emails.py \
             --run-dir=$runfolder \
@@ -275,7 +280,7 @@ process RENAME_AND_SAVE_FASTQS {
     newName = getNewFastqName(fastq.getName(), meta.sample_id, meta.sample_name)
     """
     if [ "${fastq}" != "$newName" ]; then
-        mv $fastq $newName
+        mv "$fastq" "$newName"
     fi
     """
 }

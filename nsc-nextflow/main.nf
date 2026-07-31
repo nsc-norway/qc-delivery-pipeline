@@ -10,14 +10,13 @@ include {
     //EMAIL_PROJECT;
     //EMAIL_SUMMARY_RUN;
     FASTQC;
-    //JSON_GENERATOR;
-    //LINK_FOLDER;
+    LINK_FOLDER;
     //MAKE_SENSITIVE_DATA_LOG_FILE;
     MD5SUM_FASTQ;
     MULTIQC;
-    //PROJECT_CREDENTIALS;
+    PROJECT_CREDENTIALS;
     SUPRDUPR;
-    //TAR_FOLDER;
+    TAR_FOLDER;
     DECOMPRESS_ORA;
     RENAME_AND_SAVE_FASTQS;
 } from './modules/modules.nf'
@@ -28,13 +27,15 @@ include {
     getFastqReadLabelsAndPaths;
     unpackSampleIds;
     groupByProject;
-} from './modules/parse_samplesheet.nf'
+} from './modules/sample_functions.nf'
 
 
 workflow {
     // Input files
     def sampleSheet = file("${params.bclConvertFastqDir}/Reports/SampleSheet.csv")
     def fastqDir = file(params.bclConvertFastqDir)
+    // TODO allow missing file
+    def sapioRunInfo = new groovy.yaml.YamlSlurper().parseText(file(params.sapioRunFile).text)
 
     println ("Working on Run: ${params.runId}")
 
@@ -81,9 +82,9 @@ workflow {
         files_ch = RENAME_AND_SAVE_FASTQS(original_files_ch)
     }
 
-
+    // Compute md5sums
     MD5SUM_FASTQ(files_ch)
-    // Apply CAT_MD5SUM grouped by project
+    // Apply CAT_MD5SUM grouped by project to create md5sum.txt per project
     CAT_MD5SUM(groupByProject(MD5SUM_FASTQ.out.MD5SUM_FASTQ_out))
 
 
@@ -107,29 +108,57 @@ workflow {
         multiqc_ch = MULTIQC(groupByProject(FASTQC.out.FASTQC_ZIP_out), "fastqc")
     }
     else if (params.enableSuprdupr.toBoolean()) {
+        // TODO: Need to support DRAGEN FastQC inputs from onboard analysis. Copy them to outdir and use for multiqc.
         //MULTIQC(analysis_project_folder, dataProjectFolder, "dragen_fastqc")
     }
 
-    /*
-    JSON_GENERATOR(params.project, qcfolder)
-    PROJECT_CREDENTIALS(params.project, dataProjectFolder, params.passwordTool)
+    // Create project-grouped channel of all files for delivery:
+    //  * all fastqs
+    //  * multiqc report
+    //  * md5sum file
+    // And add delivery methods from Sapio file to meta
+    def sapioProjects = sapioRunInfo.projects
+    // Structure: (meta, delivery_method, [list of files])
+    delivery_files_project_grouped_ch = groupByProject(files_ch)
+        .join(CAT_MD5SUM.out.CAT_MD5SUM_out)
+        .join(multiqc_ch)
+        .map { item ->
+            [
+                item[0],
 
-    def samples_fastqs = samples_ch.collect { sample -> sample[2] }
-    if (params.deliverymethod == 'Norstore') {
-        TAR_FOLDER(
-            projectDirName,
-            params.runFolder,
-            params.deliverydir,
-            PROJECT_CREDENTIALS.out.username_txt,
-            PROJECT_CREDENTIALS.out.htpasswd,
-            MULTIQC.out.MULTIQC_out,
-            CAT_MD5SUM.out
-        )
-    }
-    if (params.deliverymethod in ['NeLS_project', 'User_HDD', 'New_HDD', 'TSD_project']) {
-        LINK_FOLDER(projectDirName, samples_fastqs, MULTIQC.out.MULTIQC_out, CAT_MD5SUM.out)
-    }
+                // Lookup delivery method from Sapio file
+                sapioProjects.find {
+                    lims_project -> 
+                        lims_project.fields.ProjectName == item[0].project_name 
+                }?.submission_form?.DeliveryMethod ?: params.fallbackDeliveryMethod
 
+                ,
+                item[1..-1].flatten() // Flatten list of delivery files from joining
+            ]
+        }
+    
+    // Generate username and password - used by NIRD delivery and email script
+    PROJECT_CREDENTIALS(groupByProject(files_ch).map { meta, _files -> meta })
+
+
+    // Data delivery
+
+    // NIRD - create tar file
+    TAR_FOLDER(
+        delivery_files_project_grouped_ch
+            .filter { item -> item[1] == 'NIRD' }
+            .join(PROJECT_CREDENTIALS.out.PROJECT_CREDENTIALS_out)
+            .map { meta, _delivery_method, files, username, password_file -> [meta, files, username, password_file] }
+    )
+
+    // Other delivery methods - create folder structure with hard links to files
+    LINK_FOLDER(
+        delivery_files_project_grouped_ch
+            .filter { item -> item[1] in [null, 'NeLS project', 'User_HDD', 'New_HDD', 'TSD_project'] }
+            .map { meta, _delivery_method, files -> [meta, files] }
+    )
+
+/*
     EMAIL_PROJECT(
         params.project,
         params.runFolder,
