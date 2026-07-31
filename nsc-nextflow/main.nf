@@ -35,9 +35,11 @@ workflow {
     def sampleSheet = file("${params.bclConvertFastqDir}/Reports/SampleSheet.csv")
     def fastqDir = file(params.bclConvertFastqDir)
     // TODO allow missing file
-    def sapioRunInfo = new groovy.yaml.YamlSlurper().parseText(file(params.sapioRunFile).text)
+    def runId = file(params.runFolder).name
+    def sapioRunFile = file("${params.runFolder}/NscSapioInfo.yaml")
+    def sapioRunInfo = new groovy.yaml.YamlSlurper().parseText(sapioRunFile.text)
 
-    println ("Working on Run: ${params.runId}")
+    println ("Working on Run: ${runId}")
 
     def isOra = false // ORA support is not yet implemented
 
@@ -122,18 +124,18 @@ workflow {
     delivery_files_project_grouped_ch = groupByProject(files_ch)
         .join(CAT_MD5SUM.out.CAT_MD5SUM_out)
         .join(multiqc_ch)
-        .map { item ->
+        .map { item -> [item[0], item[1..-1].flatten()] }
+    
+    delivery_files_project_grouped_ch = delivery_files_project_grouped_ch
+        .map { meta, files ->
             [
-                item[0],
-
                 // Lookup delivery method from Sapio file
                 sapioProjects.find {
                     lims_project -> 
-                        lims_project.fields.ProjectName == item[0].project_name 
-                }?.submission_form?.DeliveryMethod ?: params.fallbackDeliveryMethod
-
-                ,
-                item[1..-1].flatten() // Flatten list of delivery files from joining
+                        lims_project.fields.ProjectName == meta.project_name 
+                }?.submission_form?.DeliveryMethod ?: params.fallbackDeliveryMethod,
+                meta,
+                files
             ]
         }
     
@@ -146,16 +148,16 @@ workflow {
     // NIRD - create tar file
     TAR_FOLDER(
         delivery_files_project_grouped_ch
-            .filter { item -> item[1] == 'NIRD' }
+            .filter { delivery_method, meta, files -> delivery_method == 'NIRD' }
+            .map { delivery_method, meta, files -> [meta, files] }
             .join(PROJECT_CREDENTIALS.out.PROJECT_CREDENTIALS_out)
-            .map { meta, _delivery_method, files, username, password_file -> [meta, files, username, password_file] }
     )
 
     // Other delivery methods - create folder structure with hard links to files
     LINK_FOLDER(
         delivery_files_project_grouped_ch
-            .filter { item -> item[1] in [null, 'NeLS project', 'User_HDD', 'New_HDD', 'TSD_project'] }
-            .map { meta, _delivery_method, files -> [meta, files] }
+            .filter { delivery_method, meta, files -> delivery_method in [null, 'NeLS project', 'User_HDD', 'New_HDD', 'TSD_project'] }
+            .map { delivery_method, meta, files -> [meta, files] }
     )
 
 /*

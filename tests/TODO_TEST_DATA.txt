@@ -6,6 +6,13 @@ NovaSeq X 25 B ?
 CreateFastsForIndexReads
 Single-end read data? If we have any at all....
 Multiple single index (i7 index) for each sample (10X)
+Auto-detect indexes ....?
+
+No-guid names
+No-project and no-guid names (Current Sapio MiSeq i100 fmt) - Could take project from Run Name, or as fallback cmd line arg - or not support this
+Sample_Project and no-guid names?... (Have it, but not supported - N20260715_SH01006_0020_ASC2245414-SC3.c2)
 
 Project missing from Sapio (fallback delivery method)
+
+No NscSapioInfo.yaml file at all
 
