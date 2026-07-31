@@ -1,3 +1,6 @@
 .nf-test/
 .DS_Store
 containers/
+.nextflow*
+work/
+output/

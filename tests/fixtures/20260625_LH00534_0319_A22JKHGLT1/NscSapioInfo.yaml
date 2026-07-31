@@ -1,0 +1,151 @@
+run:
+  flowcell_id: 22JKHGLT1
+projects:
+- record_id: 7773833
+  fields:
+    CreatedBy: paabjo
+    RelatedRecord113: null
+    Leader: ''
+    RelatedRecord112: NSC
+    ProjectName: Example-test1-2026-07-28
+    RelatedRecord3: null
+    RelatedRecord111: null
+    ProjectId: '10227'
+    DateCreated: 1785236490862
+    EndDate: null
+    StartDate: 1785236490862
+    IsSharedResourceProject: false
+    InheritRolesFromParent: true
+    DataRecordName: 10227 Example-test1-2026-07-28
+    Classification: Research
+    ProjectType: Sequencing (Short Read)
+    ProjectDesc: ''
+    VeloxLastModifiedDate: 1785485953224
+    VeloxLastModifiedBy: paabjo
+    RecordId: 7773833
+    SDMSSubdirectory: ''
+  evaluation_form: {}
+  submission_form:
+    ContactTelephone: +47 900 00 102
+    Kontostreng: Not applicable
+    NeLSProjectId: NeLS-Example-test1
+    DateCreated: 1785485953180
+    UploadToTSDProject: false
+    ContactPerson: Erik Example
+    BillingAddress: Testveien 1, 0001 Oslo, Norway
+    UploadToNeLS: false
+    Funded: false
+    BillingContactPerson: Erik Example
+    VeloxLastModifiedBy: paabjo
+    UploadPassword: false
+    RecordId: 7799821
+    ContactAddress: Testveien 1, 0001 Oslo, Norway
+    TSDProjectId: ''
+    DeliveryMethod: NeLS project
+    PurchaseOrderNumber: TEST-PO-1002
+    CreatedBy: paabjo
+    ReferenceGenome: E. coli K-12 MG1655 (NC_000913.3)
+    BillingTelephone: +47 900 00 102
+    BillingInstitution: Example Research Institute
+    ProjectSensitivity: Non-sensitive
+    ContactInstitution: Example Research Institute
+    BillingPostcode: '0001'
+    DataRecordName: ProjectSubmissionForm 7799821
+    BioinformaticServices: false
+    ProjectType: Short Read
+    VeloxLastModifiedDate: 1785485953224
+    ContactEmail: erik.example@example.org
+    InstitutionVATNumber: NO999999999MVA
+    RelatedRecord182: 10227 Example-test1-2026-07-28
+    BillingEmail: erik.example@example.org
+- record_id: 7774167
+  fields:
+    CreatedBy: paabjo
+    RelatedRecord113: null
+    Leader: ''
+    RelatedRecord112: NSC
+    ProjectName: Testcase-test2-2026-07-28
+    RelatedRecord3: null
+    RelatedRecord111: null
+    ProjectId: '10228'
+    DateCreated: 1785237129099
+    EndDate: null
+    StartDate: 1785237129099
+    IsSharedResourceProject: false
+    InheritRolesFromParent: true
+    DataRecordName: 10228 Testcase-test2-2026-07-28
+    Classification: Research
+    ProjectType: Sequencing (Short Read)
+    ProjectDesc: ''
+    VeloxLastModifiedDate: 1785485806156
+    VeloxLastModifiedBy: paabjo
+    RecordId: 7774167
+    SDMSSubdirectory: ''
+  evaluation_form:
+    Storagelocation: ''
+    PhiX: ''
+    ProjectEvaluationFormName: Project Evaluation Form - Testcase-test2-2026-07-28
+    I1: null
+    DateCreated: 1785485579664
+    Kittype: ''
+    I2: null
+    Datefordatadelivery: null
+    Comparableprojects: ''
+    VeloxLastModifiedBy: paabjo
+    Totalnumbertubesreceived: '1'
+    RecordId: 7799794
+    InvoiceNumber: ''
+    R1: null
+    R2: null
+    cDate: null
+    CreatedBy: paabjo
+    Sampletype: ''
+    RUNID: ''
+    QCprosedyre: ''
+    Invoicesent: false
+    DataRecordName: Project Evaluation Form - Testcase-test2-2026-07-28 7799794
+    Datesamplesreceived: 1785448800000
+    TotalPrice: null
+    ProjectType: Sequencing (Short Read)
+    FinalsamplenM: ''
+    Instrument: NovaSeq X
+    VeloxLastModifiedDate: 1785485631384
+    MVA: false
+    Lanes: '1'
+    RelatedRecord182: 10228 Testcase-test2-2026-07-28
+    SampleType2: ''
+    ClusterDensity: null
+  submission_form:
+    ContactTelephone: +47 900 00 103
+    Kontostreng: Not applicable
+    NeLSProjectId: NeLS-Testcase-test2
+    DateCreated: 1785485806080
+    UploadToTSDProject: false
+    ContactPerson: Thea Testcase
+    BillingAddress: Testveien 1, 0001 Oslo, Norway
+    UploadToNeLS: false
+    Funded: false
+    BillingContactPerson: Thea Testcase
+    VeloxLastModifiedBy: paabjo
+    UploadPassword: false
+    RecordId: 7799796
+    ContactAddress: Testveien 1, 0001 Oslo, Norway
+    TSDProjectId: ''
+    DeliveryMethod: User HDD
+    PurchaseOrderNumber: TEST-PO-1003
+    CreatedBy: paabjo
+    ReferenceGenome: E. coli K-12 MG1655 (NC_000913.3)
+    BillingTelephone: +47 900 00 103
+    BillingInstitution: Example Research Institute
+    ProjectSensitivity: Sensitive
+    ContactInstitution: Example Research Institute
+    BillingPostcode: '0001'
+    DataRecordName: ProjectSubmissionForm 7799796
+    BioinformaticServices: false
+    ProjectType: Short Read
+    VeloxLastModifiedDate: 1785485806156
+    ContactEmail: thea.testcase@example.org
+    InstitutionVATNumber: NO999999999MVA
+    RelatedRecord182: 10228 Testcase-test2-2026-07-28
+    BillingEmail: thea.testcase@example.org
+samples: []

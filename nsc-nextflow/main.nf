@@ -32,15 +32,11 @@ include {
 
 
 workflow {
-    // Get the Run ID as the name of the run folder
-    def runid = file(params.runFolder).getName()
-
     // Input files
-    def sapioFile = file("${params.runFolder}/NscSapioInfo.yaml")
     def sampleSheet = file("${params.bclConvertFastqDir}/Reports/SampleSheet.csv")
     def fastqDir = file(params.bclConvertFastqDir)
 
-    println ("Working on Run: $runid")
+    println ("Working on Run: ${params.runId}")
 
     def isOra = false // ORA support is not yet implemented
 
@@ -53,7 +49,7 @@ workflow {
         .unique()
         .map { lane, origProjectName, sampleId ->
             def (projectName, sampleName, guid) = unpackSampleIds(origProjectName, sampleId)
-            def projectDirName = getProjectDirName(projectName, runid)
+            def projectDirName = getProjectDirName(projectName, params.runId)
             def sampleKey = "${lane}_${projectName}_${sampleId}"
             [
                 id: sampleKey,

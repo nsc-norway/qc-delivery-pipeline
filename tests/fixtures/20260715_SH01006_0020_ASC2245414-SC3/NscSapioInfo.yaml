@@ -1,0 +1,94 @@
+run:
+  flowcell_id: BXC08001-1432
+projects:
+- record_id: 7791320
+  fields:
+    CreatedBy: paabjo
+    RelatedRecord113: null
+    Leader: ''
+    RelatedRecord112: NSC
+    ProjectName: Test-Libs6-2026-06-22
+    RelatedRecord3: null
+    RelatedRecord111: null
+    ProjectId: '10229'
+    DateCreated: 1785413681325
+    EndDate: null
+    StartDate: 1785413681325
+    IsSharedResourceProject: false
+    InheritRolesFromParent: true
+    DataRecordName: 10229 Test-Libs6-2026-06-22
+    Classification: Research
+    ProjectType: Sequencing (Short Read)
+    ProjectDesc: ''
+    VeloxLastModifiedDate: 1785485862588
+    VeloxLastModifiedBy: paabjo
+    RecordId: 7791320
+    SDMSSubdirectory: ''
+  evaluation_form:
+    Storagelocation: ''
+    PhiX: ''
+    ProjectEvaluationFormName: Project Evaluation Form - Test-Libs6-2026-06-22
+    I1: null
+    DateCreated: 1785485841688
+    Kittype: ''
+    I2: null
+    Datefordatadelivery: null
+    Comparableprojects: ''
+    VeloxLastModifiedBy: paabjo
+    Totalnumbertubesreceived: '1'
+    RecordId: 7799819
+    InvoiceNumber: ''
+    R1: null
+    R2: null
+    cDate: null
+    CreatedBy: paabjo
+    Sampletype: ''
+    RUNID: ''
+    QCprosedyre: ''
+    Invoicesent: false
+    DataRecordName: Project Evaluation Form - Test-Libs6-2026-06-22 7799819
+    Datesamplesreceived: 1785362400000
+    TotalPrice: null
+    ProjectType: Sequencing (Short Read)
+    FinalsamplenM: ''
+    Instrument: MiSeq
+    VeloxLastModifiedDate: 1785485898985
+    MVA: false
+    Lanes: '1'
+    RelatedRecord182: 10229 Test-Libs6-2026-06-22
+    SampleType2: Library
+    ClusterDensity: null
+  submission_form:
+    ContactTelephone: +47 900 00 101
+    Kontostreng: Not applicable
+    NeLSProjectId: NeLS-Test-Lib6
+    DateCreated: 1785485835111
+    UploadToTSDProject: false
+    ContactPerson: Tora Test
+    BillingAddress: Testveien 1, 0001 Oslo, Norway
+    UploadToNeLS: false
+    Funded: false
+    BillingContactPerson: Tora Test
+    VeloxLastModifiedBy: paabjo
+    UploadPassword: false
+    RecordId: 7799818
+    ContactAddress: Testveien 1, 0001 Oslo, Norway
+    TSDProjectId: ''
+    DeliveryMethod: NIRD
+    PurchaseOrderNumber: TEST-PO-1001
+    CreatedBy: paabjo
+    ReferenceGenome: E. coli K-12 MG1655 (NC_000913.3)
+    BillingTelephone: +47 900 00 101
+    BillingInstitution: Example Research Institute
+    ProjectSensitivity: Non-sensitive
+    ContactInstitution: Example Research Institute
+    BillingPostcode: '0001'
+    DataRecordName: ProjectSubmissionForm 7799818
+    BioinformaticServices: false
+    ProjectType: Short Read
+    VeloxLastModifiedDate: 1785485835202
+    ContactEmail: tora.test@example.org
+    InstitutionVATNumber: NO999999999MVA
+    RelatedRecord182: 10229 Test-Libs6-2026-06-22
+    BillingEmail: tora.test@example.org
+samples: []
