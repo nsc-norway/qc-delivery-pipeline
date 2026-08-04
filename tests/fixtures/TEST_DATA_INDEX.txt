@@ -1,5 +1,13 @@
-Example MiSeq i100 run
+
+20260625_LH00534_0319_A22JKHGLT1: Example NovaSeq X 1.5B run
+
+c2: offboard demultiplexing with Sapio-style samplesheet
+
+
+20260715_SH01006_0020_ASC2245414-SC3: Example MiSeq i100 run
 
 3: onboard demultiplexing with Sapio-style samplesheet
 c1: offboard demultiplexing with Sapio-style samplesheet, with project names in Sample_ID
 c2: offboard demultiplexing with plain Sample_ID (no project and GUID), with Sample_Project column
+
+

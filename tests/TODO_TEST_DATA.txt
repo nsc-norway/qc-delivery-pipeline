@@ -3,7 +3,6 @@ Absolutely required test data:
 IMM/MIK MiSeq Run
 NovaSeq X - onboard demultiplexing
 No-project and no-guid names (Current Sapio MiSeq i100 fmt) - Could take project from Run Name, or as fallback cmd line arg - or not support this
-Sample_Project and no-guid names?... (Have it, but not supported - N20260715_SH01006_0020_ASC2245414-SC3.c2)
 
 
 Nice to have test data:
@@ -11,8 +10,11 @@ Nice to have test data:
 NovaSeq X 25 B ?
 CreateFastsForIndexReads
 Single-end read data? If we have any at all....
-Multiple single index (i7 index) for each sample (10X)
+Multiple single index (i7 index) for each sample (10X) - Any repeated sample ID will do
 Auto-detect indexes ....?
-No-guid names
-Project specified, but missing from Sapio (fallback delivery method)
+Project specified, but missing from Sapio (fallback delivery method) - use existing 
 No NscSapioInfo.yaml file at all
+No-guid names
+
+
+Sample_Project and no-guid names?... (Have it, but not supported by pipeline - N20260715_SH01006_0020_ASC2245414-SC3.c2)
