@@ -1,7 +1,7 @@
 Absolutely required test data:
 
 IMM/MIK MiSeq Run
-NovaSeq X - onboard demultiplexing
+NovaSeq X - onboard demultiplexing TODO 20260804_LH00770_0246_A22JJTLLT1 Add NscSapioInfo.yaml
 No-project and no-guid names (Current Sapio MiSeq i100 fmt) - Could take project from Run Name, or as fallback cmd line arg - or not support this
 
 
@@ -18,3 +18,4 @@ No-guid names
 
 
 Sample_Project and no-guid names?... (Have it, but not supported by pipeline - N20260715_SH01006_0020_ASC2245414-SC3.c2)
+  
