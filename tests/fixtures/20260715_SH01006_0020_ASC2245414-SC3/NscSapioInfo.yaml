@@ -2,6 +2,7 @@ run:
   flowcell_id: BXC08001-1432
 projects:
 - record_id: 7791320
+  department: NSC
   fields:
     CreatedBy: paabjo
     RelatedRecord113: null

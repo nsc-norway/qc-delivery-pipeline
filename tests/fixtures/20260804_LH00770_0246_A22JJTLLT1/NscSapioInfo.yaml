@@ -1,36 +1,36 @@
 run:
-  flowcell_id: 22JKHGLT1
+  flowcell_id: 22JJTLLT1
 projects:
-- record_id: 7773833
+- record_id: 7828631
   department: NSC
   fields:
     CreatedBy: paabjo
     RelatedRecord113: null
     Leader: ''
     RelatedRecord112: NSC
-    ProjectName: Example-test1-2026-07-28
+    ProjectName: Example-test2-2026-07-28
     RelatedRecord3: null
     RelatedRecord111: null
-    ProjectId: '10227'
-    DateCreated: 1785236490862
+    ProjectId: '10233'
+    DateCreated: 1785851513093
     EndDate: null
-    StartDate: 1785236490862
+    StartDate: 1785851513093
     IsSharedResourceProject: false
     InheritRolesFromParent: true
-    DataRecordName: 10227 Example-test1-2026-07-28
+    DataRecordName: 10233 Example-test2-2026-07-28
     Classification: Research
     ProjectType: Sequencing (Short Read)
     ProjectDesc: ''
-    VeloxLastModifiedDate: 1785485953224
+    VeloxLastModifiedDate: 1785852460722
     VeloxLastModifiedBy: paabjo
-    RecordId: 7773833
+    RecordId: 7828631
     SDMSSubdirectory: ''
   evaluation_form: {}
   submission_form:
     ContactTelephone: +47 900 00 102
     Kontostreng: Not applicable
     NeLSProjectId: NeLS-Example-test1
-    DateCreated: 1785485953180
+    DateCreated: 1785852460690
     UploadToTSDProject: false
     ContactPerson: Erik Example
     BillingAddress: Testveien 1, 0001 Oslo, Norway
@@ -39,7 +39,7 @@ projects:
     BillingContactPerson: Erik Example
     VeloxLastModifiedBy: paabjo
     UploadPassword: false
-    RecordId: 7799821
+    RecordId: 7828737
     ContactAddress: Testveien 1, 0001 Oslo, Norway
     TSDProjectId: ''
     DeliveryMethod: NeLS project
@@ -51,51 +51,51 @@ projects:
     ProjectSensitivity: Non-sensitive
     ContactInstitution: Example Research Institute
     BillingPostcode: '0001'
-    DataRecordName: ProjectSubmissionForm 7799821
+    DataRecordName: ProjectSubmissionForm 7828737
     BioinformaticServices: false
     ProjectType: Short Read
-    VeloxLastModifiedDate: 1785485953224
+    VeloxLastModifiedDate: 1785852460722
     ContactEmail: erik.example@example.org
     InstitutionVATNumber: NO999999999MVA
-    RelatedRecord182: 10227 Example-test1-2026-07-28
+    RelatedRecord182: 10233 Example-test2-2026-07-28
     BillingEmail: erik.example@example.org
-- record_id: 7774167
+- record_id: 7828707
   department: NSC
   fields:
     CreatedBy: paabjo
     RelatedRecord113: null
     Leader: ''
     RelatedRecord112: NSC
-    ProjectName: Testcase-test2-2026-07-28
+    ProjectName: Testcase-test3-2026-08-04
     RelatedRecord3: null
     RelatedRecord111: null
-    ProjectId: '10228'
-    DateCreated: 1785237129099
+    ProjectId: '10234'
+    DateCreated: 1785852176550
     EndDate: null
-    StartDate: 1785237129099
+    StartDate: 1785852176550
     IsSharedResourceProject: false
     InheritRolesFromParent: true
-    DataRecordName: 10228 Testcase-test2-2026-07-28
+    DataRecordName: 10234 Testcase-test3-2026-08-04
     Classification: Research
     ProjectType: Sequencing (Short Read)
     ProjectDesc: ''
-    VeloxLastModifiedDate: 1785485806156
+    VeloxLastModifiedDate: 1785854462421
     VeloxLastModifiedBy: paabjo
-    RecordId: 7774167
+    RecordId: 7828707
     SDMSSubdirectory: ''
   evaluation_form:
     Storagelocation: ''
     PhiX: ''
-    ProjectEvaluationFormName: Project Evaluation Form - Testcase-test2-2026-07-28
+    ProjectEvaluationFormName: Project Evaluation Form - Testcase-test3-2026-08-04
     I1: null
-    DateCreated: 1785485579664
-    Kittype: ''
+    DateCreated: 1785852220705
+    Kittype: Thruplex
     I2: null
     Datefordatadelivery: null
     Comparableprojects: ''
     VeloxLastModifiedBy: paabjo
-    Totalnumbertubesreceived: '1'
-    RecordId: 7799794
+    Totalnumbertubesreceived: '4'
+    RecordId: 7828708
     InvoiceNumber: ''
     R1: null
     R2: null
@@ -105,23 +105,23 @@ projects:
     RUNID: ''
     QCprosedyre: ''
     Invoicesent: false
-    DataRecordName: Project Evaluation Form - Testcase-test2-2026-07-28 7799794
-    Datesamplesreceived: 1785448800000
+    DataRecordName: Project Evaluation Form - Testcase-test3-2026-08-04 7828708
+    Datesamplesreceived: 1785794400000
     TotalPrice: null
     ProjectType: Sequencing (Short Read)
     FinalsamplenM: ''
     Instrument: NovaSeq X
-    VeloxLastModifiedDate: 1785485631384
+    VeloxLastModifiedDate: 1785852261884
     MVA: false
     Lanes: '1'
-    RelatedRecord182: 10228 Testcase-test2-2026-07-28
-    SampleType2: ''
+    RelatedRecord182: 10234 Testcase-test3-2026-08-04
+    SampleType2: DNA
     ClusterDensity: null
   submission_form:
     ContactTelephone: +47 900 00 103
     Kontostreng: Not applicable
     NeLSProjectId: NeLS-Testcase-test2
-    DateCreated: 1785485806080
+    DateCreated: 1785852281599
     UploadToTSDProject: false
     ContactPerson: Thea Testcase
     BillingAddress: Testveien 1, 0001 Oslo, Norway
@@ -130,7 +130,7 @@ projects:
     BillingContactPerson: Thea Testcase
     VeloxLastModifiedBy: paabjo
     UploadPassword: false
-    RecordId: 7799796
+    RecordId: 7828710
     ContactAddress: Testveien 1, 0001 Oslo, Norway
     TSDProjectId: ''
     DeliveryMethod: User HDD
@@ -142,12 +142,12 @@ projects:
     ProjectSensitivity: Sensitive
     ContactInstitution: Example Research Institute
     BillingPostcode: '0001'
-    DataRecordName: ProjectSubmissionForm 7799796
+    DataRecordName: ProjectSubmissionForm 7828710
     BioinformaticServices: false
     ProjectType: Short Read
-    VeloxLastModifiedDate: 1785485806156
+    VeloxLastModifiedDate: 1785852281631
     ContactEmail: thea.testcase@example.org
     InstitutionVATNumber: NO999999999MVA
-    RelatedRecord182: 10228 Testcase-test2-2026-07-28
+    RelatedRecord182: 10234 Testcase-test3-2026-08-04
     BillingEmail: thea.testcase@example.org
 samples: []
