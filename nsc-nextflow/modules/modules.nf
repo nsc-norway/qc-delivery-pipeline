@@ -18,7 +18,7 @@ process MD5SUM_FASTQ {
 process CAT_MD5SUM {
     tag "$meta.project_name"
     container "ghcr.io/nsc-norway/qc-delivery-pipeline-tools:1.0.0"
-    publishDir { "${params.outdir}/${meta.project_dir_name}" }, mode:'link', overwrite: true
+    publishDir { "${params.outdir}/${meta.run_id}/${meta.project_dir_name}" }, mode:'link', overwrite: true
 
     input:
     tuple val(meta), path(fastq_md5)
@@ -35,7 +35,7 @@ process CAT_MD5SUM {
 process SUPRDUPR {
     tag "$meta.sample_id"
     container "ghcr.io/nsc-norway/suprdupr:v1.4.1"
-    publishDir { "${params.outdir}/QualityControl/${meta.project_name}/suprdupr" }, mode:'link',  overwrite: true
+    publishDir { "${params.outdir}/${meta.run_id}/QualityControl/${meta.project_name}/suprdupr" }, mode:'link',  overwrite: true
 
     input:
     tuple val(meta), path(fastq)
@@ -52,7 +52,7 @@ process SUPRDUPR {
 process FASTQC {
     tag "$meta.sample_id"
     container "biocontainers/fastqc:v0.11.9_cv8"
-    publishDir { "${params.outdir}/QualityControl/${meta.project_name}/fastqc" }, mode:'link',  overwrite: true
+    publishDir { "${params.outdir}/${meta.run_id}/QualityControl/${meta.project_name}/fastqc" }, mode:'link',  overwrite: true
 
     input:
     tuple val(meta), path(fastq)
@@ -70,7 +70,7 @@ process FASTQC {
 process MULTIQC {
     tag "$meta.project_name"
     container "multiqc/multiqc:v1.35"
-    publishDir { "${params.outdir}/${meta.project_dir_name}" }, mode:'link',  overwrite: true
+    publishDir { "${params.outdir}/${meta.run_id}/${meta.project_dir_name}" }, mode:'link',  overwrite: true
 
     input:
     tuple val(meta), path(multiqc_inputs)
@@ -233,7 +233,7 @@ process EMAIL_SUMMARY_RUN {
 process DECOMPRESS_ORA {
     tag "$meta.sample_id"
     
-    publishDir { "${params.outdir}/${meta.project_dir_name}" }, mode:'link', overwrite: true
+    publishDir { "${params.outdir}/${meta.run_id}/${meta.project_dir_name}" }, mode:'link', overwrite: true
 
     cpus 8
     memory 32.GB
@@ -268,7 +268,7 @@ def getNewFastqName(originalFastq, sampleId, sampleName) {
 process RENAME_AND_SAVE_FASTQS {
     tag "$meta.sample_id"
     container "ghcr.io/nsc-norway/qc-delivery-pipeline-tools:1.0.0"
-    publishDir { "${params.outdir}/${meta.project_dir_name}" }, mode:'link', overwrite: true
+    publishDir { "${params.outdir}/${meta.run_id}/${meta.project_dir_name}" }, mode:'link', overwrite: true
 
     input:
     tuple val(meta), path(fastq)

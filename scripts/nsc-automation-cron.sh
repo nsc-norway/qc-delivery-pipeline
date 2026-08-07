@@ -21,8 +21,7 @@ do
     complete=false
     if [ -f "$analysis/CopyComplete.txt" ]; then
         complete=true
-    elif [ -f "$analysis/FastqComplete.txt" ]; then
-        # TODO confirm off-board analysis completion file path
+    elif [ -f "$analysis/Fastq/Logs/FastqComplete.txt" ]; then
         complete=true
     fi
 
@@ -37,6 +36,6 @@ do
             echo "" >> "$log_file"
         fi
         echo "Running the nextflow pipeline..." >> "$log_file"
-        pipeline-runner.sh "$analysis/../../NscSapioInfo.yaml" "$analysis" >> "$log_file" 2>&1
+        pipeline-runner.sh "$analysis" >> "$log_file" 2>&1
     fi
 done

@@ -50,6 +50,19 @@ def sapio_request(url, headers, auth, params=None, json_body=None):
         raise RuntimeError(f"Sapio API request failed ({error.code}): {message}") from error
 
 
+def get_department_name_of_project(sapio_url_base, sapio_headers, sapio_auth, record_id):
+    response = sapio_request(
+        f"{sapio_url_base}/webservice/api/datarecord/parents",
+        sapio_headers,
+        sapio_auth,
+        {"recordId": record_id, "parentTypeName": "VeloxDepartment"},
+    )
+    parent_records = response.get("resultList", [])
+    if not parent_records:
+        return "Unknown"
+    return parent_records[0].get("fields", {}).get("DepartmentName", "Unknown")
+
+
 def get_sapio_child_record_fields(sapio_url_base, sapio_headers, sapio_auth, record_id, child_type_name):
     response = sapio_request(
         f"{sapio_url_base}/webservice/api/datarecord/children",
@@ -93,6 +106,7 @@ def get_sapio_lane_projects(sapio_url_base, sapio_headers, sapio_auth, lane_reco
         result_project_list.append(
             {
                 "record_id": record_id,
+                "department": get_department_name_of_project(sapio_url_base, sapio_headers, sapio_auth, record_id),
                 "fields": ancestor["fields"],
                 **get_sapio_project_forms(sapio_url_base, sapio_headers, sapio_auth, record_id),
             }

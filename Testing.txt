@@ -1,0 +1,20 @@
+We may be ready to implement a testing framework for this repo. The base pipeline code and example test data are in place. The code is in early development and isn't expected to work. The goal now is to plan out what frameworks and logic to use for testing. Priority for testing:
+
+* nextflow pipeline (nsc_nextflow)
+
+Low priority, should be deferred:
+
+* simple delivery script (shared-resource-user-delivery.sh) - script is not yet implemented
+* nsc-automation-cron.sh - automation orchestrator. Might make sense to test it independently of the pipeline itself.
+* pipeline-runner.sh - Trivial script, but an integrated test could be performed including nsc-automation-cron.sh, the pipeline runner and the nextflow pipeline 
+
+Very low priority:
+
+* anonymize-fastq.py
+* sapio-run-extractor.py
+* miseq-delivery-simple.sh (at the repo root)
+
+
+The goal is to start testing in tandem with the development of the scripts. The tests should support the finding of simple bugs in the underdeveloped code. The goal is not to perform wide-ranging refactoring to make it work. Localized work-arounds are okay as a temporary measure if it's absolutely necessary for the development process to allow some code to run.
+
+The initial tests should be manual only, not integrated with Github CI.

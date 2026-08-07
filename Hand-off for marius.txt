@@ -1,0 +1,22 @@
+# Current dev state
+
+The main blocking decision now is how to handle configuration.
+
+Deployment-specific configuration includes:
+
+* run folder dir
+* demultiplexed output root
+* delivery dir
+* shared resource user delivery locations
+* Sapio URL and credentials
+
+The config is needed by various components:
+
+* nextflow pipeline. whether it is executed manually or automatically
+* automation cron job
+* simple delivery script
+
+It may not make sense to put it in nextflow config / params for that reason. The config not be hard-coded, to allow the execution in test and prod without major monkey-patching.
+
+After the config handling is settled, the next step is to complete some minimal viable scripts and set up the testing - see testing text file.
+

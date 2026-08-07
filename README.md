@@ -7,14 +7,70 @@ See the repo linked below for the initial data handling tools shared between NSC
 https://gitlab.com/genomedx/labautomation/sapio-sequencingfiles
 
 
+## Entry points and usage
 
-## Repo overview
+### Scheduled automation worker
 
+Scans a run folder location for unprocessed runs, looks up LIMS information and starts an appropriate
+pipeline based on the project type.
+
+```
+scripts/nsc-automation-cron.sh
+```
+
+TODO - describe running this or refer to deployment docs
+
+
+### Manual invocation of the components
+
+TODO
+
+
+### Direct pipeline execution (TODO - update with current parameter specs)
+
+```
+nextflow run nsc-nextflow/main.nf \
+  --runId 20260715_SH01006_0020_ASC2245414-SC3 \
+  --runFolder tests/fixtures/20260715_SH01006_0020_ASC2245414-SC3 \
+  --bclConvertFastqDir tests/fixtures/20260715_SH01006_0020_ASC2245414-SC3/Analysis/3/Data/BCLConvert/fastq \
+  --outdir output/outdir \
+  -resume
+```
+
+
+## Requirements
+
+### Pipeline
+
+The Nextflow-based pipeline requires a local **Java and Nextflow** on the path.
+
+* Java >= 17
+* nextflow tested with 26.01 (TBC TODO)
+
+The pipeline's environment is not containerized due to the complexity of job submission from a container.
+
+
+### Scripts
+
+The shell scripts require Bash on an Unix-like OS.
+
+The Python scripts require Python >= 3.9 locally installed, and only rely on the standard library.
+
+
+## Repo layout
 
 ### Cron job, script and Sapio extractor: scripts/
 
-TODO
-Entry points / usage
+#### Main pipeline running scripts
+
+##### nsc-automation-cron.sh
+
+Primary entry point for automatic job execution. 
+
+
+#### Helper scripts
+
+* scripts/anonymize-fastq.py
 
 
 ### miseq-delivery-simple.sh
@@ -22,12 +78,23 @@ Entry points / usage
 Stand-alone script for legacy MiSeq data transfers - not integrated with the rest of the repo.
 
 
-### QC / Delivery pipeline: nsc-nextflow/
+### Setup and installation: deployment/
+
+Contains code for deploying the pipeline and orchestration in a production environment.
 
 TODO
 
+
+
+### QC / Delivery pipeline: nsc-nextflow/
+
+Nextflow pipeline for data QC, file copying, report generation and data delivery preparation.
+
+
 ### Containers: dockerfiles/
 
-TODO - container information
+Dockerfiles for tools that are contained in this repo. The docker images are build through Github Actions.
+
+For external tools there are instead references to public Docker images.
 
 

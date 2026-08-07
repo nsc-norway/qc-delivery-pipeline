@@ -34,8 +34,8 @@ workflow {
     // Input files
     def sampleSheet = file("${params.bclConvertFastqDir}/Reports/SampleSheet.csv")
     def fastqDir = file(params.bclConvertFastqDir)
-    // TODO allow missing file
     def runId = file(params.runFolder).name
+    // TODO allow missing file
     def sapioRunFile = file("${params.runFolder}/NscSapioInfo.yaml")
     def sapioRunInfo = new groovy.yaml.YamlSlurper().parseText(sapioRunFile.text)
 
@@ -55,6 +55,7 @@ workflow {
             def projectDirName = getProjectDirName(projectName, params.runId)
             def sampleKey = "${lane}_${projectName}_${sampleId}"
             [
+                run_id: runId,
                 id: sampleKey,
                 lane: lane,
                 project_name: projectName,
