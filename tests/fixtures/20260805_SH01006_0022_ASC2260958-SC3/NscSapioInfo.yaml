@@ -1,0 +1,30 @@
+run:
+  flowcell_id: BXC08009-0821
+projects:
+- record_id: 7839942
+  department: IMM
+  fields:
+    CreatedBy: paabjo
+    RelatedRecord113: null
+    Leader: ''
+    RelatedRecord112: IMM
+    ProjectName: TI-IMMtestdata-2026-08-05
+    RelatedRecord3: null
+    RelatedRecord111: null
+    ProjectId: '10237'
+    DateCreated: 1786021257504
+    EndDate: null
+    StartDate: 1786021257504
+    IsSharedResourceProject: true
+    InheritRolesFromParent: true
+    DataRecordName: 10237 TI-IMMtestdata-2026-08-05
+    Classification: Research
+    ProjectType: ''
+    ProjectDesc: ''
+    VeloxLastModifiedDate: 1786021835541
+    VeloxLastModifiedBy: paabjo
+    RecordId: 7839942
+    SDMSSubdirectory: ''
+  evaluation_form: {}
+  submission_form: {}
+samples: []

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RunParameters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Application>MiSeqi100Series Control Software</Application>
+  <SystemSuiteVersion>1.1.0.26158</SystemSuiteVersion>
+  <OutputFolder>boston-nfs.ous.nsc.local:/ifs/nsc/data/runScratch/MiSeqi100/20260805_SH01006_0022_ASC2260958-SC3</OutputFolder>
+  <CustomPrimerSelections>
+    <ReadOnePrimer>false</ReadOnePrimer>
+    <ReadTwoPrimer>false</ReadTwoPrimer>
+    <IndexOnePrimer>false</IndexOnePrimer>
+    <IndexTwoPrimer>false</IndexTwoPrimer>
+  </CustomPrimerSelections>
+  <CloudUploadMode>InstrumentPerformance</CloudUploadMode>
+  <RunSetupMode>Manual</RunSetupMode>
+  <SecondaryAnalysisMode>None</SecondaryAnalysisMode>
+  <InstrumentType>MiSeqi100Plus</InstrumentType>
+  <InstrumentSerialNumber>SH01006</InstrumentSerialNumber>
+  <RunId>20260805_SH01006_0022_ASC2260958-SC3</RunId>
+  <ConsumableInfo>
+    <ConsumableInfo>
+      <SerialNumber>SC2260958-SC3</SerialNumber>
+      <LotNumber>21058963</LotNumber>
+      <PartNumber>20100086</PartNumber>
+      <ExpirationDate>2027-10-26T00:00:00+02:00</ExpirationDate>
+      <Type>DryCartridge</Type>
+      <Mode>25M</Mode>
+      <Version>1</Version>
+    </ConsumableInfo>
+    <ConsumableInfo>
+      <SerialNumber>SC2216967-SC1</SerialNumber>
+      <LotNumber>21025754</LotNumber>
+      <PartNumber>20079638</PartNumber>
+      <ExpirationDate>2027-02-04T00:00:00+01:00</ExpirationDate>
+      <Type>WetCartridge</Type>
+      <Mode>A</Mode>
+      <Version>1</Version>
+    </ConsumableInfo>
+    <ConsumableInfo>
+      <SerialNumber>BXC08009-0821</SerialNumber>
+      <Type>FlowCell_1</Type>
+      <Mode>2</Mode>
+      <Version>1</Version>
+    </ConsumableInfo>
+  </ConsumableInfo>
+  <PlannedReads>
+    <Read ReadName="Index1" Cycles="8" />
+    <Read ReadName="Index2" Cycles="8" />
+    <Read ReadName="Read1" Cycles="151" />
+    <Read ReadName="Read2" Cycles="151" />
+  </PlannedReads>
+  <SecondaryAnalysisInfo />
+  <RunCounter>22</RunCounter>
+  <RecipeName>25M/300_A_Recipe</RecipeName>
+  <RecipeVersion>2.2_IF</RecipeVersion>
+  <ExperimentName>TI-IMM-2026-08-05</ExperimentName>
+  <PurgeReagentCartridge>true</PurgeReagentCartridge>
+</RunParameters>

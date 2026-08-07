@@ -1,0 +1,16 @@
+{
+	"metadata": {
+		"dragenVersion": "12.031.779.4.4.6",
+		"licenseInfo": [],
+		"runInfo": {
+			"features": [
+				"BAM out"
+			],
+			"mode": [
+				"None"
+			],
+			"pipeline": "BCL"
+		},
+		"timestamp": "2026-08-06T13:51:00Z"
+	}
+}

@@ -1,0 +1,30 @@
+TRIMMER STATISTICS,,Total input reads,786624
+TRIMMER STATISTICS,,Total input bases,118780224
+TRIMMER STATISTICS,,Total input bases R1,59390112
+TRIMMER STATISTICS,,Total input bases R2,59390112
+TRIMMER STATISTICS,,Average input read length,151
+TRIMMER STATISTICS,,Total trimmed reads,0,0.00
+TRIMMER STATISTICS,,Total trimmed bases,0,0.00
+TRIMMER STATISTICS,,Average bases trimmed per read,0
+TRIMMER STATISTICS,,Average bases trimmed per trimmed read,0
+TRIMMER STATISTICS,,Remaining poly-G K-mers R1 3prime,23680,6.02
+TRIMMER STATISTICS,,Remaining poly-G K-mers R2 3prime,22874,5.82
+TRIMMER STATISTICS,,Poly-G soft trimmed reads unfiltered R1 5prime,0,0.00
+TRIMMER STATISTICS,,Poly-G soft trimmed reads unfiltered R1 3prime,26107,6.64
+TRIMMER STATISTICS,,Poly-G soft trimmed reads unfiltered R2 5prime,0,0.00
+TRIMMER STATISTICS,,Poly-G soft trimmed reads unfiltered R2 3prime,25363,6.45
+TRIMMER STATISTICS,,Poly-G soft trimmed reads filtered R1 5prime,0,0.00
+TRIMMER STATISTICS,,Poly-G soft trimmed reads filtered R1 3prime,0,0.00
+TRIMMER STATISTICS,,Poly-G soft trimmed reads filtered R2 5prime,0,0.00
+TRIMMER STATISTICS,,Poly-G soft trimmed reads filtered R2 3prime,0,0.00
+TRIMMER STATISTICS,,Poly-G soft trimmed bases unfiltered R1 5prime,0,0.00
+TRIMMER STATISTICS,,Poly-G soft trimmed bases unfiltered R1 3prime,2257395,3.80
+TRIMMER STATISTICS,,Poly-G soft trimmed bases unfiltered R2 5prime,0,0.00
+TRIMMER STATISTICS,,Poly-G soft trimmed bases unfiltered R2 3prime,3107598,5.23
+TRIMMER STATISTICS,,Poly-G soft trimmed bases filtered R1 5prime,0,0.00
+TRIMMER STATISTICS,,Poly-G soft trimmed bases filtered R1 3prime,0,0.00
+TRIMMER STATISTICS,,Poly-G soft trimmed bases filtered R2 5prime,0,0.00
+TRIMMER STATISTICS,,Poly-G soft trimmed bases filtered R2 3prime,0,0.00
+TRIMMER STATISTICS,,Total filtered reads,0,0.00
+TRIMMER STATISTICS,,Reads filtered for minimum read length R1,0,0.00
+TRIMMER STATISTICS,,Reads filtered for minimum read length R2,0,0.00

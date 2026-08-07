@@ -1,0 +1,39 @@
+2026-08-06T13:50:26Z thread 4192949 Sample sheet being processed by common lib? Yes
+2026-08-06T13:50:26Z thread 4192949 SampleSheet Settings: 
+2026-08-06T13:50:26Z thread 4192949   FastqCompressionFormat = gzip
+2026-08-06T13:50:26Z thread 4192949   GenerateFastqcMetrics = TRUE
+2026-08-06T13:50:26Z thread 4192949   NoLaneSplitting = TRUE
+2026-08-06T13:50:26Z thread 4192949   SoftwareVersion = 4.4.6
+2026-08-06T13:50:26Z thread 4192949 
+2026-08-06T13:50:26Z thread 4192949 shared-thread-linux-native-asio output is disabled
+2026-08-06T13:50:40Z thread 4192949 Input BCL Information:
+2026-08-06T13:50:40Z thread 4192949     Read Structure: 2026-08-06T13:50:40Z thread 4192949 I82026-08-06T13:50:40Z thread 4192949 ;2026-08-06T13:50:40Z thread 4192949 I82026-08-06T13:50:40Z thread 4192949 ;2026-08-06T13:50:40Z thread 4192949 Y1512026-08-06T13:50:40Z thread 4192949 ;2026-08-06T13:50:40Z thread 4192949 Y1512026-08-06T13:50:40Z thread 4192949 
+2026-08-06T13:50:40Z thread 4192949     RunInfo.xml file lists: 1 lanes, 90 tiles
+2026-08-06T13:50:40Z thread 4192949     BCL file format: cbcl
+2026-08-06T13:50:40Z thread 4192949     Positions file format: slocs
+2026-08-06T13:50:40Z thread 4192949     Filter file format: filter
+2026-08-06T13:50:40Z thread 4192949 Conversion Information:
+2026-08-06T13:50:40Z thread 4192949     Sample Count: 96
+2026-08-06T13:50:40Z thread 4192949     Per-sample settings active: 2 distinct settings groups detected
+2026-08-06T13:50:40Z thread 4192949     NoLaneSplitting mode is active
+2026-08-06T13:50:40Z thread 4192949     Expected number of sample FASTQ files to be created: 192
+2026-08-06T13:50:40Z thread 4192949 # CPU hw threads available: 22
+2026-08-06T13:50:40Z thread 4192949 Parallel Tiles: 4. Threads Per Tile: 5
+2026-08-06T13:50:40Z thread 4192949 HW compressors: 5
+2026-08-06T13:50:40Z thread 4192949 HW decompressors: 0
+2026-08-06T13:50:40Z thread 4192949 SW compressors: 11
+2026-08-06T13:50:40Z thread 4192949 SW decompressors: 11
+2026-08-06T13:50:40Z thread 4192949 SW FASTQ compression level: 1
+2026-08-06T13:51:00Z thread 4192949 Lane 1 Post-run Information:
+2026-08-06T13:51:00Z thread 4192949     Total clusters: 32078095
+2026-08-06T13:51:00Z thread 4192949     Total Genomic Reads: 64156190
+2026-08-06T13:51:00Z thread 4192949     Total Genomic Input Gigabases 9.69
+2026-08-06T13:51:00Z thread 4192949     Minimum reads for a sample: 30128
+2026-08-06T13:51:00Z thread 4192949     Maximum reads for a sample: 828262
+2026-08-06T13:51:00Z thread 4192949     Average reads per sample: 612199.88
+2026-08-06T13:51:00Z thread 4192949     Undetermined reads: 5385002
+2026-08-06T13:51:00Z thread 4192949 Hardware compressor 0 finished. Processed 2377 buffers
+2026-08-06T13:51:00Z thread 4192949 Hardware compressor 1 finished. Processed 2322 buffers
+2026-08-06T13:51:00Z thread 4192949 Hardware compressor 2 finished. Processed 2331 buffers
+2026-08-06T13:51:00Z thread 4192949 Hardware compressor 3 finished. Processed 2323 buffers
+2026-08-06T13:51:00Z thread 4192949 Hardware compressor 4 finished. Processed 2265 buffers
