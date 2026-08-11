@@ -16,3 +16,7 @@ c2: offboard demultiplexing with plain Sample_ID (no project and GUID), with Sam
 2: onboard demultiplexing with Sapio sample sheet - Dragen FASTQC off
 3: onboard demultiplexing with Sapio sample sheet - Dragen FASTQC on
 
+20260805_SH01006_0022_ASC2260958-SC3: IMM MiSeq i100 run
+
+4: Sapio sample sheet onboard demultiplexing
+

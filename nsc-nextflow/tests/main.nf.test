@@ -1,0 +1,31 @@
+nextflow_pipeline {
+
+    name "Test QC delivery pipeline"
+    script "main.nf"
+
+    test("publishes renamed FASTQ and MD5 manifest for the MiSeq fixture") {
+
+        when {
+            params {
+                def fixtureDir = "${projectDir}/../tests/fixtures/20260715_SH01006_0020_ASC2245414-SC3"
+                def resultsDir = "${projectDir}/.nf-test/results/main-smoke"
+
+                runId = "20260715_SH01006_0020_ASC2245414-SC3"
+                runFolder = fixtureDir
+                bclConvertFastqDir = "${fixtureDir}/Analysis/3/Data/BCLConvert/fastq"
+                outdir = "${resultsDir}/outdir"
+                deliveryDir = "${resultsDir}/delivery"
+                enableFastQC = false
+                enableSuprdupr = false
+            }
+        }
+
+        then {
+            assert workflow.success
+
+            def projectOutputDir = path("${projectDir}/.nf-test/results/main-smoke/outdir/20260715_SH01006_0020_ASC2245414-SC3/260715_SH01006.A.Project_Test-Libs6-2026-06-22")
+            assert projectOutputDir.resolve("22-miseq22_S1_L001_R1_001.fastq.gz").exists()
+            assert projectOutputDir.resolve("md5sum.txt").exists()
+        }
+    }
+}

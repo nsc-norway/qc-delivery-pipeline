@@ -1,4 +1,5 @@
 .nf-test/
+.nf-test.log
 .DS_Store
 containers/
 .nextflow*

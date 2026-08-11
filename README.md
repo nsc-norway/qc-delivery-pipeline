@@ -47,6 +47,14 @@ The Nextflow-based pipeline requires a local **Java and Nextflow** on the path.
 * Java >= 17
 * nextflow tested with 26.01 (TBC TODO)
 
+For local development and manual tests, create the project environment from the
+repository root:
+
+```
+conda env create -f environment.yml
+conda activate qc-delivery-pipeline
+```
+
 The pipeline's environment is not containerized due to the complexity of job submission from a container.
 
 

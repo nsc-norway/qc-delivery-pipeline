@@ -1,0 +1,11 @@
+name: qc-delivery-pipeline
+
+channels:
+  - conda-forge
+  - bioconda
+
+dependencies:
+  - bats-core=1.14.0
+  - nextflow=26.04.6
+  - nf-test=0.9.5
+  - openjdk=17

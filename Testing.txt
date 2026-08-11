@@ -1,20 +1,85 @@
-We may be ready to implement a testing framework for this repo. The base pipeline code and example test data are in place. The code is in early development and isn't expected to work. The goal now is to plan out what frameworks and logic to use for testing. Priority for testing:
+# Manual Testing Framework
 
-* nextflow pipeline (nsc_nextflow)
+The test setup is deliberately small and manual. It prioritizes the Nextflow
+pipeline, supports development-time debugging, and does not run in GitHub CI.
+A failing test records the current implementation gap; it is not a reason to
+refactor unrelated pipeline code.
 
-Low priority, should be deferred:
+## Development environment
 
-* simple delivery script (shared-resource-user-delivery.sh) - script is not yet implemented
-* nsc-automation-cron.sh - automation orchestrator. Might make sense to test it independently of the pipeline itself.
-* pipeline-runner.sh - Trivial script, but an integrated test could be performed including nsc-automation-cron.sh, the pipeline runner and the nextflow pipeline 
+Create the project-owned Conda environment once, then activate it before running
+the manual test commands:
 
-Very low priority:
+```
+conda env create -f environment.yml
+conda activate qc-delivery-pipeline
+```
 
-* anonymize-fastq.py
-* sapio-run-extractor.py
-* miseq-delivery-simple.sh (at the repo root)
+It provides OpenJDK 17, Nextflow 26.04.6, nf-test 0.9.5, and Bats Core 1.14.0.
+Docker remains a host-level requirement. After changing the environment file,
+update it with `conda env update -f environment.yml --prune`.
 
+## Current smoke test
 
-The goal is to start testing in tandem with the development of the scripts. The tests should support the finding of simple bugs in the underdeveloped code. The goal is not to perform wide-ranging refactoring to make it work. Localized work-arounds are okay as a temporary measure if it's absolutely necessary for the development process to allow some code to run.
+Run the Nextflow smoke test from the repository root:
 
-The initial tests should be manual only, not integrated with Github CI.
+```
+bash tests/nextflow/run-smoke.sh
+```
+
+It runs `nsc-nextflow/main.nf` against the existing
+`20260715_SH01006_0020_ASC2245414-SC3` fixture. FastQC and suprDUPr are disabled
+so the test reaches the core sample discovery, FASTQ rename, MD5, credentials,
+and delivery-channel logic without pulling the optional QC containers.
+
+The default Nextflow profile requires Docker to be installed and its daemon to
+be running. The runner checks this before creating test artifacts.
+
+Each invocation writes its work directory, Nextflow reports, output, and delivery
+artifacts under `output/manual-tests/`. The script returns the pipeline's exit
+status and, on a successful workflow run, verifies that an `md5sum.txt` artifact
+was published. Preserve a failing run directory while diagnosing it. Set
+`TEST_ARTIFACT_DIR` to store artifacts elsewhere or `NEXTFLOW_BIN` to use another
+Nextflow executable.
+
+## Test layers
+
+1. Use the smoke test for one end-to-end regression check while developing the
+	pipeline. Keep the fixture and optional features deliberately fixed unless a
+	development task specifically needs another path.
+2. Use `nf-test` for file-output checks against the same fixture:
+
+	```
+	cd nsc-nextflow
+	nf-test test
+	```
+
+	`nsc-nextflow/tests/main.nf.test` disables optional QC and asserts a renamed
+	FASTQ plus its project-level `md5sum.txt` manifest. Its test artifacts are
+	stored under `nsc-nextflow/.nf-test/`.
+3. Add one focused test when a bug, branch, or data format requires it. Prefer a
+	minimal fixture or a stubbed process over copying the full smoke scenario.
+
+## Deferred components
+
+Do not add tests for `scripts/shared-resource-user-delivery.sh` until it has an
+implementation.
+
+## Cron worker tests
+
+Run the cron worker's Bats tests from the repository root:
+
+```
+bats tests/cron/nsc-automation-cron.bats
+```
+
+The tests create temporary run folders and prepend mock versions of
+`pipeline-runner.sh`, `shared-resource-user-delivery.sh`, and `python3` to
+`PATH`. They verify completion-marker handling, department routing, and the
+missing-`NscSapioInfo.yaml` path without starting Nextflow or contacting Sapio.
+The mocked `python3` writes minimal generic Sapio metadata, allowing the cron
+script to continue through its normal routing code.
+
+`pipeline-runner.sh` and the Python utilities remain lower priority for direct
+tests. Test a cron/pipeline-runner integration only after the runner's Nextflow
+parameter contract is stable.
