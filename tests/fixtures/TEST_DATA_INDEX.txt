@@ -13,5 +13,6 @@ c2: offboard demultiplexing with plain Sample_ID (no project and GUID), with Sam
 
 20260804_LH00770_0246_A22JJTLLT1: NovaSeq X 1.5B run
 
-2: onboard demultiplexing with Sapio sample sheet
+2: onboard demultiplexing with Sapio sample sheet - Dragen FASTQC off
+3: onboard demultiplexing with Sapio sample sheet - Dragen FASTQC on
 

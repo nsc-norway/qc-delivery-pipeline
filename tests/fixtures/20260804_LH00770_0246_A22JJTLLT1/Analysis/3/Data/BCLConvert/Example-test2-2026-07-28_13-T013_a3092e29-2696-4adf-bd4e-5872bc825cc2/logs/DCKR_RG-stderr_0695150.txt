@@ -1,0 +1,1 @@
+Workflow report is disabled when samples are specified

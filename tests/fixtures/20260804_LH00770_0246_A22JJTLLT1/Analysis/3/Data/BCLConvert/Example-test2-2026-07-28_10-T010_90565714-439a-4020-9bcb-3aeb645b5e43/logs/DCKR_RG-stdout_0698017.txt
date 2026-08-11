@@ -1,0 +1,2 @@
+Successfully wrote file "/data/BCLConvert/Example-test2-2026-07-28_10-T010_90565714-439a-4020-9bcb-3aeb645b5e43/fastqc/report.html"
+Successfully created symlink "/data/BCLConvert/AggregateReports/report_files/samples/Example-test2-2026-07-28_10-T010_90565714-439a-4020-9bcb-3aeb645b5e43/Example-test2-2026-07-28_10-T010_90565714-439a-4020-9bcb-3aeb645b5e43.html"

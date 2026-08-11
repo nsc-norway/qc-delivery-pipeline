@@ -1,0 +1,3 @@
+Workflow report is disabled when samples are specified
+Directory "/data/BCLConvert/AggregateReports/report_files" already exists
+Directory "/data/BCLConvert/AggregateReports/report_files/samples" already exists
