@@ -70,7 +70,7 @@ TODO - describe running this or refer to deployment docs
 The Nextflow-based pipeline requires a local **Java and Nextflow** on the path.
 
 * Java >= 17
-* nextflow tested with 26.01 (TBC TODO)
+* Nextflow 26.04.6
 
 For local development and manual tests, create the project environment from the
 repository root:
@@ -81,6 +81,8 @@ conda activate qc-delivery-pipeline
 ```
 
 The pipeline's environment is not containerized due to the complexity of job submission from a container.
+Docker must be installed and its daemon running for pipeline runs and the
+Nextflow test suite.
 
 
 ### Scripts
@@ -88,6 +90,34 @@ The pipeline's environment is not containerized due to the complexity of job sub
 The shell scripts require Bash on an Unix-like OS.
 
 The Python scripts require Python >= 3.9 locally installed, and only rely on the standard library.
+
+
+## Testing
+
+Tests are run manually during development and are not currently run in GitHub
+CI. Use the project Conda environment before running them.
+
+### Nextflow pipeline
+
+Run the end-to-end Nextflow test from `nsc-nextflow/`:
+
+```
+cd nsc-nextflow
+nf-test test
+```
+
+### Cron worker
+
+Run the cron worker tests from the repository root:
+
+```
+bats tests/cron/nsc-automation-cron.bats
+```
+
+They use temporary run folders and mocked pipeline, delivery, and Sapio
+commands. The suite checks completion-marker handling, department routing, and
+the missing `NscSapioInfo.yaml` path without starting Nextflow or contacting
+Sapio.
 
 
 ## Repo layout

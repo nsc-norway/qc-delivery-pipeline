@@ -30,7 +30,8 @@ include {
 } from './modules/sample_functions.nf'
 
 
-workflow {
+workflow QC_DELIVERY_PIPELINE {
+    main:
     // LOCATE INPUT FILES
 
     // Sample sheet is usually copied to Reports/ by BCL Convert, but in case of NovaSeq X onboard analysis, 
@@ -115,19 +116,21 @@ workflow {
     
     // TODO - suprDUPr should be disabled (or reconfigured) in case the read length
     // is less than 51 bases. Otherwise, it will crash.
-    superdupr_ch = channel.empty() // Channel to contain suprDUPr outputs
+    def suprdupr_ch = channel.empty()
     if (params.enableSuprdupr.toBoolean()) {
         def suprdupr_files_ch = files_ch.filter { item -> item[0].read_label == 'R1' }
         SUPRDUPR(suprdupr_files_ch)
-        suprdupr_ch = SUPRDUPR.out.collect()
+        suprdupr_ch = SUPRDUPR.out
     }
 
     // FastQC and MultiQC. MultiQC reports are included in the data delivery.
     // DRAGEN FastQC from the onboard analysis can be used as an alternative to FastQC.
-    multiqc_ch = channel.empty() // Channel to contain multiqc outputs
+    def fastqc_html_ch = channel.empty()
+    def multiqc_ch = channel.empty()
     if (params.enableFastQC.toString().toBoolean()) {
         def data_read_files_ch = files_ch.filter { sample -> sample[0].read_label in ['R1', 'R2'] }
         FASTQC(data_read_files_ch)
+        fastqc_html_ch = FASTQC.out.FASTQC_HTML_out
         multiqc_ch = MULTIQC(groupByProject(FASTQC.out.FASTQC_ZIP_out), "fastqc")
     }
     else if (params.enableSuprdupr.toBoolean()) {
@@ -185,6 +188,15 @@ workflow {
             .map { _delivery_method, meta, files -> [meta, files] }
     )
 
+    emit: // Emit channels for testing
+    fastqs = files_ch
+    md5sum = CAT_MD5SUM.out.CAT_MD5SUM_out
+    fastqc_html = fastqc_html_ch
+    suprdupr = suprdupr_ch
+    multiqc = multiqc_ch
+    nird_delivery = TAR_FOLDER.out.TAR_FOLDER_out
+    linked_delivery = LINK_FOLDER.out
+
 /*
     EMAIL_PROJECT(
         params.project,
@@ -198,4 +210,8 @@ workflow {
     // Run-level process
     EMAIL_SUMMARY_RUN(params.runFolder, qcfolder, project_lims_json.collect())
     */
+}
+
+workflow {
+    QC_DELIVERY_PIPELINE()
 }

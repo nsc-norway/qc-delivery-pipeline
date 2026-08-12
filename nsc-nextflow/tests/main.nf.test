@@ -1,9 +1,10 @@
-nextflow_pipeline {
+nextflow_workflow {
 
     name "Test QC delivery pipeline"
     script "main.nf"
+    workflow "QC_DELIVERY_PIPELINE"
 
-    test("publishes renamed FASTQ and MD5 manifest for the MiSeq fixture") {
+    test("publishes the expected output and delivery files for the MiSeq fixture") {
 
         when {
             params {
@@ -21,8 +22,31 @@ nextflow_pipeline {
             assert workflow.success
 
             def projectOutputDir = path("${projectDir}/.nf-test/results/main-smoke/outdir/20260715_SH01006_0020_ASC2245414-SC3/260715_SH01006.A.Project_Test-Libs6-2026-06-22")
+            def projectDeliveryDir = path("${projectDir}/.nf-test/results/main-smoke/delivery/260715_SH01006.A.Project_Test-Libs6-2026-06-22")
+
             assert projectOutputDir.resolve("22-miseq22_S1_L001_R1_001.fastq.gz").exists()
             assert projectOutputDir.resolve("md5sum.txt").exists()
+            assert projectDeliveryDir.exists()
+
+            def fixtureId = "20260715_SH01006_0020_ASC2245414-SC3"
+            def fileNames = { directory ->
+                def fileStream = java.nio.file.Files.list(directory)
+                try {
+                    fileStream
+                        .filter { file -> java.nio.file.Files.isRegularFile(file) }
+                        .map { file -> file.fileName.toString() }
+                        .sorted()
+                        .toList()
+                } finally {
+                    fileStream.close()
+                }
+            }
+            assert snapshot(fileNames(projectOutputDir)).match("published output files")
+            assert snapshot(fileNames(projectDeliveryDir)).match("delivery files")
+            assert snapshot(workflow.out.md5sum).match("${fixtureId} md5sum contents")
+            assert snapshot(workflow.out.fastqc_html).match("${fixtureId} FastQC contents")
+            assert snapshot(workflow.out.suprdupr).match("${fixtureId} suprDUPr contents")
+            assert snapshot(workflow.out.multiqc).match("${fixtureId} MultiQC contents")
         }
     }
 }
