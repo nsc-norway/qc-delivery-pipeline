@@ -10,13 +10,10 @@ nextflow_pipeline {
                 def fixtureDir = "${projectDir}/../tests/fixtures/20260715_SH01006_0020_ASC2245414-SC3"
                 def resultsDir = "${projectDir}/.nf-test/results/main-smoke"
 
-                runId = "20260715_SH01006_0020_ASC2245414-SC3"
                 runFolder = fixtureDir
                 bclConvertFastqDir = "${fixtureDir}/Analysis/3/Data/BCLConvert/fastq"
                 outdir = "${resultsDir}/outdir"
                 deliveryDir = "${resultsDir}/delivery"
-                enableFastQC = false
-                enableSuprdupr = false
             }
         }
 

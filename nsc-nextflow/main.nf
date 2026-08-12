@@ -31,8 +31,14 @@ include {
 
 
 workflow {
-    // Input files
+    // LOCATE INPUT FILES
+
+    // Sample sheet is usually copied to Reports/ by BCL Convert, but in case of NovaSeq X onboard analysis, 
+    // it can instead be found next to the fastq files.
     def sampleSheet = file("${params.bclConvertFastqDir}/Reports/SampleSheet.csv")
+    if (!sampleSheet.exists()) {
+        sampleSheet = file("${params.bclConvertFastqDir}/SampleSheet.csv")
+    }
     def fastqDir = file(params.bclConvertFastqDir)
     def runId = file(params.runFolder).name
     // TODO allow missing file
@@ -43,8 +49,10 @@ workflow {
 
     def isOra = false // ORA support is not yet implemented
 
+
+    // CREATE CHANNEL sample_metadata_ch FOR SAMPLES
+
     // Create samples channel from SampleSheet
-    // One entry per fastq file (up to two entries per sample)
     // The elements of the channel are map objects containing the sample information.
     def sample_metadata_ch = channel.fromPath( sampleSheet, checkIfExists: true )
         .flatMap { samplesheet_file -> parseBclConvertData(samplesheet_file) }
@@ -52,7 +60,7 @@ workflow {
         .unique()
         .map { lane, origProjectName, sampleId ->
             def (projectName, sampleName, guid) = unpackSampleIds(origProjectName, sampleId)
-            def projectDirName = getProjectDirName(projectName, params.runId)
+            def projectDirName = getProjectDirName(projectName, runId)
             def sampleKey = "${lane}_${projectName}_${sampleId}"
             [
                 run_id: runId,
@@ -76,7 +84,12 @@ workflow {
         }
     }
 
-    def files_ch
+
+
+    // INITIAL FASTQ DATA - FIND THE FILES AND PUBLISH THEM TO THE OUTPUT DIR WITH SIMPLE NAMES
+
+    // files_ch will contain (meta, fastqPath) tuples for each FASTQ file.
+    
     if (isOra) {
         // ORA Compressed samples (see above; ORA was currently not supported when writing this)
         files_ch = DECOMPRESS_ORA(original_files_ch)
@@ -85,14 +98,21 @@ workflow {
         files_ch = RENAME_AND_SAVE_FASTQS(original_files_ch)
     }
 
+
+
+
+    // MD5SUM
+
     // Compute md5sums
     MD5SUM_FASTQ(files_ch)
     // Apply CAT_MD5SUM grouped by project to create md5sum.txt per project
     CAT_MD5SUM(groupByProject(MD5SUM_FASTQ.out.MD5SUM_FASTQ_out))
 
 
-    // suprDUPr QC. Used by the email scripts if available.
 
+
+    // QC TOOLS
+    
     // TODO - suprDUPr should be disabled (or reconfigured) in case the read length
     // is less than 51 bases. Otherwise, it will crash.
     superdupr_ch = channel.empty() // Channel to contain suprDUPr outputs
@@ -119,7 +139,7 @@ workflow {
     //  * all fastqs
     //  * multiqc report
     //  * md5sum file
-    // And add delivery methods from Sapio file to meta
+    // And add delivery methods from Sapio as a tuple element - Tuple structure: (delivery_method, meta, [list of files])
 
     // Structure 1: (meta, [list of files])
     delivery_files_project_grouped_ch = groupByProject(files_ch)
@@ -128,7 +148,7 @@ workflow {
         .map { item -> [item[0], item[1..-1].flatten()] }
     
     def sapioProjects = sapioRunInfo.projects
-    // Structure 2: (delivery_method, meta, [list of files])
+    // Structure 2 - one element per project: (delivery_method, meta, [list of files])
     delivery_files_project_grouped_ch = delivery_files_project_grouped_ch
         .map { meta, files ->
             [
@@ -141,15 +161,16 @@ workflow {
                 files
             ]
         }
-    
+
+
+    // DATA DELIVERY
+
     // Generate username and password - used by NIRD delivery and email script
     PROJECT_CREDENTIALS(groupByProject(files_ch).map { meta, _files -> meta })
 
-    // Data delivery
-
     // NIRD - create tar file
     TAR_FOLDER(
-        // Input structure to tar process is (meta, [list of files])
+        // Input structure to tar process is (project-grouped): (meta, [list of files to deliver])
         delivery_files_project_grouped_ch
             .filter { delivery_method, _meta, _files -> delivery_method == 'NIRD' }
             .map { _delivery_method, meta, files -> [meta, files] }
@@ -158,7 +179,7 @@ workflow {
 
     // Other delivery methods - create folder structure with hard links to files
     LINK_FOLDER(
-        // Input structure to link process is (meta, [list of files])
+        // Input structure to link process is (project-grouped): (meta, [list of files to deliver])
         delivery_files_project_grouped_ch
             .filter { delivery_method, _meta, _files -> delivery_method in [null, 'NeLS project', 'User_HDD', 'New_HDD', 'TSD_project'] }
             .map { _delivery_method, meta, files -> [meta, files] }

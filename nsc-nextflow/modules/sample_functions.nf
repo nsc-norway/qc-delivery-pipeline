@@ -144,6 +144,7 @@ def groupByProject( files_ch ) {
     return files_ch.map { meta, fastqPath -> [meta.project_name, meta, fastqPath] }
                    .groupTuple()
                    .map { projectName, metas, fastqs -> [[
+                            run_id: metas[0].run_id,
                             project_name: projectName,
                             project_dir_name: metas[0].project_dir_name,
                         ], fastqs] }
