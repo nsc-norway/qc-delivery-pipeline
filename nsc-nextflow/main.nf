@@ -120,13 +120,15 @@ workflow {
     //  * multiqc report
     //  * md5sum file
     // And add delivery methods from Sapio file to meta
-    def sapioProjects = sapioRunInfo.projects
-    // Structure: (meta, delivery_method, [list of files])
+
+    // Structure 1: (meta, [list of files])
     delivery_files_project_grouped_ch = groupByProject(files_ch)
         .join(CAT_MD5SUM.out.CAT_MD5SUM_out)
         .join(multiqc_ch)
         .map { item -> [item[0], item[1..-1].flatten()] }
     
+    def sapioProjects = sapioRunInfo.projects
+    // Structure 2: (delivery_method, meta, [list of files])
     delivery_files_project_grouped_ch = delivery_files_project_grouped_ch
         .map { meta, files ->
             [
@@ -143,22 +145,23 @@ workflow {
     // Generate username and password - used by NIRD delivery and email script
     PROJECT_CREDENTIALS(groupByProject(files_ch).map { meta, _files -> meta })
 
-
     // Data delivery
 
     // NIRD - create tar file
     TAR_FOLDER(
+        // Input structure to tar process is (meta, [list of files])
         delivery_files_project_grouped_ch
-            .filter { delivery_method, meta, files -> delivery_method == 'NIRD' }
-            .map { delivery_method, meta, files -> [meta, files] }
+            .filter { delivery_method, _meta, _files -> delivery_method == 'NIRD' }
+            .map { _delivery_method, meta, files -> [meta, files] }
             .join(PROJECT_CREDENTIALS.out.PROJECT_CREDENTIALS_out)
     )
 
     // Other delivery methods - create folder structure with hard links to files
     LINK_FOLDER(
+        // Input structure to link process is (meta, [list of files])
         delivery_files_project_grouped_ch
-            .filter { delivery_method, meta, files -> delivery_method in [null, 'NeLS project', 'User_HDD', 'New_HDD', 'TSD_project'] }
-            .map { delivery_method, meta, files -> [meta, files] }
+            .filter { delivery_method, _meta, _files -> delivery_method in [null, 'NeLS project', 'User_HDD', 'New_HDD', 'TSD_project'] }
+            .map { _delivery_method, meta, files -> [meta, files] }
     )
 
 /*

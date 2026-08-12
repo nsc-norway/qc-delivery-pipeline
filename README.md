@@ -9,12 +9,39 @@ https://gitlab.com/genomedx/labautomation/sapio-sequencingfiles
 
 ## Entry points and usage
 
-### Environment configuration
 
-The scripts are configured using environment variables. An example is given in .env.example.
+### Direct pipeline invocation (TODO - update with current parameter specs)
 
-TODO
+```
+nextflow run nsc-nextflow/main.nf \
+  --runId 20260715_SH01006_0020_ASC2245414-SC3 \
+  --runFolder tests/fixtures/20260715_SH01006_0020_ASC2245414-SC3 \
+  --bclConvertFastqDir tests/fixtures/20260715_SH01006_0020_ASC2245414-SC3/Analysis/3/Data/BCLConvert/fastq \
+  --outdir output/outdir \
+  -resume
 
+  TODO -- update
+```
+
+### Input / output parameter spec
+
+Input:
+
+* runFolder example: 
+* analysisBclConvertFolers 
+
+
+Output:
+
+* outdir: base root.
+
+Example:
+
+...
+
+Creates:
+
+...
 
 
 ### Scheduled automation worker
@@ -26,24 +53,14 @@ pipeline based on the project type.
 scripts/nsc-automation-cron.sh
 ```
 
+The scripts are configured using environment variables. An example is given in .env.example. The 
+nextflow pipeline should not read environment variables, and is instead configured explicitly using
+parameters (see above).
+
+
 TODO - describe running this or refer to deployment docs
 
 
-### Manual invocation of the components
-
-TODO
-
-
-### Direct pipeline execution (TODO - update with current parameter specs)
-
-```
-nextflow run nsc-nextflow/main.nf \
-  --runId 20260715_SH01006_0020_ASC2245414-SC3 \
-  --runFolder tests/fixtures/20260715_SH01006_0020_ASC2245414-SC3 \
-  --bclConvertFastqDir tests/fixtures/20260715_SH01006_0020_ASC2245414-SC3/Analysis/3/Data/BCLConvert/fastq \
-  --outdir output/outdir \
-  -resume
-```
 
 
 ## Requirements
