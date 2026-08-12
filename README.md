@@ -49,7 +49,23 @@ Creates:
 Scans a run folder location for unprocessed runs, looks up LIMS information and starts an appropriate
 pipeline based on the project type.
 
+Automation worker requires exported environment variables for configuration:
+
+
 ```
+set -a            # Automatically export all subsequent variables
+source .env       # Read and execute the file in the current shell
+set +a            # Turn off the automatic export feature
+scripts/nsc-automation-cron.sh
+```
+
+
+
+
+```
+set -a            # Automatically export all subsequent variables
+source .env       # Read and execute the file in the current shell
+set +a            # Turn off the automatic export feature
 scripts/nsc-automation-cron.sh
 ```
 
@@ -156,7 +172,7 @@ Nextflow pipeline for data QC, file copying, report generation and data delivery
 
 ### Containers: dockerfiles/
 
-Dockerfiles for tools that are contained in this repo. The docker images are build through Github Actions.
+Dockerfiles for tools that are contained in this repo. The docker images are built through Github Actions.
 
 For external tools there are instead references to public Docker images.
 

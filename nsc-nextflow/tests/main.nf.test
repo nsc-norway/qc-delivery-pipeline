@@ -27,6 +27,7 @@ nextflow_workflow {
             assert projectOutputDir.resolve("22-miseq22_S1_L001_R1_001.fastq.gz").exists()
             assert projectOutputDir.resolve("md5sum.txt").exists()
             assert projectDeliveryDir.exists()
+            assert workflow.out.nird_delivery.size() == 1
 
             def fixtureId = "20260715_SH01006_0020_ASC2245414-SC3"
             def fileNames = { directory ->
@@ -47,6 +48,167 @@ nextflow_workflow {
             assert snapshot(workflow.out.fastqc_html).match("${fixtureId} FastQC contents")
             assert snapshot(workflow.out.suprdupr).match("${fixtureId} suprDUPr contents")
             assert snapshot(workflow.out.multiqc).match("${fixtureId} MultiQC contents")
+        }
+    }
+
+    test("runs the NovaSeq X offboard c2 fixture") {
+
+        when {
+            params {
+                def fixtureDir = "${projectDir}/../tests/fixtures/20260625_LH00534_0319_A22JKHGLT1"
+                def resultsDir = "${projectDir}/.nf-test/results/20260625-c2"
+
+                runFolder = fixtureDir
+                bclConvertFastqDir = "${fixtureDir}/Analysis/c2/Fastq"
+                outdir = "${resultsDir}/outdir"
+                deliveryDir = "${resultsDir}/delivery"
+            }
+        }
+
+        then {
+            assert workflow.success
+
+            def resultDir = path("${projectDir}/.nf-test/results/20260625-c2")
+            def outputRunDir = resultDir.resolve("outdir/20260625_LH00534_0319_A22JKHGLT1")
+            def exampleProjectDir = outputRunDir.resolve("260625_LH00534.A.Project_Example-test1-2026-07-28")
+            def testcaseProjectDir = outputRunDir.resolve("260625_LH00534.A.Project_Testcase-test2-2026-07-28")
+            def deliveryDir = resultDir.resolve("delivery")
+
+            assert exampleProjectDir.resolve("1-a_S6_L001_R1_001.fastq.gz").exists()
+            assert exampleProjectDir.resolve("md5sum.txt").exists()
+            assert testcaseProjectDir.resolve("1-dummy_S10_L002_R1_001.fastq.gz").exists()
+            assert testcaseProjectDir.resolve("md5sum.txt").exists()
+            assert snapshot(workflow.out.fastqs, workflow.out.md5sum).match("20260625-c2 core output contents")
+            assert workflow.out.linked_delivery.size() == 2
+            assert deliveryDir.resolve("260625_LH00534.A.Project_Example-test1-2026-07-28").exists()
+            assert deliveryDir.resolve("260625_LH00534.A.Project_Testcase-test2-2026-07-28").exists()
+        }
+    }
+
+    test("runs the MiSeq offboard c1 fixture with QC disabled") {
+
+        when {
+            params {
+                def fixtureDir = "${projectDir}/../tests/fixtures/20260715_SH01006_0020_ASC2245414-SC3"
+                def resultsDir = "${projectDir}/.nf-test/results/20260715-c1"
+
+                runFolder = fixtureDir
+                bclConvertFastqDir = "${fixtureDir}/Analysis/c1/Fastq"
+                outdir = "${resultsDir}/outdir"
+                deliveryDir = "${resultsDir}/delivery"
+                enableFastQC = false
+                enableSuprdupr = false
+            }
+        }
+
+        then {
+            assert workflow.success
+
+            def resultDir = path("${projectDir}/.nf-test/results/20260715-c1")
+            def projectDir = resultDir.resolve("outdir/20260715_SH01006_0020_ASC2245414-SC3/260715_SH01006.A.Project_Test-Libs6-2026-06-22")
+            def deliveryDir = resultDir.resolve("delivery/260715_SH01006.A.Project_Test-Libs6-2026-06-22")
+
+            assert projectDir.resolve("22-miseq22_S1_L001_R1_001.fastq.gz").exists()
+            assert projectDir.resolve("md5sum.txt").exists()
+            assert snapshot(workflow.out.fastqs, workflow.out.md5sum).match("20260715-c1 core output contents")
+            assert workflow.out.fastqc_html.size() == 0
+            assert workflow.out.suprdupr.size() == 0
+            assert workflow.out.multiqc.size() == 0
+            assert workflow.out.nird_delivery.size() == 0
+            assert !deliveryDir.exists()
+        }
+    }
+
+    test("runs the MiSeq offboard c2 fixture") {
+
+        when {
+            params {
+                def fixtureDir = "${projectDir}/../tests/fixtures/20260715_SH01006_0020_ASC2245414-SC3"
+                def resultsDir = "${projectDir}/.nf-test/results/20260715-c2"
+
+                runFolder = fixtureDir
+                bclConvertFastqDir = "${fixtureDir}/Analysis/c2/Fastq"
+                outdir = "${resultsDir}/outdir"
+                deliveryDir = "${resultsDir}/delivery"
+            }
+        }
+
+        then {
+            assert workflow.success
+
+            def resultDir = path("${projectDir}/.nf-test/results/20260715-c2")
+            def projectDir = resultDir.resolve("outdir/20260715_SH01006_0020_ASC2245414-SC3/260715_SH01006.A.Project_Test-Libs6-2026-06-22")
+            def deliveryDir = resultDir.resolve("delivery/260715_SH01006.A.Project_Test-Libs6-2026-06-22")
+
+            assert projectDir.resolve("22-miseq22_S1_L001_R1_001.fastq.gz").exists()
+            assert projectDir.resolve("md5sum.txt").exists()
+            assert snapshot(workflow.out.fastqs, workflow.out.md5sum).match("20260715-c2 core output contents")
+            assert workflow.out.nird_delivery.size() == 1
+            assert deliveryDir.exists()
+        }
+    }
+
+    test("runs the NovaSeq X onboard 2 fixture") {
+
+        when {
+            params {
+                def fixtureDir = "${projectDir}/../tests/fixtures/20260804_LH00770_0246_A22JJTLLT1"
+                def resultsDir = "${projectDir}/.nf-test/results/20260804-2"
+
+                runFolder = fixtureDir
+                bclConvertFastqDir = "${fixtureDir}/Analysis/2/Data/BCLConvert"
+                outdir = "${resultsDir}/outdir"
+                deliveryDir = "${resultsDir}/delivery"
+            }
+        }
+
+        then {
+            assert workflow.success
+
+            def resultDir = path("${projectDir}/.nf-test/results/20260804-2")
+            def outputRunDir = resultDir.resolve("outdir/20260804_LH00770_0246_A22JJTLLT1")
+            def exampleProjectDir = outputRunDir.resolve("260804_LH00770.A.Project_Example-test2-2026-07-28")
+            def testcaseProjectDir = outputRunDir.resolve("260804_LH00770.A.Project_Testcase-test3-2026-08-04")
+            def deliveryDir = resultDir.resolve("delivery")
+
+            assert exampleProjectDir.resolve("md5sum.txt").exists()
+            assert testcaseProjectDir.resolve("md5sum.txt").exists()
+            assert snapshot(workflow.out.fastqs, workflow.out.md5sum).match("20260804-2 core output contents")
+            assert workflow.out.linked_delivery.size() == 2
+            assert deliveryDir.resolve("260804_LH00770.A.Project_Example-test2-2026-07-28").exists()
+            assert deliveryDir.resolve("260804_LH00770.A.Project_Testcase-test3-2026-08-04").exists()
+        }
+    }
+
+    test("runs the NovaSeq X onboard 3 fixture") {
+
+        when {
+            params {
+                def fixtureDir = "${projectDir}/../tests/fixtures/20260804_LH00770_0246_A22JJTLLT1"
+                def resultsDir = "${projectDir}/.nf-test/results/20260804-3"
+
+                runFolder = fixtureDir
+                bclConvertFastqDir = "${fixtureDir}/Analysis/3/Data/BCLConvert"
+                outdir = "${resultsDir}/outdir"
+                deliveryDir = "${resultsDir}/delivery"
+            }
+        }
+
+        then {
+            assert workflow.success
+
+            def resultDir = path("${projectDir}/.nf-test/results/20260804-3")
+            def outputRunDir = resultDir.resolve("outdir/20260804_LH00770_0246_A22JJTLLT1")
+            def exampleProjectDir = outputRunDir.resolve("260804_LH00770.A.Project_Example-test2-2026-07-28")
+            def testcaseProjectDir = outputRunDir.resolve("260804_LH00770.A.Project_Testcase-test3-2026-08-04")
+            def deliveryDir = resultDir.resolve("delivery")
+
+            assert exampleProjectDir.resolve("md5sum.txt").exists()
+            assert testcaseProjectDir.resolve("md5sum.txt").exists()
+            assert snapshot(workflow.out.fastqs, workflow.out.md5sum).match("20260804-3 core output contents")
+            assert workflow.out.linked_delivery.size() == 2
+            assert deliveryDir.resolve("260804_LH00770.A.Project_Example-test2-2026-07-28").exists()
+            assert deliveryDir.resolve("260804_LH00770.A.Project_Testcase-test3-2026-08-04").exists()
         }
     }
 }

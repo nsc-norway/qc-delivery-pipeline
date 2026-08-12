@@ -144,14 +144,14 @@ workflow QC_DELIVERY_PIPELINE {
     //  * md5sum file
     // And add delivery methods from Sapio as a tuple element - Tuple structure: (delivery_method, meta, [list of files])
 
-    // Structure 1: (meta, [list of files])
+    // Structure: (meta, [list of files])
     delivery_files_project_grouped_ch = groupByProject(files_ch)
         .join(CAT_MD5SUM.out.CAT_MD5SUM_out)
         .join(multiqc_ch)
         .map { item -> [item[0], item[1..-1].flatten()] }
     
     def sapioProjects = sapioRunInfo.projects
-    // Structure 2 - one element per project: (delivery_method, meta, [list of files])
+    // Structure - one element per project: (delivery_method, meta, [list of files])
     delivery_files_project_grouped_ch = delivery_files_project_grouped_ch
         .map { meta, files ->
             [

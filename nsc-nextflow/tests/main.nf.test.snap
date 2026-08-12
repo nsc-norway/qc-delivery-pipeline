@@ -650,11 +650,488 @@
                         "project_name": "Test-Libs6-2026-06-22",
                         "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22"
                     },
-                    "multiqc_report.html:md5,59de30b8b8d30d4f8e4f889f2f10fe6e"
+                    "multiqc_report.html:md5,ce0f234a8d01657d82e3266e54835d01"
                 ]
             ]
         ],
-        "timestamp": "2026-08-12T13:53:32.613223",
+        "timestamp": "2026-08-12T16:18:02.28852",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "20260625-c2 core output contents": {
+        "content": [
+            [
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "1_Example-test1-2026-07-28_Example-test1-2026-07-28_1-a_dc68d5a4-1142-43cc-be66-49598a84184c",
+                        "lane": 1,
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28",
+                        "sample_id": "Example-test1-2026-07-28_1-a_dc68d5a4-1142-43cc-be66-49598a84184c",
+                        "sample_name": "1-a",
+                        "guid": "dc68d5a4-1142-43cc-be66-49598a84184c",
+                        "read_label": "R1"
+                    },
+                    "1-a_S6_L001_R1_001.fastq.gz:md5,407944ad090594814f1a179d331920f3"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "1_Example-test1-2026-07-28_Example-test1-2026-07-28_1-a_dc68d5a4-1142-43cc-be66-49598a84184c",
+                        "lane": 1,
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28",
+                        "sample_id": "Example-test1-2026-07-28_1-a_dc68d5a4-1142-43cc-be66-49598a84184c",
+                        "sample_name": "1-a",
+                        "guid": "dc68d5a4-1142-43cc-be66-49598a84184c",
+                        "read_label": "R2"
+                    },
+                    "1-a_S6_L001_R2_001.fastq.gz:md5,d56dda766a4f772a6dac0a9b64db42c5"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "1_Example-test1-2026-07-28_Example-test1-2026-07-28_2-b_266bc1a2-a84f-4c5a-863a-4c515eb12fab",
+                        "lane": 1,
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28",
+                        "sample_id": "Example-test1-2026-07-28_2-b_266bc1a2-a84f-4c5a-863a-4c515eb12fab",
+                        "sample_name": "2-b",
+                        "guid": "266bc1a2-a84f-4c5a-863a-4c515eb12fab",
+                        "read_label": "R1"
+                    },
+                    "2-b_S7_L001_R1_001.fastq.gz:md5,1aa59a3c114198327ffa11a8a18a2dc8"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "1_Example-test1-2026-07-28_Example-test1-2026-07-28_2-b_266bc1a2-a84f-4c5a-863a-4c515eb12fab",
+                        "lane": 1,
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28",
+                        "sample_id": "Example-test1-2026-07-28_2-b_266bc1a2-a84f-4c5a-863a-4c515eb12fab",
+                        "sample_name": "2-b",
+                        "guid": "266bc1a2-a84f-4c5a-863a-4c515eb12fab",
+                        "read_label": "R2"
+                    },
+                    "2-b_S7_L001_R2_001.fastq.gz:md5,1943bc8876dce59d878b3b2258f7ea89"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "1_Example-test1-2026-07-28_Example-test1-2026-07-28_3-c_8323999c-8a81-4eee-b879-cf7c485a69f8",
+                        "lane": 1,
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28",
+                        "sample_id": "Example-test1-2026-07-28_3-c_8323999c-8a81-4eee-b879-cf7c485a69f8",
+                        "sample_name": "3-c",
+                        "guid": "8323999c-8a81-4eee-b879-cf7c485a69f8",
+                        "read_label": "R1"
+                    },
+                    "3-c_S8_L001_R1_001.fastq.gz:md5,641c6e16de4e6d4ef971d541e7a30139"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "1_Example-test1-2026-07-28_Example-test1-2026-07-28_3-c_8323999c-8a81-4eee-b879-cf7c485a69f8",
+                        "lane": 1,
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28",
+                        "sample_id": "Example-test1-2026-07-28_3-c_8323999c-8a81-4eee-b879-cf7c485a69f8",
+                        "sample_name": "3-c",
+                        "guid": "8323999c-8a81-4eee-b879-cf7c485a69f8",
+                        "read_label": "R2"
+                    },
+                    "3-c_S8_L001_R2_001.fastq.gz:md5,b83397b44273fb561a1483b180e31463"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "1_Example-test1-2026-07-28_Example-test1-2026-07-28_4-d_805dfa82-478f-40f0-b10c-c8d880990bbf",
+                        "lane": 1,
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28",
+                        "sample_id": "Example-test1-2026-07-28_4-d_805dfa82-478f-40f0-b10c-c8d880990bbf",
+                        "sample_name": "4-d",
+                        "guid": "805dfa82-478f-40f0-b10c-c8d880990bbf",
+                        "read_label": "R1"
+                    },
+                    "4-d_S9_L001_R1_001.fastq.gz:md5,c2d2b4553891f8fba801e4443a49513c"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "1_Example-test1-2026-07-28_Example-test1-2026-07-28_4-d_805dfa82-478f-40f0-b10c-c8d880990bbf",
+                        "lane": 1,
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28",
+                        "sample_id": "Example-test1-2026-07-28_4-d_805dfa82-478f-40f0-b10c-c8d880990bbf",
+                        "sample_name": "4-d",
+                        "guid": "805dfa82-478f-40f0-b10c-c8d880990bbf",
+                        "read_label": "R2"
+                    },
+                    "4-d_S9_L001_R2_001.fastq.gz:md5,0be2257830e850b40cc52a53a5df721d"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "1_Example-test1-2026-07-28_Example-test1-2026-07-28_5-e_8e76dea4-ae5a-4856-a2a5-06cfc2f3915e",
+                        "lane": 1,
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28",
+                        "sample_id": "Example-test1-2026-07-28_5-e_8e76dea4-ae5a-4856-a2a5-06cfc2f3915e",
+                        "sample_name": "5-e",
+                        "guid": "8e76dea4-ae5a-4856-a2a5-06cfc2f3915e",
+                        "read_label": "R1"
+                    },
+                    "5-e_S1_L001_R1_001.fastq.gz:md5,6b7206b0b267e2b28bf3b52d2c58b457"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "1_Example-test1-2026-07-28_Example-test1-2026-07-28_5-e_8e76dea4-ae5a-4856-a2a5-06cfc2f3915e",
+                        "lane": 1,
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28",
+                        "sample_id": "Example-test1-2026-07-28_5-e_8e76dea4-ae5a-4856-a2a5-06cfc2f3915e",
+                        "sample_name": "5-e",
+                        "guid": "8e76dea4-ae5a-4856-a2a5-06cfc2f3915e",
+                        "read_label": "R2"
+                    },
+                    "5-e_S1_L001_R2_001.fastq.gz:md5,19060b6255f4672cb661cb945da03cd3"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "1_Example-test1-2026-07-28_Example-test1-2026-07-28_6-f_bcdd6ee7-2830-481b-b2ba-8a15f3c5fc87",
+                        "lane": 1,
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28",
+                        "sample_id": "Example-test1-2026-07-28_6-f_bcdd6ee7-2830-481b-b2ba-8a15f3c5fc87",
+                        "sample_name": "6-f",
+                        "guid": "bcdd6ee7-2830-481b-b2ba-8a15f3c5fc87",
+                        "read_label": "R1"
+                    },
+                    "6-f_S2_L001_R1_001.fastq.gz:md5,81f34bdf00caa4dd7d523269736a12c2"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "1_Example-test1-2026-07-28_Example-test1-2026-07-28_6-f_bcdd6ee7-2830-481b-b2ba-8a15f3c5fc87",
+                        "lane": 1,
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28",
+                        "sample_id": "Example-test1-2026-07-28_6-f_bcdd6ee7-2830-481b-b2ba-8a15f3c5fc87",
+                        "sample_name": "6-f",
+                        "guid": "bcdd6ee7-2830-481b-b2ba-8a15f3c5fc87",
+                        "read_label": "R2"
+                    },
+                    "6-f_S2_L001_R2_001.fastq.gz:md5,4043e13e083048844ddc0ef3c3096032"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "1_Example-test1-2026-07-28_Example-test1-2026-07-28_7-g_ad52bfe9-3034-47cc-a38a-0664d265f0d8",
+                        "lane": 1,
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28",
+                        "sample_id": "Example-test1-2026-07-28_7-g_ad52bfe9-3034-47cc-a38a-0664d265f0d8",
+                        "sample_name": "7-g",
+                        "guid": "ad52bfe9-3034-47cc-a38a-0664d265f0d8",
+                        "read_label": "R1"
+                    },
+                    "7-g_S3_L001_R1_001.fastq.gz:md5,7d05e8386a7f77fc95741f7b1b64cb2a"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "1_Example-test1-2026-07-28_Example-test1-2026-07-28_7-g_ad52bfe9-3034-47cc-a38a-0664d265f0d8",
+                        "lane": 1,
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28",
+                        "sample_id": "Example-test1-2026-07-28_7-g_ad52bfe9-3034-47cc-a38a-0664d265f0d8",
+                        "sample_name": "7-g",
+                        "guid": "ad52bfe9-3034-47cc-a38a-0664d265f0d8",
+                        "read_label": "R2"
+                    },
+                    "7-g_S3_L001_R2_001.fastq.gz:md5,9d04336dde040c6d1ab29b8ae25d1609"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "1_Example-test1-2026-07-28_Example-test1-2026-07-28_8-h_31d1b404-bc96-416c-b5a8-f8fadf6b151f",
+                        "lane": 1,
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28",
+                        "sample_id": "Example-test1-2026-07-28_8-h_31d1b404-bc96-416c-b5a8-f8fadf6b151f",
+                        "sample_name": "8-h",
+                        "guid": "31d1b404-bc96-416c-b5a8-f8fadf6b151f",
+                        "read_label": "R1"
+                    },
+                    "8-h_S4_L001_R1_001.fastq.gz:md5,cef038858c467d75fc97f001742cdd5e"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "1_Example-test1-2026-07-28_Example-test1-2026-07-28_8-h_31d1b404-bc96-416c-b5a8-f8fadf6b151f",
+                        "lane": 1,
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28",
+                        "sample_id": "Example-test1-2026-07-28_8-h_31d1b404-bc96-416c-b5a8-f8fadf6b151f",
+                        "sample_name": "8-h",
+                        "guid": "31d1b404-bc96-416c-b5a8-f8fadf6b151f",
+                        "read_label": "R2"
+                    },
+                    "8-h_S4_L001_R2_001.fastq.gz:md5,fc14e9c75890360e758785f1e6ad9f04"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "1_Example-test1-2026-07-28_Example-test1-2026-07-28_9-i_dd72ca93-2d1f-4363-aa80-937678f27ceb",
+                        "lane": 1,
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28",
+                        "sample_id": "Example-test1-2026-07-28_9-i_dd72ca93-2d1f-4363-aa80-937678f27ceb",
+                        "sample_name": "9-i",
+                        "guid": "dd72ca93-2d1f-4363-aa80-937678f27ceb",
+                        "read_label": "R1"
+                    },
+                    "9-i_S5_L001_R1_001.fastq.gz:md5,d95ac7079505202df597161da16cbd94"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "1_Example-test1-2026-07-28_Example-test1-2026-07-28_9-i_dd72ca93-2d1f-4363-aa80-937678f27ceb",
+                        "lane": 1,
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28",
+                        "sample_id": "Example-test1-2026-07-28_9-i_dd72ca93-2d1f-4363-aa80-937678f27ceb",
+                        "sample_name": "9-i",
+                        "guid": "dd72ca93-2d1f-4363-aa80-937678f27ceb",
+                        "read_label": "R2"
+                    },
+                    "9-i_S5_L001_R2_001.fastq.gz:md5,26b08daeb867ede40cca3f26f7ae8bec"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "2_Testcase-test2-2026-07-28_Testcase-test2-2026-07-28_1-dummy_73b15f20-0b3d-4ee1-9630-c192ad23569a",
+                        "lane": 2,
+                        "project_name": "Testcase-test2-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Testcase-test2-2026-07-28",
+                        "sample_id": "Testcase-test2-2026-07-28_1-dummy_73b15f20-0b3d-4ee1-9630-c192ad23569a",
+                        "sample_name": "1-dummy",
+                        "guid": "73b15f20-0b3d-4ee1-9630-c192ad23569a",
+                        "read_label": "R1"
+                    },
+                    "1-dummy_S10_L002_R1_001.fastq.gz:md5,5634f3f58d2537cd9bf1a7fb46dada40"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "2_Testcase-test2-2026-07-28_Testcase-test2-2026-07-28_1-dummy_73b15f20-0b3d-4ee1-9630-c192ad23569a",
+                        "lane": 2,
+                        "project_name": "Testcase-test2-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Testcase-test2-2026-07-28",
+                        "sample_id": "Testcase-test2-2026-07-28_1-dummy_73b15f20-0b3d-4ee1-9630-c192ad23569a",
+                        "sample_name": "1-dummy",
+                        "guid": "73b15f20-0b3d-4ee1-9630-c192ad23569a",
+                        "read_label": "R2"
+                    },
+                    "1-dummy_S10_L002_R2_001.fastq.gz:md5,0273ca52543f82cfac23aa7924913afc"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "2_Testcase-test2-2026-07-28_Testcase-test2-2026-07-28_2-unit_e6b0bf3e-24f1-40d1-a445-d8e18556a698",
+                        "lane": 2,
+                        "project_name": "Testcase-test2-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Testcase-test2-2026-07-28",
+                        "sample_id": "Testcase-test2-2026-07-28_2-unit_e6b0bf3e-24f1-40d1-a445-d8e18556a698",
+                        "sample_name": "2-unit",
+                        "guid": "e6b0bf3e-24f1-40d1-a445-d8e18556a698",
+                        "read_label": "R1"
+                    },
+                    "2-unit_S11_L002_R1_001.fastq.gz:md5,532778f06605ed5ff8eb5d0ec84d79f3"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "2_Testcase-test2-2026-07-28_Testcase-test2-2026-07-28_2-unit_e6b0bf3e-24f1-40d1-a445-d8e18556a698",
+                        "lane": 2,
+                        "project_name": "Testcase-test2-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Testcase-test2-2026-07-28",
+                        "sample_id": "Testcase-test2-2026-07-28_2-unit_e6b0bf3e-24f1-40d1-a445-d8e18556a698",
+                        "sample_name": "2-unit",
+                        "guid": "e6b0bf3e-24f1-40d1-a445-d8e18556a698",
+                        "read_label": "R2"
+                    },
+                    "2-unit_S11_L002_R2_001.fastq.gz:md5,8d5e4cb8c3b2d80882ca80b1f91eb4d0"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "2_Testcase-test2-2026-07-28_Testcase-test2-2026-07-28_3-element_0d720e14-f89f-4140-8f14-088ed3711f12",
+                        "lane": 2,
+                        "project_name": "Testcase-test2-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Testcase-test2-2026-07-28",
+                        "sample_id": "Testcase-test2-2026-07-28_3-element_0d720e14-f89f-4140-8f14-088ed3711f12",
+                        "sample_name": "3-element",
+                        "guid": "0d720e14-f89f-4140-8f14-088ed3711f12",
+                        "read_label": "R1"
+                    },
+                    "3-element_S12_L002_R1_001.fastq.gz:md5,29303016551c7cef4717db0a3614c3d0"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "2_Testcase-test2-2026-07-28_Testcase-test2-2026-07-28_3-element_0d720e14-f89f-4140-8f14-088ed3711f12",
+                        "lane": 2,
+                        "project_name": "Testcase-test2-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Testcase-test2-2026-07-28",
+                        "sample_id": "Testcase-test2-2026-07-28_3-element_0d720e14-f89f-4140-8f14-088ed3711f12",
+                        "sample_name": "3-element",
+                        "guid": "0d720e14-f89f-4140-8f14-088ed3711f12",
+                        "read_label": "R2"
+                    },
+                    "3-element_S12_L002_R2_001.fastq.gz:md5,6899155998a2e7302cdf2661cdc643d9"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "2_Testcase-test2-2026-07-28_Testcase-test2-2026-07-28_4-test_fc9f0e1a-0f10-4929-b1a0-ef1ce05321e7",
+                        "lane": 2,
+                        "project_name": "Testcase-test2-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Testcase-test2-2026-07-28",
+                        "sample_id": "Testcase-test2-2026-07-28_4-test_fc9f0e1a-0f10-4929-b1a0-ef1ce05321e7",
+                        "sample_name": "4-test",
+                        "guid": "fc9f0e1a-0f10-4929-b1a0-ef1ce05321e7",
+                        "read_label": "R1"
+                    },
+                    "4-test_S13_L002_R1_001.fastq.gz:md5,121751563a78e4e787898ec799d249c4"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "2_Testcase-test2-2026-07-28_Testcase-test2-2026-07-28_4-test_fc9f0e1a-0f10-4929-b1a0-ef1ce05321e7",
+                        "lane": 2,
+                        "project_name": "Testcase-test2-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Testcase-test2-2026-07-28",
+                        "sample_id": "Testcase-test2-2026-07-28_4-test_fc9f0e1a-0f10-4929-b1a0-ef1ce05321e7",
+                        "sample_name": "4-test",
+                        "guid": "fc9f0e1a-0f10-4929-b1a0-ef1ce05321e7",
+                        "read_label": "R2"
+                    },
+                    "4-test_S13_L002_R2_001.fastq.gz:md5,874b82e5eccca38e70126bbe6d67bc34"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "2_Testcase-test2-2026-07-28_Testcase-test2-2026-07-28_5-datum_eb49169a-d43e-46f2-ac6b-43687cf874fb",
+                        "lane": 2,
+                        "project_name": "Testcase-test2-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Testcase-test2-2026-07-28",
+                        "sample_id": "Testcase-test2-2026-07-28_5-datum_eb49169a-d43e-46f2-ac6b-43687cf874fb",
+                        "sample_name": "5-datum",
+                        "guid": "eb49169a-d43e-46f2-ac6b-43687cf874fb",
+                        "read_label": "R1"
+                    },
+                    "5-datum_S14_L002_R1_001.fastq.gz:md5,91d9b57d59c1e868e2d7d2e4d597119e"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "2_Testcase-test2-2026-07-28_Testcase-test2-2026-07-28_5-datum_eb49169a-d43e-46f2-ac6b-43687cf874fb",
+                        "lane": 2,
+                        "project_name": "Testcase-test2-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Testcase-test2-2026-07-28",
+                        "sample_id": "Testcase-test2-2026-07-28_5-datum_eb49169a-d43e-46f2-ac6b-43687cf874fb",
+                        "sample_name": "5-datum",
+                        "guid": "eb49169a-d43e-46f2-ac6b-43687cf874fb",
+                        "read_label": "R2"
+                    },
+                    "5-datum_S14_L002_R2_001.fastq.gz:md5,3107e4e416f635b735f09cebf46a04c5"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "2_Testcase-test2-2026-07-28_Testcase-test2-2026-07-28_6-point_e624cd43-0e06-4298-b3c7-cc6df7ac4809",
+                        "lane": 2,
+                        "project_name": "Testcase-test2-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Testcase-test2-2026-07-28",
+                        "sample_id": "Testcase-test2-2026-07-28_6-point_e624cd43-0e06-4298-b3c7-cc6df7ac4809",
+                        "sample_name": "6-point",
+                        "guid": "e624cd43-0e06-4298-b3c7-cc6df7ac4809",
+                        "read_label": "R1"
+                    },
+                    "6-point_S15_L002_R1_001.fastq.gz:md5,ac2efa502802ace68d5363423a29f406"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "2_Testcase-test2-2026-07-28_Testcase-test2-2026-07-28_6-point_e624cd43-0e06-4298-b3c7-cc6df7ac4809",
+                        "lane": 2,
+                        "project_name": "Testcase-test2-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Testcase-test2-2026-07-28",
+                        "sample_id": "Testcase-test2-2026-07-28_6-point_e624cd43-0e06-4298-b3c7-cc6df7ac4809",
+                        "sample_name": "6-point",
+                        "guid": "e624cd43-0e06-4298-b3c7-cc6df7ac4809",
+                        "read_label": "R2"
+                    },
+                    "6-point_S15_L002_R2_001.fastq.gz:md5,1d8f0b0afd5e6910bc2117bcc90b203c"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "2_Testcase-test2-2026-07-28_Testcase-test2-2026-07-28_7-case_232431d5-72ed-494e-937a-fe3705e0f315",
+                        "lane": 2,
+                        "project_name": "Testcase-test2-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Testcase-test2-2026-07-28",
+                        "sample_id": "Testcase-test2-2026-07-28_7-case_232431d5-72ed-494e-937a-fe3705e0f315",
+                        "sample_name": "7-case",
+                        "guid": "232431d5-72ed-494e-937a-fe3705e0f315",
+                        "read_label": "R1"
+                    },
+                    "7-case_S16_L002_R1_001.fastq.gz:md5,69a24703e9c887602907bb893dc151f7"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "id": "2_Testcase-test2-2026-07-28_Testcase-test2-2026-07-28_7-case_232431d5-72ed-494e-937a-fe3705e0f315",
+                        "lane": 2,
+                        "project_name": "Testcase-test2-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Testcase-test2-2026-07-28",
+                        "sample_id": "Testcase-test2-2026-07-28_7-case_232431d5-72ed-494e-937a-fe3705e0f315",
+                        "sample_name": "7-case",
+                        "guid": "232431d5-72ed-494e-937a-fe3705e0f315",
+                        "read_label": "R2"
+                    },
+                    "7-case_S16_L002_R2_001.fastq.gz:md5,f006f909724591d541a8e2c86b739872"
+                ]
+            ],
+            [
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "project_name": "Example-test1-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Example-test1-2026-07-28"
+                    },
+                    "md5sum.txt:md5,379c399ae1cf5e64e92e005911b61cab"
+                ],
+                [
+                    {
+                        "run_id": "20260625_LH00534_0319_A22JKHGLT1",
+                        "project_name": "Testcase-test2-2026-07-28",
+                        "project_dir_name": "260625_LH00534.A.Project_Testcase-test2-2026-07-28"
+                    },
+                    "md5sum.txt:md5,a1752a0c0eb0fecc5dffcadc658c3d9d"
+                ]
+            ]
+        ],
+        "timestamp": "2026-08-12T16:18:34.079749",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -764,6 +1241,643 @@
             ]
         ],
         "timestamp": "2026-08-12T13:27:02.473908",
+        "meta": {
+            "nf-test": "0.9.5",
+            "nextflow": "26.04.6"
+        }
+    },
+    "20260715-c1 core output contents": {
+        "content": [
+            [
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_1-miseq1_fd7fb7ae-a16c-4d1e-a3b2-021fdc25b4c2",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_1-miseq1_fd7fb7ae-a16c-4d1e-a3b2-021fdc25b4c2",
+                        "sample_name": "1-miseq1",
+                        "guid": "fd7fb7ae-a16c-4d1e-a3b2-021fdc25b4c2",
+                        "read_label": "R1"
+                    },
+                    "1-miseq1_S22_L001_R1_001.fastq.gz:md5,219e4bfb1cd5faae79739357d7d5aa2e"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_1-miseq1_fd7fb7ae-a16c-4d1e-a3b2-021fdc25b4c2",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_1-miseq1_fd7fb7ae-a16c-4d1e-a3b2-021fdc25b4c2",
+                        "sample_name": "1-miseq1",
+                        "guid": "fd7fb7ae-a16c-4d1e-a3b2-021fdc25b4c2",
+                        "read_label": "R2"
+                    },
+                    "1-miseq1_S22_L001_R2_001.fastq.gz:md5,8be094871930ce5dd4844f7bdd1113a5"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_10-miseq10_9ca8a2a9-ee92-4ee0-aada-c36a76500ccc",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_10-miseq10_9ca8a2a9-ee92-4ee0-aada-c36a76500ccc",
+                        "sample_name": "10-miseq10",
+                        "guid": "9ca8a2a9-ee92-4ee0-aada-c36a76500ccc",
+                        "read_label": "R1"
+                    },
+                    "10-miseq10_S13_L001_R1_001.fastq.gz:md5,994a93ba530bee80cb4e47e6b7668ad4"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_10-miseq10_9ca8a2a9-ee92-4ee0-aada-c36a76500ccc",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_10-miseq10_9ca8a2a9-ee92-4ee0-aada-c36a76500ccc",
+                        "sample_name": "10-miseq10",
+                        "guid": "9ca8a2a9-ee92-4ee0-aada-c36a76500ccc",
+                        "read_label": "R2"
+                    },
+                    "10-miseq10_S13_L001_R2_001.fastq.gz:md5,949598635f70c376b28929d67d20e817"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_11-miseq11_7a37c499-ad29-4e3d-ad85-7867a2a79aed",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_11-miseq11_7a37c499-ad29-4e3d-ad85-7867a2a79aed",
+                        "sample_name": "11-miseq11",
+                        "guid": "7a37c499-ad29-4e3d-ad85-7867a2a79aed",
+                        "read_label": "R1"
+                    },
+                    "11-miseq11_S12_L001_R1_001.fastq.gz:md5,6033db900ff258070250b183e3df6cb3"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_11-miseq11_7a37c499-ad29-4e3d-ad85-7867a2a79aed",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_11-miseq11_7a37c499-ad29-4e3d-ad85-7867a2a79aed",
+                        "sample_name": "11-miseq11",
+                        "guid": "7a37c499-ad29-4e3d-ad85-7867a2a79aed",
+                        "read_label": "R2"
+                    },
+                    "11-miseq11_S12_L001_R2_001.fastq.gz:md5,39a1a8589765cddc4a9dad9cc73be202"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_12-miseq12_221a5fd8-fd84-4119-9070-5007fbe2c326",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_12-miseq12_221a5fd8-fd84-4119-9070-5007fbe2c326",
+                        "sample_name": "12-miseq12",
+                        "guid": "221a5fd8-fd84-4119-9070-5007fbe2c326",
+                        "read_label": "R1"
+                    },
+                    "12-miseq12_S11_L001_R1_001.fastq.gz:md5,27d2137bc7c49b42551bd88dae877bed"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_12-miseq12_221a5fd8-fd84-4119-9070-5007fbe2c326",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_12-miseq12_221a5fd8-fd84-4119-9070-5007fbe2c326",
+                        "sample_name": "12-miseq12",
+                        "guid": "221a5fd8-fd84-4119-9070-5007fbe2c326",
+                        "read_label": "R2"
+                    },
+                    "12-miseq12_S11_L001_R2_001.fastq.gz:md5,bd47a589b54ae52635b22cfb5a3b9f14"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_13-miseq13_a749938f-d965-4cc2-a747-a64fdf12d820",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_13-miseq13_a749938f-d965-4cc2-a747-a64fdf12d820",
+                        "sample_name": "13-miseq13",
+                        "guid": "a749938f-d965-4cc2-a747-a64fdf12d820",
+                        "read_label": "R1"
+                    },
+                    "13-miseq13_S10_L001_R1_001.fastq.gz:md5,d7497f74ea0e4b3d843d9b8910564988"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_13-miseq13_a749938f-d965-4cc2-a747-a64fdf12d820",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_13-miseq13_a749938f-d965-4cc2-a747-a64fdf12d820",
+                        "sample_name": "13-miseq13",
+                        "guid": "a749938f-d965-4cc2-a747-a64fdf12d820",
+                        "read_label": "R2"
+                    },
+                    "13-miseq13_S10_L001_R2_001.fastq.gz:md5,7339852d3df25d8896c39af3762296e4"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_14-miseq14_494c9dda-643f-499b-aa13-de1378d4ad76",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_14-miseq14_494c9dda-643f-499b-aa13-de1378d4ad76",
+                        "sample_name": "14-miseq14",
+                        "guid": "494c9dda-643f-499b-aa13-de1378d4ad76",
+                        "read_label": "R1"
+                    },
+                    "14-miseq14_S9_L001_R1_001.fastq.gz:md5,99b669f183609c03eafeed70af480aae"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_14-miseq14_494c9dda-643f-499b-aa13-de1378d4ad76",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_14-miseq14_494c9dda-643f-499b-aa13-de1378d4ad76",
+                        "sample_name": "14-miseq14",
+                        "guid": "494c9dda-643f-499b-aa13-de1378d4ad76",
+                        "read_label": "R2"
+                    },
+                    "14-miseq14_S9_L001_R2_001.fastq.gz:md5,a62d1f5f20046c376b0f9a8b9b8bd2ef"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_15-miseq15_be695a47-bf06-476c-bc3c-4f743a84c1f8",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_15-miseq15_be695a47-bf06-476c-bc3c-4f743a84c1f8",
+                        "sample_name": "15-miseq15",
+                        "guid": "be695a47-bf06-476c-bc3c-4f743a84c1f8",
+                        "read_label": "R1"
+                    },
+                    "15-miseq15_S8_L001_R1_001.fastq.gz:md5,42dd3c888f865c15538ff4f889a1803c"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_15-miseq15_be695a47-bf06-476c-bc3c-4f743a84c1f8",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_15-miseq15_be695a47-bf06-476c-bc3c-4f743a84c1f8",
+                        "sample_name": "15-miseq15",
+                        "guid": "be695a47-bf06-476c-bc3c-4f743a84c1f8",
+                        "read_label": "R2"
+                    },
+                    "15-miseq15_S8_L001_R2_001.fastq.gz:md5,3397a6c5c1cf77592b3f1d4fb78181fc"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_16-miseq16_723940bc-2ca5-408a-b500-cbf4ca69079a",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_16-miseq16_723940bc-2ca5-408a-b500-cbf4ca69079a",
+                        "sample_name": "16-miseq16",
+                        "guid": "723940bc-2ca5-408a-b500-cbf4ca69079a",
+                        "read_label": "R1"
+                    },
+                    "16-miseq16_S7_L001_R1_001.fastq.gz:md5,2a1f3b797408f25490f9897b58d331ce"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_16-miseq16_723940bc-2ca5-408a-b500-cbf4ca69079a",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_16-miseq16_723940bc-2ca5-408a-b500-cbf4ca69079a",
+                        "sample_name": "16-miseq16",
+                        "guid": "723940bc-2ca5-408a-b500-cbf4ca69079a",
+                        "read_label": "R2"
+                    },
+                    "16-miseq16_S7_L001_R2_001.fastq.gz:md5,e497e8bf02956ed8e9284f9e845139fa"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_17-miseq17_4d3d5e6b-34c9-449c-adcc-266a8ce35a74",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_17-miseq17_4d3d5e6b-34c9-449c-adcc-266a8ce35a74",
+                        "sample_name": "17-miseq17",
+                        "guid": "4d3d5e6b-34c9-449c-adcc-266a8ce35a74",
+                        "read_label": "R1"
+                    },
+                    "17-miseq17_S6_L001_R1_001.fastq.gz:md5,4ea8a881fc3cf10be7b59a3580e45284"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_17-miseq17_4d3d5e6b-34c9-449c-adcc-266a8ce35a74",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_17-miseq17_4d3d5e6b-34c9-449c-adcc-266a8ce35a74",
+                        "sample_name": "17-miseq17",
+                        "guid": "4d3d5e6b-34c9-449c-adcc-266a8ce35a74",
+                        "read_label": "R2"
+                    },
+                    "17-miseq17_S6_L001_R2_001.fastq.gz:md5,743cb457e909a34aa83a9f4fee7b88ab"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_18-miseq18_93b9ca20-a2af-4e23-88d0-ade00bf3cbd2",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_18-miseq18_93b9ca20-a2af-4e23-88d0-ade00bf3cbd2",
+                        "sample_name": "18-miseq18",
+                        "guid": "93b9ca20-a2af-4e23-88d0-ade00bf3cbd2",
+                        "read_label": "R1"
+                    },
+                    "18-miseq18_S5_L001_R1_001.fastq.gz:md5,bd0bf3f638c61d2bd804dac56c2c4ff4"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_18-miseq18_93b9ca20-a2af-4e23-88d0-ade00bf3cbd2",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_18-miseq18_93b9ca20-a2af-4e23-88d0-ade00bf3cbd2",
+                        "sample_name": "18-miseq18",
+                        "guid": "93b9ca20-a2af-4e23-88d0-ade00bf3cbd2",
+                        "read_label": "R2"
+                    },
+                    "18-miseq18_S5_L001_R2_001.fastq.gz:md5,dfccb074bac933d32e1f3b429ba7331f"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_19-miseq19_512c0c0b-4f94-4219-99ef-5ddcb0bf2a50",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_19-miseq19_512c0c0b-4f94-4219-99ef-5ddcb0bf2a50",
+                        "sample_name": "19-miseq19",
+                        "guid": "512c0c0b-4f94-4219-99ef-5ddcb0bf2a50",
+                        "read_label": "R1"
+                    },
+                    "19-miseq19_S4_L001_R1_001.fastq.gz:md5,7c9a4820ab8e1a9b703f492740bc687f"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_19-miseq19_512c0c0b-4f94-4219-99ef-5ddcb0bf2a50",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_19-miseq19_512c0c0b-4f94-4219-99ef-5ddcb0bf2a50",
+                        "sample_name": "19-miseq19",
+                        "guid": "512c0c0b-4f94-4219-99ef-5ddcb0bf2a50",
+                        "read_label": "R2"
+                    },
+                    "19-miseq19_S4_L001_R2_001.fastq.gz:md5,aebfb6104dd268745cc2bb8bc5fd9cb7"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_2-miseq2_b88067f2-ee61-4e91-8512-34d31c9356e9",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_2-miseq2_b88067f2-ee61-4e91-8512-34d31c9356e9",
+                        "sample_name": "2-miseq2",
+                        "guid": "b88067f2-ee61-4e91-8512-34d31c9356e9",
+                        "read_label": "R1"
+                    },
+                    "2-miseq2_S21_L001_R1_001.fastq.gz:md5,1519e2e69731e7a5eb1436815c0f8755"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_2-miseq2_b88067f2-ee61-4e91-8512-34d31c9356e9",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_2-miseq2_b88067f2-ee61-4e91-8512-34d31c9356e9",
+                        "sample_name": "2-miseq2",
+                        "guid": "b88067f2-ee61-4e91-8512-34d31c9356e9",
+                        "read_label": "R2"
+                    },
+                    "2-miseq2_S21_L001_R2_001.fastq.gz:md5,87c49611f61e8829845b591757e67762"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_20-miseq20_1e3d3ec3-b4ff-4888-9502-d28aeb5dd6ba",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_20-miseq20_1e3d3ec3-b4ff-4888-9502-d28aeb5dd6ba",
+                        "sample_name": "20-miseq20",
+                        "guid": "1e3d3ec3-b4ff-4888-9502-d28aeb5dd6ba",
+                        "read_label": "R1"
+                    },
+                    "20-miseq20_S3_L001_R1_001.fastq.gz:md5,4d01896dee3aafc49756f94ede3c43a9"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_20-miseq20_1e3d3ec3-b4ff-4888-9502-d28aeb5dd6ba",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_20-miseq20_1e3d3ec3-b4ff-4888-9502-d28aeb5dd6ba",
+                        "sample_name": "20-miseq20",
+                        "guid": "1e3d3ec3-b4ff-4888-9502-d28aeb5dd6ba",
+                        "read_label": "R2"
+                    },
+                    "20-miseq20_S3_L001_R2_001.fastq.gz:md5,365c19911c13de0f8f6436aab4356d4b"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_21-miseq21_89a0c738-9914-4f1a-bf86-18c7ba31bb6d",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_21-miseq21_89a0c738-9914-4f1a-bf86-18c7ba31bb6d",
+                        "sample_name": "21-miseq21",
+                        "guid": "89a0c738-9914-4f1a-bf86-18c7ba31bb6d",
+                        "read_label": "R1"
+                    },
+                    "21-miseq21_S2_L001_R1_001.fastq.gz:md5,8a5f16ee5cfaf26032c31672d703f579"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_21-miseq21_89a0c738-9914-4f1a-bf86-18c7ba31bb6d",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_21-miseq21_89a0c738-9914-4f1a-bf86-18c7ba31bb6d",
+                        "sample_name": "21-miseq21",
+                        "guid": "89a0c738-9914-4f1a-bf86-18c7ba31bb6d",
+                        "read_label": "R2"
+                    },
+                    "21-miseq21_S2_L001_R2_001.fastq.gz:md5,2e968062f62044f5f4ece7cc271567c6"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_22-miseq22_a5a2ecda-f5d3-4b7c-b6ae-7a7ce9a02d21",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_22-miseq22_a5a2ecda-f5d3-4b7c-b6ae-7a7ce9a02d21",
+                        "sample_name": "22-miseq22",
+                        "guid": "a5a2ecda-f5d3-4b7c-b6ae-7a7ce9a02d21",
+                        "read_label": "R1"
+                    },
+                    "22-miseq22_S1_L001_R1_001.fastq.gz:md5,ea97429875008f5c541e5ea4bc92fcf2"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_22-miseq22_a5a2ecda-f5d3-4b7c-b6ae-7a7ce9a02d21",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_22-miseq22_a5a2ecda-f5d3-4b7c-b6ae-7a7ce9a02d21",
+                        "sample_name": "22-miseq22",
+                        "guid": "a5a2ecda-f5d3-4b7c-b6ae-7a7ce9a02d21",
+                        "read_label": "R2"
+                    },
+                    "22-miseq22_S1_L001_R2_001.fastq.gz:md5,8c886b826e4735135d6688e272f26684"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_3-miseq3_634ec9f2-d9fb-4b91-a67e-f3db7b78f75d",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_3-miseq3_634ec9f2-d9fb-4b91-a67e-f3db7b78f75d",
+                        "sample_name": "3-miseq3",
+                        "guid": "634ec9f2-d9fb-4b91-a67e-f3db7b78f75d",
+                        "read_label": "R1"
+                    },
+                    "3-miseq3_S20_L001_R1_001.fastq.gz:md5,f81b86b44cedf876de09417a4494f857"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_3-miseq3_634ec9f2-d9fb-4b91-a67e-f3db7b78f75d",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_3-miseq3_634ec9f2-d9fb-4b91-a67e-f3db7b78f75d",
+                        "sample_name": "3-miseq3",
+                        "guid": "634ec9f2-d9fb-4b91-a67e-f3db7b78f75d",
+                        "read_label": "R2"
+                    },
+                    "3-miseq3_S20_L001_R2_001.fastq.gz:md5,397430996a818bd090f3ee0f3ca7483b"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_4-miseq4_b279df1f-0466-42e1-92e1-4c8020de0523",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_4-miseq4_b279df1f-0466-42e1-92e1-4c8020de0523",
+                        "sample_name": "4-miseq4",
+                        "guid": "b279df1f-0466-42e1-92e1-4c8020de0523",
+                        "read_label": "R1"
+                    },
+                    "4-miseq4_S19_L001_R1_001.fastq.gz:md5,bf39c305e3cea93bf5ad6de26c17faf2"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_4-miseq4_b279df1f-0466-42e1-92e1-4c8020de0523",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_4-miseq4_b279df1f-0466-42e1-92e1-4c8020de0523",
+                        "sample_name": "4-miseq4",
+                        "guid": "b279df1f-0466-42e1-92e1-4c8020de0523",
+                        "read_label": "R2"
+                    },
+                    "4-miseq4_S19_L001_R2_001.fastq.gz:md5,77058e1d74edc21c721351585fbe0c23"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_5-miseq5_16237ddd-60f2-47c9-9ca4-bd2d3b9e5c5f",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_5-miseq5_16237ddd-60f2-47c9-9ca4-bd2d3b9e5c5f",
+                        "sample_name": "5-miseq5",
+                        "guid": "16237ddd-60f2-47c9-9ca4-bd2d3b9e5c5f",
+                        "read_label": "R1"
+                    },
+                    "5-miseq5_S18_L001_R1_001.fastq.gz:md5,7cbd4dcb824e6312889b655c602fcb34"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_5-miseq5_16237ddd-60f2-47c9-9ca4-bd2d3b9e5c5f",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_5-miseq5_16237ddd-60f2-47c9-9ca4-bd2d3b9e5c5f",
+                        "sample_name": "5-miseq5",
+                        "guid": "16237ddd-60f2-47c9-9ca4-bd2d3b9e5c5f",
+                        "read_label": "R2"
+                    },
+                    "5-miseq5_S18_L001_R2_001.fastq.gz:md5,d2b17894c396069c68337dde26b6c550"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_6-miseq6_3a6a4383-8746-471f-baae-d526465def19",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_6-miseq6_3a6a4383-8746-471f-baae-d526465def19",
+                        "sample_name": "6-miseq6",
+                        "guid": "3a6a4383-8746-471f-baae-d526465def19",
+                        "read_label": "R1"
+                    },
+                    "6-miseq6_S17_L001_R1_001.fastq.gz:md5,269145193b3e7ef310f45452f7451f84"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_6-miseq6_3a6a4383-8746-471f-baae-d526465def19",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_6-miseq6_3a6a4383-8746-471f-baae-d526465def19",
+                        "sample_name": "6-miseq6",
+                        "guid": "3a6a4383-8746-471f-baae-d526465def19",
+                        "read_label": "R2"
+                    },
+                    "6-miseq6_S17_L001_R2_001.fastq.gz:md5,8cb305f3e5b757fadb34e79ea7417862"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_7-miseq7_702258e7-5b0b-427f-aa8f-81174ec062e9",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_7-miseq7_702258e7-5b0b-427f-aa8f-81174ec062e9",
+                        "sample_name": "7-miseq7",
+                        "guid": "702258e7-5b0b-427f-aa8f-81174ec062e9",
+                        "read_label": "R1"
+                    },
+                    "7-miseq7_S16_L001_R1_001.fastq.gz:md5,7964560765106214ea69fb96a3654746"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_7-miseq7_702258e7-5b0b-427f-aa8f-81174ec062e9",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_7-miseq7_702258e7-5b0b-427f-aa8f-81174ec062e9",
+                        "sample_name": "7-miseq7",
+                        "guid": "702258e7-5b0b-427f-aa8f-81174ec062e9",
+                        "read_label": "R2"
+                    },
+                    "7-miseq7_S16_L001_R2_001.fastq.gz:md5,3d09b7236a96e661931b0917e9b88a92"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_8-miseq8_b58a1f64-570a-4d2e-9754-a5aeb2bdcda8",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_8-miseq8_b58a1f64-570a-4d2e-9754-a5aeb2bdcda8",
+                        "sample_name": "8-miseq8",
+                        "guid": "b58a1f64-570a-4d2e-9754-a5aeb2bdcda8",
+                        "read_label": "R1"
+                    },
+                    "8-miseq8_S15_L001_R1_001.fastq.gz:md5,0d95a163fce7c144f3f7222973ecdaeb"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_8-miseq8_b58a1f64-570a-4d2e-9754-a5aeb2bdcda8",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_8-miseq8_b58a1f64-570a-4d2e-9754-a5aeb2bdcda8",
+                        "sample_name": "8-miseq8",
+                        "guid": "b58a1f64-570a-4d2e-9754-a5aeb2bdcda8",
+                        "read_label": "R2"
+                    },
+                    "8-miseq8_S15_L001_R2_001.fastq.gz:md5,3377503c375a95a414d3e2ced23fc98b"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_9-miseq9_421c9a99-35dc-44b3-ad94-2c4316357f36",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_9-miseq9_421c9a99-35dc-44b3-ad94-2c4316357f36",
+                        "sample_name": "9-miseq9",
+                        "guid": "421c9a99-35dc-44b3-ad94-2c4316357f36",
+                        "read_label": "R1"
+                    },
+                    "9-miseq9_S14_L001_R1_001.fastq.gz:md5,b0039ac7628c00330f208b17c5789052"
+                ],
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "id": "1_Test-Libs6-2026-06-22_Test-Libs6-2026-06-22_9-miseq9_421c9a99-35dc-44b3-ad94-2c4316357f36",
+                        "lane": 1,
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22",
+                        "sample_id": "Test-Libs6-2026-06-22_9-miseq9_421c9a99-35dc-44b3-ad94-2c4316357f36",
+                        "sample_name": "9-miseq9",
+                        "guid": "421c9a99-35dc-44b3-ad94-2c4316357f36",
+                        "read_label": "R2"
+                    },
+                    "9-miseq9_S14_L001_R2_001.fastq.gz:md5,6590ac056aadfe3693055f58e4a66dbd"
+                ]
+            ],
+            [
+                [
+                    {
+                        "run_id": "20260715_SH01006_0020_ASC2245414-SC3",
+                        "project_name": "Test-Libs6-2026-06-22",
+                        "project_dir_name": "260715_SH01006.A.Project_Test-Libs6-2026-06-22"
+                    },
+                    "md5sum.txt:md5,38811e2672a4d80b762b71085ea869d9"
+                ]
+            ]
+        ],
+        "timestamp": "2026-08-12T16:19:13.716034",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
