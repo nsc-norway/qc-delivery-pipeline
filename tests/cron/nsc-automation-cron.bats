@@ -6,10 +6,14 @@ setup() {
     run_root="${BATS_TEST_TMPDIR}/runs"
     mock_bin="${BATS_TEST_TMPDIR}/bin"
     call_log="${BATS_TEST_TMPDIR}/calls.log"
+    mik_delivery_root="${BATS_TEST_TMPDIR}/mik-delivery"
+    imm_delivery_root="${BATS_TEST_TMPDIR}/imm-delivery"
 
-    mkdir -p "$run_root" "$mock_bin"
+    mkdir -p "$run_root" "$mock_bin" "$mik_delivery_root" "$imm_delivery_root"
     : > "$call_log"
     export CALL_LOG="$call_log"
+    export MIK_DELIVERY_ROOT="$mik_delivery_root"
+    export IMM_DELIVERY_ROOT="$imm_delivery_root"
     export PATH="${mock_bin}:${PATH}"
 
     create_command_mock pipeline-runner.sh
@@ -127,7 +131,9 @@ assert_calls_match() {
     run bash "$cron_script" "$run_root"
 
     [ "$status" -eq 0 ]
-    expected_calls=$(printf 'shared-resource-user-delivery.sh\tIMM\t%s\nshared-resource-user-delivery.sh\tMIK\t%s' "$imm_analysis" "$mik_analysis")
+    expected_calls=$(printf 'shared-resource-user-delivery.sh\t%s\t%s\t%s\nshared-resource-user-delivery.sh\t%s\t%s\t%s' \
+        "${run_root}/imm-run" "$imm_analysis" "$imm_delivery_root" \
+        "${run_root}/mik-run" "$mik_analysis" "$mik_delivery_root")
     assert_calls_match "$expected_calls"
 }
 

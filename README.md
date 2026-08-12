@@ -9,6 +9,14 @@ https://gitlab.com/genomedx/labautomation/sapio-sequencingfiles
 
 ## Entry points and usage
 
+### Environment configuration
+
+The scripts are configured using environment variables. An example is given in .env.example.
+
+TODO
+
+
+
 ### Scheduled automation worker
 
 Scans a run folder location for unprocessed runs, looks up LIMS information and starts an appropriate

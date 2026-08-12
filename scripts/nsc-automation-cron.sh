@@ -4,8 +4,21 @@
 
 # The called script sapio-run-extractor.py requires environment variables to be set for the Sapio API. See script source for details.
 
+
+# Required environment variables:
+# Sapio credentials
+# MIK_DELIVERY_ROOT
+# IMM_DELIVERY_ROOT
+
+
+
 if [ "$1" == "" ]; then
     echo "Usage: $0 RUN_FOLDER_ROOT"
+    exit 1
+fi
+
+if [ ! -d "$MIK_DELIVERY_ROOT" ] || [ ! -d "$IMM_DELIVERY_ROOT" ]; then
+    echo "Error: Delivery destinations must be specified and exist: MIK_DELIVERY_ROOT, IMM_DELIVERY_ROOT"
     exit 1
 fi
 
@@ -44,10 +57,10 @@ do
 
         if [ $IS_MIK -eq 0 ]; then
             echo "Analysis is from MIK department" >> "$log_file"
-            shared-resource-user-delivery.sh MIK "$analysis" >> "$log_file" 2>&1
+            shared-resource-user-delivery.sh "$run_folder" "$analysis" "$MIK_DELIVERY_ROOT" >> "$log_file" 2>&1
         elif [ $IS_IMM -eq 0 ]; then
             echo "Analysis is from IMM department" >> "$log_file"
-            shared-resource-user-delivery.sh IMM "$analysis" >> "$log_file" 2>&1
+            shared-resource-user-delivery.sh "$run_folder" "$analysis" "$IMM_DELIVERY_ROOT" >> "$log_file" 2>&1
         else
             echo "Running the nextflow pipeline..." >> "$log_file"
             pipeline-runner.sh "$analysis" >> "$log_file" 2>&1
