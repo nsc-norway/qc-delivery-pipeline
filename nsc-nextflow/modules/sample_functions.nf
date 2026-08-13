@@ -109,10 +109,11 @@ def getProjectDirName( projectName, runId ) {
  * @param lane             (Integer)  the lane number (e.g. 1, 2, …)
  * @param fastqDir         (Path)     Fastq directory
  * @param sampleId         (String)   Sample ID
+ * @param sampleProject    (String)   Value of Sample_Project column in SampleSheet (may be null)
  * @param isOraCompressed  (Boolean)  True if ora compressed, otherwise gz
  * @return                 Tuples of (readLabel, fastq_path) for each FASTQ file found for the sample.
  */
-def getFastqReadLabelsAndPaths( lane, fastqDir, sampleId, isOraCompressed ) {
+def getFastqReadLabelsAndPaths( lane, fastqDir, sampleId, sampleProject, isOraCompressed ) {
     // decide which reads to look for
     def extensionPattern = "\\.fastq\\.gz"
     if (isOraCompressed) {
@@ -124,10 +125,14 @@ def getFastqReadLabelsAndPaths( lane, fastqDir, sampleId, isOraCompressed ) {
     ["R1", "I1", "I2", "R2"].collect { readLabel ->
         // build a Groovy regex to match the unpredictable S<digits> part
         def pattern = "^${sampleId}_S\\d+_L00${lane}_${readLabel}_001${extensionPattern}\$"
-        def match = fastqDir.listDirectory().find { fastqFile -> fastqFile.name ==~ pattern }
+        def fastqLocalDir = fastqDir
+        if (sampleProject) {
+            fastqLocalDir = fastqDir.resolve(sampleProject)
+        }
+        def match = fastqLocalDir.listDirectory().find { fastqFile -> fastqFile.name ==~ pattern }
         if( ! match ) {
             if (readLabel == "R1") {
-                throw new FileNotFoundException("No FASTQ file matching $pattern in $fastqDir")
+                throw new FileNotFoundException("No FASTQ file matching $pattern in $fastqLocalDir")
             }
             else {
                 match = ""

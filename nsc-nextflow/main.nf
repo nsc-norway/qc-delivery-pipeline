@@ -35,16 +35,15 @@ workflow QC_DELIVERY_PIPELINE {
     // LOCATE INPUT FILES
 
     // Sample sheet is usually copied to Reports/ by BCL Convert, but in case of NovaSeq X onboard analysis, 
-    // it can instead be found next to the fastq files.
+    // it can instead be found directly in the BCLConvert directory (next to fastqc outputs).
     def sampleSheet = file("${params.bclConvertFastqDir}/Reports/SampleSheet.csv")
     if (!sampleSheet.exists()) {
-        sampleSheet = file("${params.bclConvertFastqDir}/SampleSheet.csv")
+        sampleSheet = file("${params.bclConvertFastqDir}/../SampleSheet.csv")
     }
     def fastqDir = file(params.bclConvertFastqDir)
     def runId = file(params.runFolder).name
-    // TODO allow missing file
     def sapioRunFile = file("${params.runFolder}/NscSapioInfo.yaml")
-    def sapioRunInfo = new groovy.yaml.YamlSlurper().parseText(sapioRunFile.text)
+    def sapioRunInfo = sapioRunFile.exists() ? new groovy.yaml.YamlSlurper().parseText(sapioRunFile.text) : [projects: []]
 
     println ("Working on Run: ${runId}")
 
@@ -59,8 +58,8 @@ workflow QC_DELIVERY_PIPELINE {
         .flatMap { samplesheet_file -> parseBclConvertData(samplesheet_file) }
         // tuples of (lane, projectName, sampleId)
         .unique()
-        .map { lane, origProjectName, sampleId ->
-            def (projectName, sampleName, guid) = unpackSampleIds(origProjectName, sampleId)
+        .map { lane, sampleProjectColumnValue, sampleId ->
+            def (projectName, sampleName, guid) = unpackSampleIds(sampleProjectColumnValue, sampleId)
             def projectDirName = getProjectDirName(projectName, runId)
             def sampleKey = "${lane}_${projectName}_${sampleId}"
             [
@@ -68,6 +67,7 @@ workflow QC_DELIVERY_PIPELINE {
                 id: sampleKey,
                 lane: lane,
                 project_name: projectName,
+                sample_project_column_value: sampleProjectColumnValue,
                 project_dir_name: projectDirName,
                 sample_id: sampleId,
                 sample_name: sampleName,
@@ -79,7 +79,7 @@ workflow QC_DELIVERY_PIPELINE {
     // This file channel contains two entries per sample for paired-end runs, four entries
     // per sample in case of paired end + index reads fastqs are enabled, etc.
     def original_files_ch = sample_metadata_ch.flatMap { meta ->
-            def fastqs = getFastqReadLabelsAndPaths(meta.lane, fastqDir, meta.sample_id, isOra)
+            def fastqs = getFastqReadLabelsAndPaths(meta.lane, fastqDir, meta.sample_id, meta.sample_project_column_value, isOra)
             fastqs.collect { readLabel, fastqPath ->
                 [meta + [read_label: readLabel], fastqPath]
         }
@@ -171,11 +171,14 @@ workflow QC_DELIVERY_PIPELINE {
     // Generate username and password - used by NIRD delivery and email script
     PROJECT_CREDENTIALS(groupByProject(files_ch).map { meta, _files -> meta })
 
+    def TAR_DELIVERY_TYPES = ['NIRD']
+    def LINK_DELIVERY_TYPES = ['NeLS project', 'User HDD', 'New HDD', 'TSD project']
+
     // NIRD - create tar file
     TAR_FOLDER(
         // Input structure to tar process is (project-grouped): (meta, [list of files to deliver])
         delivery_files_project_grouped_ch
-            .filter { delivery_method, _meta, _files -> delivery_method == 'NIRD' }
+            .filter { delivery_method, _meta, _files -> delivery_method in TAR_DELIVERY_TYPES }
             .map { _delivery_method, meta, files -> [meta, files] }
             .join(PROJECT_CREDENTIALS.out.PROJECT_CREDENTIALS_out)
     )
@@ -184,18 +187,16 @@ workflow QC_DELIVERY_PIPELINE {
     LINK_FOLDER(
         // Input structure to link process is (project-grouped): (meta, [list of files to deliver])
         delivery_files_project_grouped_ch
-            .filter { delivery_method, _meta, _files -> delivery_method in [null, 'NeLS project', 'User_HDD', 'New_HDD', 'TSD_project'] }
+            .filter { delivery_method, _meta, _files -> delivery_method in LINK_DELIVERY_TYPES }
             .map { _delivery_method, meta, files -> [meta, files] }
     )
 
-    emit: // Emit channels for testing
-    fastqs = files_ch
-    md5sum = CAT_MD5SUM.out.CAT_MD5SUM_out
-    fastqc_html = fastqc_html_ch
-    suprdupr = suprdupr_ch
-    multiqc = multiqc_ch
-    nird_delivery = TAR_FOLDER.out.TAR_FOLDER_out
-    linked_delivery = LINK_FOLDER.out
+    // Throw an error if there are any projects with unsupported delivery methods
+    delivery_files_project_grouped_ch
+        .filter { delivery_method, _meta, _files -> !(delivery_method in TAR_DELIVERY_TYPES + LINK_DELIVERY_TYPES) }
+        .map { delivery_method, _meta, _files ->
+            error("Unsupported delivery method '${delivery_method}' for project '${_meta.project_name}'")
+        }
 
 /*
     EMAIL_PROJECT(
@@ -210,6 +211,17 @@ workflow QC_DELIVERY_PIPELINE {
     // Run-level process
     EMAIL_SUMMARY_RUN(params.runFolder, qcfolder, project_lims_json.collect())
     */
+
+
+    emit: // Emit channels for testing
+    fastqs = files_ch
+    md5sum = CAT_MD5SUM.out.CAT_MD5SUM_out
+    fastqc_html = fastqc_html_ch
+    suprdupr = suprdupr_ch
+    multiqc = multiqc_ch
+    nird_delivery = TAR_FOLDER.out.TAR_FOLDER_out
+    linked_delivery = LINK_FOLDER.out
+
 }
 
 workflow {

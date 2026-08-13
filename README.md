@@ -122,6 +122,19 @@ cd nsc-nextflow
 nf-test test
 ```
 
+Run an individual test by its name tag:
+
+```
+nf-test test --tag MiSeq.20260715.3
+```
+
+When development intentionally changes expected output, update that test's
+snapshots:
+
+```
+nf-test test --tag MiSeq.20260715.3 --update-snapshot
+```
+
 ### Cron worker
 
 Run the cron worker tests from the repository root:

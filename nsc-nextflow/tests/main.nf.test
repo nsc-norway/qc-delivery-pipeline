@@ -4,211 +4,142 @@ nextflow_workflow {
     script "main.nf"
     workflow "QC_DELIVERY_PIPELINE"
 
-    test("publishes the expected output and delivery files for the MiSeq fixture") {
 
-        when {
-            params {
-                def fixtureDir = "${projectDir}/../tests/fixtures/20260715_SH01006_0020_ASC2245414-SC3"
-                def resultsDir = "${projectDir}/.nf-test/results/main-smoke"
+    // This is a generic test definition to run the pipeline and verify the output files.
+    // Specific tests are defined below.
+    def fixtureTest = { fixture ->
+        test(fixture.name) {
 
-                runFolder = fixtureDir
-                bclConvertFastqDir = "${fixtureDir}/Analysis/3/Data/BCLConvert/fastq"
-                outdir = "${resultsDir}/outdir"
-                deliveryDir = "${resultsDir}/delivery"
-            }
-        }
+            when {
+                params {
+                    def fixtureDir = "${projectDir}/../tests/fixtures/${fixture.runId}"
+                    def resultsDir = "${projectDir}/.nf-test/results/${fixture.resultsDir}"
+                    def inputRunFolder = fixtureDir
 
-        then {
-            assert workflow.success
+                    if (fixture.containsKey("sapioInfo")) {
+                        def testRunFolder = java.nio.file.Paths.get("${projectDir}/.nf-test/input-runs/${fixture.resultsDir}/${fixture.runId}")
+                        def testSapioInfo = testRunFolder.resolve("NscSapioInfo.yaml")
+                        java.nio.file.Files.createDirectories(testRunFolder)
+                        java.nio.file.Files.deleteIfExists(testSapioInfo)
+                        if (fixture.sapioInfo != null) {
+                            java.nio.file.Files.copy(
+                                java.nio.file.Paths.get("${projectDir}/tests/fixtures/${fixture.sapioInfo}"),
+                                testSapioInfo,
+                                java.nio.file.StandardCopyOption.REPLACE_EXISTING
+                            )
+                        }
+                        inputRunFolder = testRunFolder.toString()
+                    }
 
-            def projectOutputDir = path("${projectDir}/.nf-test/results/main-smoke/outdir/20260715_SH01006_0020_ASC2245414-SC3/260715_SH01006.A.Project_Test-Libs6-2026-06-22")
-            def projectDeliveryDir = path("${projectDir}/.nf-test/results/main-smoke/delivery/260715_SH01006.A.Project_Test-Libs6-2026-06-22")
-
-            assert projectOutputDir.resolve("22-miseq22_S1_L001_R1_001.fastq.gz").exists()
-            assert projectOutputDir.resolve("md5sum.txt").exists()
-            assert projectDeliveryDir.exists()
-            assert workflow.out.nird_delivery.size() == 1
-
-            def fixtureId = "20260715_SH01006_0020_ASC2245414-SC3"
-            def fileNames = { directory ->
-                def fileStream = java.nio.file.Files.list(directory)
-                try {
-                    fileStream
-                        .filter { file -> java.nio.file.Files.isRegularFile(file) }
-                        .map { file -> file.fileName.toString() }
-                        .sorted()
-                        .toList()
-                } finally {
-                    fileStream.close()
+                    runFolder = inputRunFolder
+                    bclConvertFastqDir = "${fixtureDir}/${fixture.bclConvertFastqDir}"
+                    outdir = "${resultsDir}/outdir"
+                    deliveryDir = "${resultsDir}/delivery"
+                    putAll(fixture.params)
                 }
             }
-            assert snapshot(fileNames(projectOutputDir)).match("published output files")
-            assert snapshot(fileNames(projectDeliveryDir)).match("delivery files")
-            assert snapshot(workflow.out.md5sum).match("${fixtureId} md5sum contents")
-            assert snapshot(workflow.out.fastqc_html).match("${fixtureId} FastQC contents")
-            assert snapshot(workflow.out.suprdupr).match("${fixtureId} suprDUPr contents")
-            assert snapshot(workflow.out.multiqc).match("${fixtureId} MultiQC contents")
-        }
-    }
 
-    test("runs the NovaSeq X offboard c2 fixture") {
+            then {
+                assert workflow.success
 
-        when {
-            params {
-                def fixtureDir = "${projectDir}/../tests/fixtures/20260625_LH00534_0319_A22JKHGLT1"
-                def resultsDir = "${projectDir}/.nf-test/results/20260625-c2"
+                def resultsDir = path("${projectDir}/.nf-test/results/${fixture.resultsDir}")
+                def relativeFileNames = { directory ->
+                    if (!directory.exists()) {
+                        return []
+                    }
+                    def fileStream = java.nio.file.Files.walk(directory)
+                    try {
+                        fileStream
+                            .filter { file -> java.nio.file.Files.isRegularFile(file) }
+                            .map { file -> directory.relativize(file).toString() }
+                            .sorted()
+                            .toList()
+                    } finally {
+                        fileStream.close()
+                    }
+                }
+                def channelFileNames = { channel ->
+                    channel.collect { entry ->
+                        def output = entry instanceof List ? entry.last() : entry
+                        java.nio.file.Paths.get(output.toString()).getFileName().toString()
+                    }.sort()
+                }
 
-                runFolder = fixtureDir
-                bclConvertFastqDir = "${fixtureDir}/Analysis/c2/Fastq"
-                outdir = "${resultsDir}/outdir"
-                deliveryDir = "${resultsDir}/delivery"
+                assert snapshot([
+                    published: relativeFileNames(resultsDir.resolve("outdir")),
+                    delivery: relativeFileNames(resultsDir.resolve("delivery")),
+                    fastqs: channelFileNames(workflow.out.fastqs),
+                    md5sum: channelFileNames(workflow.out.md5sum),
+                    fastqcHtml: channelFileNames(workflow.out.fastqc_html),
+                    suprdupr: channelFileNames(workflow.out.suprdupr),
+                    multiqc: channelFileNames(workflow.out.multiqc),
+                    nirdDelivery: channelFileNames(workflow.out.nird_delivery),
+                    linkedDelivery: channelFileNames(workflow.out.linked_delivery)
+                ]).match("${fixture.name} output files")
             }
         }
-
-        then {
-            assert workflow.success
-
-            def resultDir = path("${projectDir}/.nf-test/results/20260625-c2")
-            def outputRunDir = resultDir.resolve("outdir/20260625_LH00534_0319_A22JKHGLT1")
-            def exampleProjectDir = outputRunDir.resolve("260625_LH00534.A.Project_Example-test1-2026-07-28")
-            def testcaseProjectDir = outputRunDir.resolve("260625_LH00534.A.Project_Testcase-test2-2026-07-28")
-            def deliveryDir = resultDir.resolve("delivery")
-
-            assert exampleProjectDir.resolve("1-a_S6_L001_R1_001.fastq.gz").exists()
-            assert exampleProjectDir.resolve("md5sum.txt").exists()
-            assert testcaseProjectDir.resolve("1-dummy_S10_L002_R1_001.fastq.gz").exists()
-            assert testcaseProjectDir.resolve("md5sum.txt").exists()
-            assert snapshot(workflow.out.fastqs, workflow.out.md5sum).match("20260625-c2 core output contents")
-            assert workflow.out.linked_delivery.size() == 2
-            assert deliveryDir.resolve("260625_LH00534.A.Project_Example-test1-2026-07-28").exists()
-            assert deliveryDir.resolve("260625_LH00534.A.Project_Testcase-test2-2026-07-28").exists()
-        }
     }
 
-    test("runs the MiSeq offboard c1 fixture with QC disabled") {
-
-        when {
-            params {
-                def fixtureDir = "${projectDir}/../tests/fixtures/20260715_SH01006_0020_ASC2245414-SC3"
-                def resultsDir = "${projectDir}/.nf-test/results/20260715-c1"
-
-                runFolder = fixtureDir
-                bclConvertFastqDir = "${fixtureDir}/Analysis/c1/Fastq"
-                outdir = "${resultsDir}/outdir"
-                deliveryDir = "${resultsDir}/delivery"
-                enableFastQC = false
-                enableSuprdupr = false
-            }
-        }
-
-        then {
-            assert workflow.success
-
-            def resultDir = path("${projectDir}/.nf-test/results/20260715-c1")
-            def projectDir = resultDir.resolve("outdir/20260715_SH01006_0020_ASC2245414-SC3/260715_SH01006.A.Project_Test-Libs6-2026-06-22")
-            def deliveryDir = resultDir.resolve("delivery/260715_SH01006.A.Project_Test-Libs6-2026-06-22")
-
-            assert projectDir.resolve("22-miseq22_S1_L001_R1_001.fastq.gz").exists()
-            assert projectDir.resolve("md5sum.txt").exists()
-            assert snapshot(workflow.out.fastqs, workflow.out.md5sum).match("20260715-c1 core output contents")
-            assert workflow.out.fastqc_html.size() == 0
-            assert workflow.out.suprdupr.size() == 0
-            assert workflow.out.multiqc.size() == 0
-            assert workflow.out.nird_delivery.size() == 0
-            assert !deliveryDir.exists()
-        }
-    }
-
-    test("runs the MiSeq offboard c2 fixture") {
-
-        when {
-            params {
-                def fixtureDir = "${projectDir}/../tests/fixtures/20260715_SH01006_0020_ASC2245414-SC3"
-                def resultsDir = "${projectDir}/.nf-test/results/20260715-c2"
-
-                runFolder = fixtureDir
-                bclConvertFastqDir = "${fixtureDir}/Analysis/c2/Fastq"
-                outdir = "${resultsDir}/outdir"
-                deliveryDir = "${resultsDir}/delivery"
-            }
-        }
-
-        then {
-            assert workflow.success
-
-            def resultDir = path("${projectDir}/.nf-test/results/20260715-c2")
-            def projectDir = resultDir.resolve("outdir/20260715_SH01006_0020_ASC2245414-SC3/260715_SH01006.A.Project_Test-Libs6-2026-06-22")
-            def deliveryDir = resultDir.resolve("delivery/260715_SH01006.A.Project_Test-Libs6-2026-06-22")
-
-            assert projectDir.resolve("22-miseq22_S1_L001_R1_001.fastq.gz").exists()
-            assert projectDir.resolve("md5sum.txt").exists()
-            assert snapshot(workflow.out.fastqs, workflow.out.md5sum).match("20260715-c2 core output contents")
-            assert workflow.out.nird_delivery.size() == 1
-            assert deliveryDir.exists()
-        }
-    }
-
-    test("runs the NovaSeq X onboard 2 fixture") {
-
-        when {
-            params {
-                def fixtureDir = "${projectDir}/../tests/fixtures/20260804_LH00770_0246_A22JJTLLT1"
-                def resultsDir = "${projectDir}/.nf-test/results/20260804-2"
-
-                runFolder = fixtureDir
-                bclConvertFastqDir = "${fixtureDir}/Analysis/2/Data/BCLConvert"
-                outdir = "${resultsDir}/outdir"
-                deliveryDir = "${resultsDir}/delivery"
-            }
-        }
-
-        then {
-            assert workflow.success
-
-            def resultDir = path("${projectDir}/.nf-test/results/20260804-2")
-            def outputRunDir = resultDir.resolve("outdir/20260804_LH00770_0246_A22JJTLLT1")
-            def exampleProjectDir = outputRunDir.resolve("260804_LH00770.A.Project_Example-test2-2026-07-28")
-            def testcaseProjectDir = outputRunDir.resolve("260804_LH00770.A.Project_Testcase-test3-2026-08-04")
-            def deliveryDir = resultDir.resolve("delivery")
-
-            assert exampleProjectDir.resolve("md5sum.txt").exists()
-            assert testcaseProjectDir.resolve("md5sum.txt").exists()
-            assert snapshot(workflow.out.fastqs, workflow.out.md5sum).match("20260804-2 core output contents")
-            assert workflow.out.linked_delivery.size() == 2
-            assert deliveryDir.resolve("260804_LH00770.A.Project_Example-test2-2026-07-28").exists()
-            assert deliveryDir.resolve("260804_LH00770.A.Project_Testcase-test3-2026-08-04").exists()
-        }
-    }
-
-    test("runs the NovaSeq X onboard 3 fixture") {
-
-        when {
-            params {
-                def fixtureDir = "${projectDir}/../tests/fixtures/20260804_LH00770_0246_A22JJTLLT1"
-                def resultsDir = "${projectDir}/.nf-test/results/20260804-3"
-
-                runFolder = fixtureDir
-                bclConvertFastqDir = "${fixtureDir}/Analysis/3/Data/BCLConvert"
-                outdir = "${resultsDir}/outdir"
-                deliveryDir = "${resultsDir}/delivery"
-            }
-        }
-
-        then {
-            assert workflow.success
-
-            def resultDir = path("${projectDir}/.nf-test/results/20260804-3")
-            def outputRunDir = resultDir.resolve("outdir/20260804_LH00770_0246_A22JJTLLT1")
-            def exampleProjectDir = outputRunDir.resolve("260804_LH00770.A.Project_Example-test2-2026-07-28")
-            def testcaseProjectDir = outputRunDir.resolve("260804_LH00770.A.Project_Testcase-test3-2026-08-04")
-            def deliveryDir = resultDir.resolve("delivery")
-
-            assert exampleProjectDir.resolve("md5sum.txt").exists()
-            assert testcaseProjectDir.resolve("md5sum.txt").exists()
-            assert snapshot(workflow.out.fastqs, workflow.out.md5sum).match("20260804-3 core output contents")
-            assert workflow.out.linked_delivery.size() == 2
-            assert deliveryDir.resolve("260804_LH00770.A.Project_Example-test2-2026-07-28").exists()
-            assert deliveryDir.resolve("260804_LH00770.A.Project_Testcase-test3-2026-08-04").exists()
-        }
-    }
+    [
+        [
+            name: "NovaSeqX.20260625.c2",
+            runId: "20260625_LH00534_0319_A22JKHGLT1",
+            bclConvertFastqDir: "Analysis/c2/Fastq",
+            resultsDir: "20260625-c2",
+            params: [:]
+        ],
+        [
+            name: "NovaSeqX.20260625.c2.NoSapioInfo",
+            runId: "20260625_LH00534_0319_A22JKHGLT1",
+            bclConvertFastqDir: "Analysis/c2/Fastq",
+            resultsDir: "20260625-c2-no-sapio-info",
+            params: [:],
+            sapioInfo: null
+        ],
+        [
+            name: "NovaSeqX.20260625.c2.PartialSapioProjectMismatch",
+            runId: "20260625_LH00534_0319_A22JKHGLT1",
+            bclConvertFastqDir: "Analysis/c2/Fastq",
+            resultsDir: "20260625-c2-partial-sapio-project-mismatch",
+            params: [fallbackDeliveryMethod: "NIRD"],
+            sapioInfo: "nsc-sapio-info-one-project-mismatch.yaml"
+        ],
+        [
+            name: "MiSeq.20260715.3",
+            runId: "20260715_SH01006_0020_ASC2245414-SC3",
+            bclConvertFastqDir: "Analysis/3/Data/BCLConvert/fastq",
+            resultsDir: "main-smoke",
+            params: [:]
+        ],
+        [
+            // Test QC disabled completely. This is not a normal configuration, but we can use it if the QC tools can't handle the
+            // fastq files in the dataset.
+            name: "MiSeq.20260715.c1.QcOff",
+            runId: "20260715_SH01006_0020_ASC2245414-SC3",
+            bclConvertFastqDir: "Analysis/c1/Fastq",
+            resultsDir: "20260715-c1",
+            params: [enableFastQC: false, enableSuprdupr: false]
+        ],
+        [
+            name: "MiSeq.20260715.c2",
+            runId: "20260715_SH01006_0020_ASC2245414-SC3",
+            bclConvertFastqDir: "Analysis/c2/Fastq",
+            resultsDir: "20260715-c2",
+            params: [:]
+        ],
+        [
+            name: "NovaSeqX.20260804.2",
+            runId: "20260804_LH00770_0246_A22JJTLLT1",
+            bclConvertFastqDir: "Analysis/2/Data/BCLConvert/fastq",
+            resultsDir: "20260804-2",
+            params: [:]
+        ],
+        [
+            name: "NovaSeqX.20260804.3.DragenFastQC",
+            runId: "20260804_LH00770_0246_A22JJTLLT1",
+            bclConvertFastqDir: "Analysis/3/Data/BCLConvert/fastq",
+            resultsDir: "20260804-3",
+            params: [enableFastQC: false]
+        ]
+    ].each(fixtureTest)
 }

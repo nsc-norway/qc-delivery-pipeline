@@ -1,0 +1,11 @@
+run:
+  flowcell_id: 22JKHGLT1
+projects:
+  - fields:
+      ProjectName: Example-test1-2026-07-28-mismatch
+    submission_form:
+      DeliveryMethod: NeLS project
+  - fields:
+      ProjectName: Testcase-test2-2026-07-28
+    submission_form:
+      DeliveryMethod: User HDD
