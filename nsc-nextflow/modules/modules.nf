@@ -111,16 +111,13 @@ process PUBLISH_REPORTS {
     input:
     val(run_id)
     val(analysis_id)
-    path("Reports-input/*")
-    path("Demux-input/*")
+    path("Demux/*")
     
     output:
     path "Demux"
 
     script:
     """
-    mkdir -p Demux
-    cp -r Demux-input/* Reports-input/* Demux/
     """
 }
 
