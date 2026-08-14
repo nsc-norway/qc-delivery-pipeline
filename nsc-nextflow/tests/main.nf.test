@@ -32,7 +32,7 @@ nextflow_workflow {
                     }
 
                     runFolder = inputRunFolder
-                    bclConvertFastqDir = "${fixtureDir}/${fixture.bclConvertFastqDir}"
+                    analysisDir = "${fixtureDir}/${fixture.analysisDir}"
                     outdir = "${resultsDir}/outdir"
                     deliveryDir = "${resultsDir}/delivery"
                     putAll(fixture.params)
@@ -84,14 +84,14 @@ nextflow_workflow {
         [
             name: "NovaSeqX.20260625.c2",
             runId: "20260625_LH00534_0319_A22JKHGLT1",
-            bclConvertFastqDir: "Analysis/c2/Fastq",
+            analysisDir: "Analysis/c2",
             resultsDir: "20260625-c2",
             params: [:]
         ],
         [
             name: "NovaSeqX.20260625.c2.NoSapioInfo",
             runId: "20260625_LH00534_0319_A22JKHGLT1",
-            bclConvertFastqDir: "Analysis/c2/Fastq",
+            analysisDir: "Analysis/c2",
             resultsDir: "20260625-c2-no-sapio-info",
             params: [:],
             sapioInfo: null
@@ -99,7 +99,7 @@ nextflow_workflow {
         [
             name: "NovaSeqX.20260625.c2.PartialSapioProjectMismatch",
             runId: "20260625_LH00534_0319_A22JKHGLT1",
-            bclConvertFastqDir: "Analysis/c2/Fastq",
+            analysisDir: "Analysis/c2",
             resultsDir: "20260625-c2-partial-sapio-project-mismatch",
             params: [fallbackDeliveryMethod: "NIRD"],
             sapioInfo: "nsc-sapio-info-one-project-mismatch.yaml"
@@ -107,7 +107,7 @@ nextflow_workflow {
         [
             name: "MiSeq.20260715.3",
             runId: "20260715_SH01006_0020_ASC2245414-SC3",
-            bclConvertFastqDir: "Analysis/3/Data/BCLConvert/fastq",
+            analysisDir: "Analysis/3",
             resultsDir: "main-smoke",
             params: [:]
         ],
@@ -116,28 +116,28 @@ nextflow_workflow {
             // fastq files in the dataset.
             name: "MiSeq.20260715.c1.QcOff",
             runId: "20260715_SH01006_0020_ASC2245414-SC3",
-            bclConvertFastqDir: "Analysis/c1/Fastq",
+            analysisDir: "Analysis/c1",
             resultsDir: "20260715-c1",
             params: [enableFastQC: false, enableSuprdupr: false]
         ],
         [
             name: "MiSeq.20260715.c2",
             runId: "20260715_SH01006_0020_ASC2245414-SC3",
-            bclConvertFastqDir: "Analysis/c2/Fastq",
+            analysisDir: "Analysis/c2",
             resultsDir: "20260715-c2",
             params: [:]
         ],
         [
             name: "NovaSeqX.20260804.2",
             runId: "20260804_LH00770_0246_A22JJTLLT1",
-            bclConvertFastqDir: "Analysis/2/Data/BCLConvert/fastq",
+            analysisDir: "Analysis/2",
             resultsDir: "20260804-2",
             params: [:]
         ],
         [
             name: "NovaSeqX.20260804.3.DragenFastQC",
             runId: "20260804_LH00770_0246_A22JJTLLT1",
-            bclConvertFastqDir: "Analysis/3/Data/BCLConvert/fastq",
+            analysisDir: "Analysis/3",
             resultsDir: "20260804-3",
             params: [enableFastQC: false]
         ]

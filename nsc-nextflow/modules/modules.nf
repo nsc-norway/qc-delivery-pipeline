@@ -35,7 +35,7 @@ process CAT_MD5SUM {
 process SUPRDUPR {
     tag "$meta.sample_id"
     container "ghcr.io/nsc-norway/suprdupr:v1.4.1"
-    publishDir { "${params.outdir}/${meta.run_id}/QualityControl/${meta.project_name}/suprdupr" }, mode:'link',  overwrite: true
+    publishDir { "${params.outdir}/${meta.run_id}/QualityControl_${meta.analysis_id}/${meta.project_name}/suprdupr" }, mode:'link',  overwrite: true
 
     input:
     tuple val(meta), path(fastq)
@@ -52,7 +52,7 @@ process SUPRDUPR {
 process FASTQC {
     tag "$meta.sample_id"
     container "biocontainers/fastqc:v0.11.9_cv8"
-    publishDir { "${params.outdir}/${meta.run_id}/QualityControl/${meta.project_name}/fastqc" }, mode:'link',  overwrite: true
+    publishDir { "${params.outdir}/${meta.run_id}/QualityControl_${meta.analysis_id}/${meta.project_name}/fastqc" }, mode:'link',  overwrite: true
 
     input:
     tuple val(meta), path(fastq)
@@ -165,71 +165,66 @@ process LINK_FOLDER {
     """
 }
 
-/*
+
 process EMAIL_PROJECT {
-    tag "$project_name"
-    //publishDir "$qcfolder" + "lims" , mode:'link',  overwrite: true
+    tag "${meta.project_name}"
     container "ghcr.io/nsc-norway/qc-delivery-email-scripts:1.0.0"
+    publishDir { "${params.outdir}/${runFolder.name}/QualityControl_${analysisId}/Delivery" }, mode:'link',  overwrite: true
 
     input:
-    val project_name
-    path runfolder
-    path qcfolder
-    path project_lims_json
-    path credentials_json
+    tuple val(meta), val(username), path('password.txt')
+    path runFolder
+    val analysisId
+    path "Demultiplex_Stats.csv"
+    path sapioRunFile
 
     output:
-    val "email_project_complete", emit: EMAIL_PROJECT_out
-
-
-        
-
+    path "Delivery/*", emit: EMAIL_PROJECT_out
 
     script:
     """
-    // TODO: Project details file needs to change to Sapio format
-    jq -s add "$project_lims_json" "$credentials_json" > project.json
-
-    //{"NIRD password": "\$password", "NIRD username": "\$username"}
-
     make-emails.py \
-            --run-dir=$runfolder \
-            --demultiplex-stats=$qcfolder/Demux/Demultiplex_Stats.csv \
-            --bclconvert-version=$params.bcl_convert_version \
-            --pipeline-version=$params.pipeline_version \
-            --output-email-dir=$qcfolder/Delivery \
-            --create-project-emails \
-            project.json
+            --run-dir=$runFolder \
+            --demultiplex-stats=Demultiplex_Stats.csv \
+            --bclconvert-version='TODO' \
+            --pipeline-version='TODO' \
+            --output-email-dir=Delivery \
+            --create-project-email=${meta.project_name} \
+            --nird-username=$username \
+            --nird-password-file=password.txt \
+            $sapioRunFile
     """
 }
 
 process EMAIL_SUMMARY_RUN {
-    tag "$runfolder"
-    //publishDir "$qcfolder" + "Delivery" , mode:'link',  overwrite: true
+    tag "${runFolder.name}"
     container "ghcr.io/nsc-norway/qc-delivery-email-scripts:1.0.0"
+    publishDir { "${params.outdir}/${runFolder.name}/QualityControl_${analysisId}/Delivery" }, mode:'link', overwrite: true
 
     input:
-    path runfolder
-    path qcfolder
-    path project_lims_json
+    path runFolder
+    val analysisId
+    path "Demultiplex_Stats.csv"
+    path "suprDUPr/*"
+    path sapioRunFile
 
     output:
-    val "email_summary_run_complete", emit: EMAIL_SUMMARY_RUN_out
+    path "Delivery/*", emit: EMAIL_SUMMARY_RUN_out
 
     script:
     """
     make-emails.py \
-            --run-dir=$runfolder \
-            --demultiplex-stats=$qcfolder/Demux/Demultiplex_Stats.csv \
-            --suprdupr-dir=$qcfolder/suprDUPr \
-            --bclconvert-version=$params.bcl_convert_version \
-            --pipeline-version=$params.pipeline_version \
-            --output-email-dir=$qcfolder/Delivery \
+            --run-dir=${runFolder} \
+            --demultiplex-stats=Demultiplex_Stats.csv \
+            --suprdupr-dir=suprDUPr \
+            --bclconvert-version='TODO' \
+            --pipeline-version='TODO' \
+            --output-email-dir=Delivery \
             --create-summary \
-            $project_lims_json
+            $sapioRunFile
     """
 }
-*/
+
 process DECOMPRESS_ORA {
     tag "$meta.sample_id"
     

@@ -1,30 +1,30 @@
-Dear {{ project_data['Contact person'] }},
+Dear {{ project_data['ContactPerson'] }},
 
-Samples/Libraries submitted under {{ project_data['Project name'] }} to NSC, Ullevål has been sequenced and are now ready for pick-up. You will therefore be billed for this service.
+Samples/Libraries submitted under {{ project_data['ProjectName'] }} to NSC, Ullevål has been sequenced and are now ready for pick-up. You will therefore be billed for this service.
 
 
------- Data collection ------{% if project_data['Delivery method'] == "NeLS project" %}
+------ Data collection ------{% if project_data['DeliveryMethod'] == "NeLS project" %}
 The data files have been transferred to your NeLS project, and stored in the directory {{ project_data['dir_name'] }}. Please wait for a confirmation from the Elixir help desk before you access the data.
-{% elif project_data['Delivery method'] == "Norstore" %}
+{% elif project_data['DeliveryMethod'] == "Norstore" %}
 You can download the data and all quality control reports using the following information:
 
 https://hts-nonsecure.web.sigma2.no/{{ project_data['dir_name'] }}/
 
-username: {{ project_data['NIRD username'] }}
-password: {{ project_data['NIRD password'] }}
-{% elif project_data['Delivery method'] == "User HDD" %}
+username: {{ project_data['nird_username'] }}
+password: {{ project_data['nird_password'] }}
+{% elif project_data['DeliveryMethod'] == "User HDD" %}
 You can pick up the data in a portable hard drive (please notice the size of the data  is approximately {{ "%.0f" % size if size else "XXXX" }} GB).
-{% elif project_data['Delivery method'] == "New HDD" %}
+{% elif project_data['DeliveryMethod'] == "New HDD" %}
 The data have been transferred to a new hard drive and are ready for pick-up.
-{% elif project_data['Delivery method'] == "TSD project" %}
+{% elif project_data['DeliveryMethod'] == "TSD project" %}
 The dataset has been imported into TSD, in a file {{ project_data['dir_name'] }}.tar.gpg.
 {% else %}
 You can pick up the data in a portable hard drive (please notice the size of the data  is approximately {{ "%.0f" % size if size else "XXXX" }} GB).
 
-NOTE: UNKNOWN DELIVERY METHOD
+NOTE: UNKNOWN Delivery method
 {% endif %}
 We will keep a copy of the data for THREE MONTHS after the run date, and will then DELETE ALL OUR COPIES without further notice.
-{% if project_data['Delivery method'] == "Norstore" %}The download link will stop working when we delete the data.{% endif %}
+{% if project_data['DeliveryMethod'] == "Norstore" %}The download link will stop working when we delete the data.{% endif %}
 
 ------ Data output ------
 Here is an overview of your samples and the number of fragments that were sequenced:

@@ -89,12 +89,12 @@ td.text {
 
 <h2>Projects</h2>
 {% for project_data in project_datas %}
-<h3>{{ project_data['Project name'] }}</h3>
-<p>Sequence ready for download - sequencing run {{ run_parameters.run_id }} - {{ project_data['Project name'] }} ({{ project_data['number_of_samples'] }} samples)</p>
+<h3>{{ project_data['ProjectName'] }}</h3>
+<p>Sequence ready for download - sequencing run {{ run_parameters.run_id }} - {{ project_data['ProjectName'] }} ({{ project_data['number_of_samples'] }} samples)</p>
 <table class="lims_info">
-    <tr><td>Contact person</td><td>{{ project_data['Contact person'] }}</td></tr>
-    <tr><td>Contact email</td><td>{{ project_data['Contact email'] }}</td></tr>
-    <tr><td>Delivery method</td><td>{{ project_data['Delivery method'] }}</td></tr>
+    <tr><td>Contact person</td><td>{{ project_data['ContactPerson'] }}</td></tr>
+    <tr><td>Contact email</td><td>{{ project_data['ContactEmail'] }}</td></tr>
+    <tr><td>Delivery method</td><td>{{ project_data['DeliveryMethod'] }}</td></tr>
     <tr><td>Directory name</td><td>{{ project_data['dir_name'] }}</td></tr>
 </table>
 <table>

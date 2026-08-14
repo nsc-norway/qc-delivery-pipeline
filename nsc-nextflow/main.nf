@@ -7,8 +7,8 @@ containerdir = "/data/runScratch.boston/analysis/pipelines/container-images/"
 
 include {
     CAT_MD5SUM;
-    //EMAIL_PROJECT;
-    //EMAIL_SUMMARY_RUN;
+    EMAIL_PROJECT;
+    EMAIL_SUMMARY_RUN;
     FASTQC;
     LINK_FOLDER;
     //MAKE_SENSITIVE_DATA_LOG_FILE;
@@ -34,13 +34,20 @@ workflow QC_DELIVERY_PIPELINE {
     main:
     // LOCATE INPUT FILES
 
+    def bclConvertFastqDir = file("${params.analysisDir}/Fastq")
+    if (!bclConvertFastqDir.exists()) {
+        bclConvertFastqDir = file("${params.analysisDir}/Data/BCLConvert/fastq")
+    }
+
     // Sample sheet is usually copied to Reports/ by BCL Convert, but in case of NovaSeq X onboard analysis, 
     // it can instead be found directly in the BCLConvert directory (next to fastqc outputs).
-    def sampleSheet = file("${params.bclConvertFastqDir}/Reports/SampleSheet.csv")
+    def sampleSheet = file("${bclConvertFastqDir}/Reports/SampleSheet.csv")
     if (!sampleSheet.exists()) {
-        sampleSheet = file("${params.bclConvertFastqDir}/../SampleSheet.csv")
+        sampleSheet = file("${params.analysisDir}/Data/BCLConvert/SampleSheet.csv")
     }
-    def fastqDir = file(params.bclConvertFastqDir)
+    def analysisId = file(params.analysisDir).name
+
+
     def runId = file(params.runFolder).name
     def sapioRunFile = file("${params.runFolder}/NscSapioInfo.yaml")
     def sapioRunInfo = sapioRunFile.exists() ? new groovy.yaml.YamlSlurper().parseText(sapioRunFile.text) : [projects: []]
@@ -64,6 +71,7 @@ workflow QC_DELIVERY_PIPELINE {
             def sampleKey = "${lane}_${projectName}_${sampleId}"
             [
                 run_id: runId,
+                analysis_id: analysisId,
                 id: sampleKey,
                 lane: lane,
                 project_name: projectName,
@@ -79,7 +87,7 @@ workflow QC_DELIVERY_PIPELINE {
     // This file channel contains two entries per sample for paired-end runs, four entries
     // per sample in case of paired end + index reads fastqs are enabled, etc.
     def original_files_ch = sample_metadata_ch.flatMap { meta ->
-            def fastqs = getFastqReadLabelsAndPaths(meta.lane, fastqDir, meta.sample_id, meta.sample_project_column_value, isOra)
+            def fastqs = getFastqReadLabelsAndPaths(meta.lane, bclConvertFastqDir, meta.sample_id, meta.sample_project_column_value, isOra)
             fastqs.collect { readLabel, fastqPath ->
                 [meta + [read_label: readLabel], fastqPath]
         }
@@ -133,7 +141,7 @@ workflow QC_DELIVERY_PIPELINE {
         fastqc_html_ch = FASTQC.out.FASTQC_HTML_out
         multiqc_ch = MULTIQC(groupByProject(FASTQC.out.FASTQC_ZIP_out), "fastqc")
     }
-    else if (params.enableSuprdupr.toBoolean()) {
+    else {
         // TODO: Need to support DRAGEN FastQC inputs from onboard analysis. Copy them to outdir and use for multiqc.
         //MULTIQC(analysis_project_folder, dataProjectFolder, "dragen_fastqc")
     }
@@ -198,19 +206,34 @@ workflow QC_DELIVERY_PIPELINE {
             error("Unsupported delivery method '${delivery_method}' for project '${_meta.project_name}'")
         }
 
-/*
+    // Get demultiplexing stats, publish them in the outdir
+    reports_files = channel.fromPath("${bclConvertFastqDir}/Reports/*", checkIfExists: true)
+    demux_files = channel.fromPath("${params.analysisDir}/Data/Demux/*")
+    //DEMUX_STATS(demux_stats_files)
+
+    // Pick the first file named Demultiplex_Stats.csv from the reports or demux files channels
+    // (the file may exist in either one or both)
+    demultiplex_stats = reports_files.mix(demux_files)
+        .filter { file -> file.name == 'Demultiplex_Stats.csv' }
+        .first()
+
     EMAIL_PROJECT(
-        params.project,
-        params.runFolder,
-        qcfolder,
-        JSON_GENERATOR.out.JSON_GENERATOR_out,
-        PROJECT_CREDENTIALS.out.credentials_json
+        PROJECT_CREDENTIALS.out.PROJECT_CREDENTIALS_out,
+        file(params.runFolder),
+        analysisId,
+        demultiplex_stats,
+        sapioRunFile
     )
-    MAKE_SENSITIVE_DATA_LOG_FILE(projectDirName, JSON_GENERATOR.out.JSON_GENERATOR_out, params.runFolder)
+    // MAKE_SENSITIVE_DATA_LOG_FILE(projectDirName, JSON_GENERATOR.out.JSON_GENERATOR_out, params.runFolder)
 
     // Run-level process
-    EMAIL_SUMMARY_RUN(params.runFolder, qcfolder, project_lims_json.collect())
-    */
+    EMAIL_SUMMARY_RUN(
+        file(params.runFolder),
+        analysisId,
+        demultiplex_stats,
+        suprdupr_ch.collect(),
+        sapioRunFile
+        )
 
 
     emit: // Emit channels for testing

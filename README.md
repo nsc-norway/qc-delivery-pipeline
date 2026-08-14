@@ -15,7 +15,7 @@ https://gitlab.com/genomedx/labautomation/sapio-sequencingfiles
 ```
 nextflow run nsc-nextflow/main.nf \
   --runFolder tests/fixtures/20260715_SH01006_0020_ASC2245414-SC3 \
-  --bclConvertFastqDir tests/fixtures/20260715_SH01006_0020_ASC2245414-SC3/Analysis/3/Data/BCLConvert/fastq \
+  --analysisDir tests/fixtures/20260715_SH01006_0020_ASC2245414-SC3/Analysis/3 \
   --outdir output/outdir \
   --deliveryDir output/delivery \
   -resume

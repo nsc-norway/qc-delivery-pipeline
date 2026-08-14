@@ -125,9 +125,9 @@ def getFastqReadLabelsAndPaths( lane, fastqDir, sampleId, sampleProject, isOraCo
     ["R1", "I1", "I2", "R2"].collect { readLabel ->
         // build a Groovy regex to match the unpredictable S<digits> part
         def pattern = "^${sampleId}_S\\d+_L00${lane}_${readLabel}_001${extensionPattern}\$"
-        def fastqLocalDir = fastqDir
+        def fastqLocalDir = file(fastqDir)
         if (sampleProject) {
-            fastqLocalDir = fastqDir.resolve(sampleProject)
+            fastqLocalDir = file(fastqDir).resolve(sampleProject)
         }
         def match = fastqLocalDir.listDirectory().find { fastqFile -> fastqFile.name ==~ pattern }
         if( ! match ) {

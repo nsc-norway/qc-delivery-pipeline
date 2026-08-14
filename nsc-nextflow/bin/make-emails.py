@@ -10,7 +10,7 @@ from math import ceil
 from pathlib import Path
 import argparse
 from xml.etree.ElementTree import ElementTree
-import json
+import yaml
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import pandas as pd
 from interop import py_interop_run_metrics, py_interop_run, py_interop_summary
@@ -23,8 +23,7 @@ def main():
     parser.add_argument('--run-dir', default=".",
                         help="Path to run folder with SAV files (RunParameters.xml, RunInfo.xml, InterOp).")
 
-    parser.add_argument('--demultiplex-stats', type=open, default="QualityControl/Demux/Demultiplex_Stats.csv",
-                        help="Demultiplex stats (used for read counts).")
+    parser.add_argument('--demultiplex-stats', type=open, help="Demultiplex stats (used for read counts).")
 
     parser.add_argument('--suprdupr-dir',
                         help="Directory containing duplicate count files for each (Lane, Sample) as [Sample_ID]_L00[Lane]_suprDUPr.txt.")
@@ -38,10 +37,13 @@ def main():
 
     parser.add_argument('--create-summary', action='store_true', help="Enable HTML summary email creation.")
 
-    parser.add_argument('--create-project-emails', action='store_true', help="Create project emails.")
+    parser.add_argument('--create-project-email', type=str, help="Create project email for the specified project.")
 
-    parser.add_argument('project_file', type=open, nargs='+', help="Input JSON files with project LIMS information. Specify one "
-                        "for each project to process.")
+    parser.add_argument('--nird-username', type=str, help="NIRD username for the project.")
+
+    parser.add_argument('--nird-password-file', type=open, help="File containing NIRD password for the project.")
+
+    parser.add_argument('sapio_file', type=open, help="Input YAML file with project Sapio LIMS information.")
     
 
     # Prepare input data
@@ -74,11 +76,11 @@ def main():
         # index.
         demultiplex_stats['suprDUPr_duplicate_count'] = get_suprDUPr_duplicates(non_undetermined, project_name_prefix, Path(args.suprdupr_dir))
 
-    # Get project information
-    project_datas = [
-        get_project_data(project_file, demultiplex_stats, run_parameters.run_id)
-        for project_file in args.project_file
-    ]
+    if args.sapio_file:
+        sapio_data = yaml.safe_load(args.sapio_file)
+    else:
+        sapio_data = {'projects': []}
+
 
     # List of tuples of (SoftwareName, SoftwareVersion)
     software_versions = [
@@ -104,10 +106,19 @@ def main():
     if args.create_summary:
         # Summary file for email content
 
+        # Get list of unique projects
+        projects = demultiplex_stats['Sample_Project'].unique()
+
+        # Get project information
+        project_datas = [
+            get_project_data(project, sapio_data['projects'], demultiplex_stats, run_parameters.run_id)
+            for project in projects
+        ]
+
         # Lane-specific information from InterOp and from sample metrics
         lane_table_headers, lane_table_classes, lane_table_data = get_lane_summary_data(run_dir, demultiplex_stats, undetermined_stats)
         
-        summary_file_name = ("Summary_for_" + run_parameters.run_id + ".html")
+        summary_file_name = ("Summary_for_" + run_parameters.run_id + ".message.html")
         summary_content_path = email_content_dir / summary_file_name
         with open(summary_content_path, 'w') as out:
             doc_content = jinja_env.get_template('run_summary.html.j2').render(
@@ -126,43 +137,47 @@ def main():
         automation_email_files.append(automation_txt_filename)
     
     # Make project emails
-    if args.create_project_emails:
-        for project_data in project_datas:
-            if project_data['Project type'] != "Diagnostics":
-                project_email_filename = (project_data['dir_name'] + ".txt")
-                with open(email_content_dir / project_email_filename, 'w') as out:
-                    size = None
-                    doc_content = jinja_env.get_template('project_email.txt.j2').render(
-                        project_data=project_data,
-                        size=size,
-                        run_parameters=run_parameters,
-                        software_versions=software_versions
-                        )
-                    out.write(doc_content)
+    if args.create_project_email:
+        project_data = get_project_data(args.create_project_email, sapio_data['projects'], demultiplex_stats, run_parameters.run_id)
+        if args.nird_username:
+            project_data['nird_username'] = args.nird_username
+        if args.nird_password_file:
+            project_data['nird_password'] = args.nird_password_file.read().strip()
+        if project_data.get('Classification') != "Diagnostics":
+            project_email_filename = (project_data['dir_name'] + ".message.txt")
+            with open(email_content_dir / project_email_filename, 'w') as out:
+                size = None
+                doc_content = jinja_env.get_template('project_email.txt.j2').render(
+                    project_data=project_data,
+                    size=size,
+                    run_parameters=run_parameters,
+                    software_versions=software_versions
+                    )
+                out.write(doc_content)
 
-                email_list.append("|".join([
-                        "text", project_data['Contact email'], "",
+            email_list.append("|".join([
+                    "text", project_data['ContactEmail'], "",
+                    '"nsc-ous-data-delivery@sequencing.uio.no" <nsc-ous-data-delivery@sequencing.uio.no>',
+                    f"Sequence ready for download - sequencing run {run_parameters.run_id} - {project_data['ProjectName']} ({project_data['number_of_samples']} samples)",
+                    f"email_content/{project_email_filename}",
+                    "" # No MultiQC attachment, because they are too big
+                ]))
+            automation_txt_filename = f"automatic_email_list-{project_data['dir_name']}.txt"
+            with open(output_email_dir / automation_txt_filename, 'w') as of:
+                of.write("|".join([
+                        "text", project_data['ContactEmail'], "",
                         '"nsc-ous-data-delivery@sequencing.uio.no" <nsc-ous-data-delivery@sequencing.uio.no>',
-                        f"Sequence ready for download - sequencing run {run_parameters.run_id} - {project_data['Project name']} ({project_data['number_of_samples']} samples)",
+                        f"Sequence ready for download - sequencing run {run_parameters.run_id} - {project_data['ProjectName']} ({project_data['number_of_samples']} samples)",
                         f"email_content/{project_email_filename}",
                         "" # No MultiQC attachment, because they are too big
-                    ]))
-                automation_txt_filename = f"automatic_email_list-{project_data['dir_name']}.txt"
-                with open(output_email_dir / automation_txt_filename, 'w') as of:
-                    of.write("|".join([
-                            "text", project_data['Contact email'], "",
-                            '"nsc-ous-data-delivery@sequencing.uio.no" <nsc-ous-data-delivery@sequencing.uio.no>',
-                            f"Sequence ready for download - sequencing run {run_parameters.run_id} - {project_data['Project name']} ({project_data['number_of_samples']} samples)",
-                            f"email_content/{project_email_filename}",
-                            "" # No MultiQC attachment, because they are too big
-                        ])+ "\n")
-                automation_email_files.append(automation_txt_filename)
+                    ])+ "\n")
+            automation_email_files.append(automation_txt_filename)
 
     command_file_path = output_email_dir / "Open_emails.command"
     with open(command_file_path, 'w') as of:
         of.write("""#!/bin/bash
 
-# This shell script is written to the QualityControl/Delivery folder in
+# This shell script is written to the Delivery folder in
 # all runs processed by the demultiplexing scripts. It calls the AppleScript file
 # "Open Emails.scpt", which is located in /data/runScratch.boston/scripts.
 
@@ -179,7 +194,7 @@ done
     
 
 def get_demux_stats_and_sample_info(demultiplex_stats_file):
-    """Get the Demultiplex_Stats.csv information and ensure that the project name is available
+    """Get the Demultiplex_Stats.csv information and ensure that the ProjectName is available
 
     Undetermined will be removed
 
@@ -191,9 +206,19 @@ def get_demux_stats_and_sample_info(demultiplex_stats_file):
 
     demultiplex_stats['OriginalSampleID'] = demultiplex_stats['SampleID']
     if 'Sample_Project' not in demultiplex_stats.columns:
-        # Decompose the sample ID into project name and sample ID
+        # Decompose the sample ID into ProjectName and sample ID
         demultiplex_stats['Sample_Project'] = demultiplex_stats.OriginalSampleID.str.split("_", expand=True)[0]
         demultiplex_stats['SampleID'] = demultiplex_stats.OriginalSampleID.str.split("_", expand=True, n=1)[1]
+        # Determine if all remaining sample IDs contain a UUID as the last _-separated part, and if so, strip it.
+        uuid_pattern = re.compile(r'_[0-9a-fA-F-]{36}$')
+        sample_ids = demultiplex_stats.loc[
+            demultiplex_stats['OriginalSampleID'] != "Undetermined", 'SampleID'
+        ]
+        all_have_uuid = sample_ids.apply(
+            lambda sample_id: isinstance(sample_id, str) and bool(uuid_pattern.search(sample_id))
+        ).all()
+        if all_have_uuid:
+            demultiplex_stats['SampleID'] = demultiplex_stats['SampleID'].str.replace(uuid_pattern, '', regex=True)
 
     # Ensure integer type - required for correct format in the project email
     demultiplex_stats['# Reads'] = demultiplex_stats['# Reads'].astype(int)
@@ -445,10 +470,12 @@ class RunParameters:
             self.cycles.append((read_name[0] + read_name[-1], read.attrib['Cycles']))
 
 
-def get_project_data(project_file, demultiplex_stats, run_id):
-    """Load information about a project into a dict object. The data from the project file
-    (json) format is imported directly.
+def get_project_data(project_name, sapio_projects, demultiplex_stats, run_id):
+    """Load information about a project into a dict object.
     
+    Project details from LIMS are added if available in the sapio_projects dict. The ProjectName is used to
+    look up the project. All fields from the project, evaluation form and submission form are added to the dict.
+
     It gathers the number of fragments in each of the samples from demultiplex_stats.
     Samples run on multiple lanes are reported once for each lane.
     For each sample, it writes a tuple of the sample name, the number of fragments, and the
@@ -466,11 +493,20 @@ def get_project_data(project_file, demultiplex_stats, run_id):
 
     """
 
-    result = json.load(project_file)
-    result['dir_name'] = get_nsc_project_name(run_id, result['Project name'])
+    result = {}
+    sapio_project = next((p for p in sapio_projects if p['fields']['ProjectName'] == project_name), None)
+    if sapio_project:
+        result.update(sapio_project['fields'])
+        result.update(sapio_project['evaluation_form'])
+        result.update(sapio_project['submission_form'])
+    else:
+        result['ProjectName'] = project_name
+        result['ContactEmail'] = ""
+
+    result['dir_name'] = get_nsc_project_name(run_id, result['ProjectName'])
     assert all(c.isalnum() or c in '-_.' for c in result['dir_name']), "Project directory should only contain safe characters."
     
-    sample_list = demultiplex_stats[demultiplex_stats.Sample_Project==result['Project name']].copy()
+    sample_list = demultiplex_stats[demultiplex_stats.Sample_Project==result['ProjectName']].copy()
     mean_frags = sample_list['# Reads'].mean()
     sample_list['RelativeDifference'] = (sample_list['# Reads'] - mean_frags) / mean_frags
     
