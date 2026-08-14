@@ -117,7 +117,7 @@ def main():
         # Lane-specific information from InterOp and from sample metrics
         lane_table_headers, lane_table_classes, lane_table_data = get_lane_summary_data(run_dir, demultiplex_stats, undetermined_stats)
         
-        summary_file_name = ("Summary_for_" + run_parameters.run_id + ".message.html")
+        summary_file_name = ("Summary_for_" + run_parameters.run_id + ".html")
         summary_content_path = output_email_dir / summary_file_name
         with open(summary_content_path, 'w') as out:
             doc_content = jinja_env.get_template('run_summary.html.j2').render(
@@ -143,7 +143,7 @@ def main():
         if args.nird_password_file:
             project_data['nird_password'] = args.nird_password_file.read().strip()
         if project_data.get('Classification') != "Diagnostics":
-            project_email_filename = (project_data['dir_name'] + ".message.txt")
+            project_email_filename = (project_data['dir_name'] + ".txt")
             with open(output_email_dir / project_email_filename, 'w') as out:
                 size = None
                 doc_content = jinja_env.get_template('project_email.txt.j2').render(
