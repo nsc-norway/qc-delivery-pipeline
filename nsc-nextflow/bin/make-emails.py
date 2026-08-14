@@ -43,7 +43,7 @@ def main():
 
     parser.add_argument('--nird-password-file', type=open, help="File containing NIRD password for the project.")
 
-    parser.add_argument('sapio_file', type=open, help="Input YAML file with project Sapio LIMS information.")
+    parser.add_argument('sapio_file', type=open, nargs='?', help="Input YAML file with project Sapio LIMS information.")
     
 
     # Prepare input data
@@ -90,8 +90,7 @@ def main():
     ]
 
     output_email_dir = Path(args.output_email_dir)
-    email_content_dir = output_email_dir / "email_content"
-    email_content_dir.mkdir(exist_ok=True, parents=True)
+    output_email_dir.mkdir(parents=True, exist_ok=True)
 
     email_list = []
     # Email list automation text files: pipe-separated values. Contains the following fields.
@@ -119,7 +118,7 @@ def main():
         lane_table_headers, lane_table_classes, lane_table_data = get_lane_summary_data(run_dir, demultiplex_stats, undetermined_stats)
         
         summary_file_name = ("Summary_for_" + run_parameters.run_id + ".message.html")
-        summary_content_path = email_content_dir / summary_file_name
+        summary_content_path = output_email_dir / summary_file_name
         with open(summary_content_path, 'w') as out:
             doc_content = jinja_env.get_template('run_summary.html.j2').render(
                                     lane_header=lane_table_headers, lane_classes=lane_table_classes,
@@ -145,7 +144,7 @@ def main():
             project_data['nird_password'] = args.nird_password_file.read().strip()
         if project_data.get('Classification') != "Diagnostics":
             project_email_filename = (project_data['dir_name'] + ".message.txt")
-            with open(email_content_dir / project_email_filename, 'w') as out:
+            with open(output_email_dir / project_email_filename, 'w') as out:
                 size = None
                 doc_content = jinja_env.get_template('project_email.txt.j2').render(
                     project_data=project_data,
@@ -156,19 +155,19 @@ def main():
                 out.write(doc_content)
 
             email_list.append("|".join([
-                    "text", project_data['ContactEmail'], "",
+                    "text", project_data.get('ContactEmail', "CONTACT_EMAIL"), "",
                     '"nsc-ous-data-delivery@sequencing.uio.no" <nsc-ous-data-delivery@sequencing.uio.no>',
                     f"Sequence ready for download - sequencing run {run_parameters.run_id} - {project_data['ProjectName']} ({project_data['number_of_samples']} samples)",
-                    f"email_content/{project_email_filename}",
+                    f"{project_email_filename}",
                     "" # No MultiQC attachment, because they are too big
                 ]))
             automation_txt_filename = f"automatic_email_list-{project_data['dir_name']}.txt"
             with open(output_email_dir / automation_txt_filename, 'w') as of:
                 of.write("|".join([
-                        "text", project_data['ContactEmail'], "",
+                        "text", project_data.get('ContactEmail', "CONTACT_EMAIL"), "",
                         '"nsc-ous-data-delivery@sequencing.uio.no" <nsc-ous-data-delivery@sequencing.uio.no>',
                         f"Sequence ready for download - sequencing run {run_parameters.run_id} - {project_data['ProjectName']} ({project_data['number_of_samples']} samples)",
-                        f"email_content/{project_email_filename}",
+                        f"{project_email_filename}",
                         "" # No MultiQC attachment, because they are too big
                     ])+ "\n")
             automation_email_files.append(automation_txt_filename)
@@ -497,8 +496,10 @@ def get_project_data(project_name, sapio_projects, demultiplex_stats, run_id):
     sapio_project = next((p for p in sapio_projects if p['fields']['ProjectName'] == project_name), None)
     if sapio_project:
         result.update(sapio_project['fields'])
-        result.update(sapio_project['evaluation_form'])
-        result.update(sapio_project['submission_form'])
+        if 'evaluation_form' in sapio_project and sapio_project['evaluation_form']:
+            result.update(sapio_project['evaluation_form'])
+        if 'submission_form' in sapio_project and sapio_project['submission_form']:
+            result.update(sapio_project['submission_form'])
     else:
         result['ProjectName'] = project_name
         result['ContactEmail'] = ""

@@ -169,7 +169,7 @@ process LINK_FOLDER {
 process EMAIL_PROJECT {
     tag "${meta.project_name}"
     container "ghcr.io/nsc-norway/qc-delivery-email-scripts:1.0.0"
-    publishDir { "${params.outdir}/${runFolder.name}/QualityControl_${analysisId}/Delivery" }, mode:'link',  overwrite: true
+    publishDir { "${params.outdir}/${runFolder.name}/QualityControl_${analysisId}" }, mode:'link',  overwrite: true
 
     input:
     tuple val(meta), val(username), path('password.txt')
@@ -182,6 +182,7 @@ process EMAIL_PROJECT {
     path "Delivery/*", emit: EMAIL_PROJECT_out
 
     script:
+    def sapioRunFileOptional = sapioRunFile.exists() ? "${sapioRunFile}" : ""
     """
     make-emails.py \
             --run-dir=$runFolder \
@@ -190,16 +191,15 @@ process EMAIL_PROJECT {
             --pipeline-version='TODO' \
             --output-email-dir=Delivery \
             --create-project-email=${meta.project_name} \
-            --nird-username=$username \
-            --nird-password-file=password.txt \
-            $sapioRunFile
+            --nird-username="$username" \
+            --nird-password-file=password.txt $sapioRunFileOptional
     """
 }
 
 process EMAIL_SUMMARY_RUN {
     tag "${runFolder.name}"
     container "ghcr.io/nsc-norway/qc-delivery-email-scripts:1.0.0"
-    publishDir { "${params.outdir}/${runFolder.name}/QualityControl_${analysisId}/Delivery" }, mode:'link', overwrite: true
+    publishDir { "${params.outdir}/${runFolder.name}/QualityControl_${analysisId}" }, mode:'link', overwrite: true
 
     input:
     path runFolder
@@ -212,6 +212,7 @@ process EMAIL_SUMMARY_RUN {
     path "Delivery/*", emit: EMAIL_SUMMARY_RUN_out
 
     script:
+    def sapioRunFileOptional = sapioRunFile.exists() ? "${sapioRunFile}" : ""
     """
     make-emails.py \
             --run-dir=${runFolder} \
@@ -221,7 +222,7 @@ process EMAIL_SUMMARY_RUN {
             --pipeline-version='TODO' \
             --output-email-dir=Delivery \
             --create-summary \
-            $sapioRunFile
+            $sapioRunFileOptional
     """
 }
 

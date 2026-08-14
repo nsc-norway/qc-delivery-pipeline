@@ -4,6 +4,18 @@ nextflow_workflow {
     script "main.nf"
     workflow "QC_DELIVERY_PIPELINE"
 
+    def deleteDirectory = { directory ->
+        if (java.nio.file.Files.exists(directory)) {
+            def fileStream = java.nio.file.Files.walk(directory)
+            try {
+                fileStream
+                    .sorted(java.util.Comparator.reverseOrder())
+                    .forEach { file -> java.nio.file.Files.delete(file) }
+            } finally {
+                fileStream.close()
+            }
+        }
+    }
 
     // This is a generic test definition to run the pipeline and verify the output files.
     // Specific tests are defined below.
@@ -15,11 +27,31 @@ nextflow_workflow {
                     def fixtureDir = "${projectDir}/../tests/fixtures/${fixture.runId}"
                     def resultsDir = "${projectDir}/.nf-test/results/${fixture.resultsDir}"
                     def inputRunFolder = fixtureDir
+                    deleteDirectory(java.nio.file.Paths.get(resultsDir))
 
                     if (fixture.containsKey("sapioInfo")) {
+                        def sourceRunFolder = java.nio.file.Paths.get(fixtureDir)
                         def testRunFolder = java.nio.file.Paths.get("${projectDir}/.nf-test/input-runs/${fixture.resultsDir}/${fixture.runId}")
                         def testSapioInfo = testRunFolder.resolve("NscSapioInfo.yaml")
-                        java.nio.file.Files.createDirectories(testRunFolder)
+                        def sourceFiles = java.nio.file.Files.walk(sourceRunFolder)
+                        // Copy the content of the run folder into the new fixture directory
+                        try {
+                            sourceFiles.forEach { sourceFile ->
+                                def targetFile = testRunFolder.resolve(sourceRunFolder.relativize(sourceFile))
+                                if (java.nio.file.Files.isDirectory(sourceFile)) {
+                                    java.nio.file.Files.createDirectories(targetFile)
+                                } else {
+                                    java.nio.file.Files.copy(
+                                        sourceFile,
+                                        targetFile,
+                                        java.nio.file.StandardCopyOption.REPLACE_EXISTING
+                                    )
+                                }
+                            }
+                        } finally {
+                            sourceFiles.close()
+                        }
+                        // Replace or remove the SapioInfo file
                         java.nio.file.Files.deleteIfExists(testSapioInfo)
                         if (fixture.sapioInfo != null) {
                             java.nio.file.Files.copy(

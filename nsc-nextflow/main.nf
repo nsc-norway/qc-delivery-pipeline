@@ -231,7 +231,7 @@ workflow QC_DELIVERY_PIPELINE {
         file(params.runFolder),
         analysisId,
         demultiplex_stats,
-        suprdupr_ch.collect(),
+        suprdupr_ch.toList(),
         sapioRunFile
         )
 

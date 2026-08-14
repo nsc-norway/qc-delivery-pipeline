@@ -3,9 +3,15 @@ run:
 projects:
   - fields:
       ProjectName: Example-test1-2026-07-28-mismatch
+      Classification: Research
     submission_form:
       DeliveryMethod: NeLS project
+      ContactPerson: Erik Example
+      ContactEmail: erik.example@example.org
   - fields:
       ProjectName: Testcase-test2-2026-07-28
+      Classification: Research
     submission_form:
       DeliveryMethod: User HDD
+      ContactPerson: Thea Testcase
+      ContactEmail: thea.testcase@example.org
