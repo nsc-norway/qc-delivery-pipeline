@@ -106,7 +106,9 @@ nextflow_workflow {
                     suprdupr: channelFileNames(workflow.out.suprdupr),
                     multiqc: channelFileNames(workflow.out.multiqc),
                     nirdDelivery: channelFileNames(workflow.out.nird_delivery),
-                    linkedDelivery: channelFileNames(workflow.out.linked_delivery)
+                    linkedDelivery: channelFileNames(workflow.out.linked_delivery),
+                    projectEmails: channelFileNames(workflow.out.project_emails),
+                    runSummaryEmail: channelFileNames(workflow.out.run_summary_email)
                 ]).match("${fixture.name} output files")
             }
         }
@@ -140,7 +142,7 @@ nextflow_workflow {
             name: "MiSeq.20260715.3",
             runId: "20260715_SH01006_0020_ASC2245414-SC3",
             analysisDir: "Analysis/3",
-            resultsDir: "main-smoke",
+            resultsDir: "20260715-3",
             params: [:]
         ],
         [

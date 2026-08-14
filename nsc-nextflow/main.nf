@@ -213,8 +213,8 @@ workflow QC_DELIVERY_PIPELINE {
     PUBLISH_REPORTS(
         runId,
         analysisId,
-        reports_files,
-        demux_files
+        reports_files.collect(),
+        demux_files.collect()
     )
 
     // Pick the first file named Demultiplex_Stats.csv from the reports or demux files channels
