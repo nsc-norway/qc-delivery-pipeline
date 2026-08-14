@@ -118,10 +118,7 @@
                     "20260625_LH00534_0319_A22JKHGLT1/QualityControl/Testcase-test2-2026-07-28/suprdupr/Testcase-test2-2026-07-28_4-test_fc9f0e1a-0f10-4929-b1a0-ef1ce05321e7.suprDUPr.txt",
                     "20260625_LH00534_0319_A22JKHGLT1/QualityControl/Testcase-test2-2026-07-28/suprdupr/Testcase-test2-2026-07-28_5-datum_eb49169a-d43e-46f2-ac6b-43687cf874fb.suprDUPr.txt",
                     "20260625_LH00534_0319_A22JKHGLT1/QualityControl/Testcase-test2-2026-07-28/suprdupr/Testcase-test2-2026-07-28_6-point_e624cd43-0e06-4298-b3c7-cc6df7ac4809.suprDUPr.txt",
-                    "20260625_LH00534_0319_A22JKHGLT1/QualityControl/Testcase-test2-2026-07-28/suprdupr/Testcase-test2-2026-07-28_7-case_232431d5-72ed-494e-937a-fe3705e0f315.suprDUPr.txt",
-                    "nextflow_reports/nextflow_flowchart.html",
-                    "nextflow_reports/nextflow_report.html",
-                    "nextflow_reports/nextflow_timeline.html"
+                    "20260625_LH00534_0319_A22JKHGLT1/QualityControl/Testcase-test2-2026-07-28/suprdupr/Testcase-test2-2026-07-28_7-case_232431d5-72ed-494e-937a-fe3705e0f315.suprDUPr.txt"
                 ],
                 "delivery": [
                     "260625_LH00534.A.Project_Example-test1-2026-07-28/1-a_S6_L001_R1_001.fastq.gz",
@@ -264,7 +261,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-08-13T15:43:11.279795",
+        "timestamp": "2026-08-14T09:50:12.934729",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -892,10 +889,7 @@
                     "20260625_LH00534_0319_A22JKHGLT1/QualityControl/Testcase-test2-2026-07-28/suprdupr/Testcase-test2-2026-07-28_4-test_fc9f0e1a-0f10-4929-b1a0-ef1ce05321e7.suprDUPr.txt",
                     "20260625_LH00534_0319_A22JKHGLT1/QualityControl/Testcase-test2-2026-07-28/suprdupr/Testcase-test2-2026-07-28_5-datum_eb49169a-d43e-46f2-ac6b-43687cf874fb.suprDUPr.txt",
                     "20260625_LH00534_0319_A22JKHGLT1/QualityControl/Testcase-test2-2026-07-28/suprdupr/Testcase-test2-2026-07-28_6-point_e624cd43-0e06-4298-b3c7-cc6df7ac4809.suprDUPr.txt",
-                    "20260625_LH00534_0319_A22JKHGLT1/QualityControl/Testcase-test2-2026-07-28/suprdupr/Testcase-test2-2026-07-28_7-case_232431d5-72ed-494e-937a-fe3705e0f315.suprDUPr.txt",
-                    "nextflow_reports/nextflow_flowchart.html",
-                    "nextflow_reports/nextflow_report.html",
-                    "nextflow_reports/nextflow_timeline.html"
+                    "20260625_LH00534_0319_A22JKHGLT1/QualityControl/Testcase-test2-2026-07-28/suprdupr/Testcase-test2-2026-07-28_7-case_232431d5-72ed-494e-937a-fe3705e0f315.suprDUPr.txt"
                 ],
                 "delivery": [
                     "260625_LH00534.A.Project_Example-test1-2026-07-28/1-a_S6_L001_R1_001.fastq.gz",
@@ -1038,7 +1032,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-08-13T15:40:49.910842",
+        "timestamp": "2026-08-14T09:48:21.314851",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -1203,10 +1197,7 @@
                     "20260715_SH01006_0020_ASC2245414-SC3/QualityControl/Test-Libs6-2026-06-22/suprdupr/Test-Libs6-2026-06-22_6-miseq6_3a6a4383-8746-471f-baae-d526465def19.suprDUPr.txt",
                     "20260715_SH01006_0020_ASC2245414-SC3/QualityControl/Test-Libs6-2026-06-22/suprdupr/Test-Libs6-2026-06-22_7-miseq7_702258e7-5b0b-427f-aa8f-81174ec062e9.suprDUPr.txt",
                     "20260715_SH01006_0020_ASC2245414-SC3/QualityControl/Test-Libs6-2026-06-22/suprdupr/Test-Libs6-2026-06-22_8-miseq8_b58a1f64-570a-4d2e-9754-a5aeb2bdcda8.suprDUPr.txt",
-                    "20260715_SH01006_0020_ASC2245414-SC3/QualityControl/Test-Libs6-2026-06-22/suprdupr/Test-Libs6-2026-06-22_9-miseq9_421c9a99-35dc-44b3-ad94-2c4316357f36.suprDUPr.txt",
-                    "nextflow_reports/nextflow_flowchart.html",
-                    "nextflow_reports/nextflow_report.html",
-                    "nextflow_reports/nextflow_timeline.html"
+                    "20260715_SH01006_0020_ASC2245414-SC3/QualityControl/Test-Libs6-2026-06-22/suprdupr/Test-Libs6-2026-06-22_9-miseq9_421c9a99-35dc-44b3-ad94-2c4316357f36.suprDUPr.txt"
                 ],
                 "delivery": [
                     "260715_SH01006.A.Project_Test-Libs6-2026-06-22/.htaccess",
@@ -1344,7 +1335,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-08-13T15:48:22.888392",
+        "timestamp": "2026-08-14T09:54:18.674805",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -1918,10 +1909,7 @@
                     "20260625_LH00534_0319_A22JKHGLT1/QualityControl/Testcase-test2-2026-07-28/suprdupr/Testcase-test2-2026-07-28_4-test_fc9f0e1a-0f10-4929-b1a0-ef1ce05321e7.suprDUPr.txt",
                     "20260625_LH00534_0319_A22JKHGLT1/QualityControl/Testcase-test2-2026-07-28/suprdupr/Testcase-test2-2026-07-28_5-datum_eb49169a-d43e-46f2-ac6b-43687cf874fb.suprDUPr.txt",
                     "20260625_LH00534_0319_A22JKHGLT1/QualityControl/Testcase-test2-2026-07-28/suprdupr/Testcase-test2-2026-07-28_6-point_e624cd43-0e06-4298-b3c7-cc6df7ac4809.suprDUPr.txt",
-                    "20260625_LH00534_0319_A22JKHGLT1/QualityControl/Testcase-test2-2026-07-28/suprdupr/Testcase-test2-2026-07-28_7-case_232431d5-72ed-494e-937a-fe3705e0f315.suprDUPr.txt",
-                    "nextflow_reports/nextflow_flowchart.html",
-                    "nextflow_reports/nextflow_report.html",
-                    "nextflow_reports/nextflow_timeline.html"
+                    "20260625_LH00534_0319_A22JKHGLT1/QualityControl/Testcase-test2-2026-07-28/suprdupr/Testcase-test2-2026-07-28_7-case_232431d5-72ed-494e-937a-fe3705e0f315.suprDUPr.txt"
                 ],
                 "delivery": [
                     "260625_LH00534.A.Project_Example-test1-2026-07-28/.htaccess",
@@ -2047,7 +2035,7 @@
                 ]
             }
         ],
-        "timestamp": "2026-08-13T15:45:39.661483",
+        "timestamp": "2026-08-14T09:52:04.225167",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
