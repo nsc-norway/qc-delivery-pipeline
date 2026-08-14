@@ -70,11 +70,9 @@ def main():
     # check for the existence of the column.
     if args.suprdupr_dir:
         non_undetermined = demultiplex_stats[demultiplex_stats['SampleID'] != "Undetermined"]
-        runid_parts = run_parameters.run_id.split("_")
-        project_name_prefix = ".".join([runid_parts[0][2:] + "_" + runid_parts[1], runid_parts[-1][0], "Project_"])
         # Pushing data back to the original DataFrame should work, because the merging is done on the
         # index.
-        demultiplex_stats['suprDUPr_duplicate_count'] = get_suprDUPr_duplicates(non_undetermined, project_name_prefix, Path(args.suprdupr_dir))
+        demultiplex_stats['suprDUPr_duplicate_count'] = get_suprDUPr_duplicates(non_undetermined, Path(args.suprdupr_dir))
 
     if args.sapio_file:
         sapio_data = yaml.safe_load(args.sapio_file)
@@ -228,29 +226,25 @@ def get_demux_stats_and_sample_info(demultiplex_stats_file):
     return demultiplex_stats, undetermined
 
 
-def get_sample_suprDUPr(suprdupr_dir, lane, longproject, sample_id):
-    pattern = f"{longproject}_{sample_id}_S*_L{str(lane).zfill(3)}_*.suprDUPr.txt"
-    suprduprs = list(suprdupr_dir.glob(pattern))
-    if len(suprduprs) == 0:
+def get_sample_suprDUPr(suprdupr_dir, lane, sample_id):
+    suprdupr_path = suprdupr_dir / f"{sample_id}_L{str(lane).zfill(3)}.suprDUPr.txt"
+    if not suprdupr_path.exists():
         return pd.NA
-    elif len(suprduprs) > 1:
-        raise RuntimeError(f"Found {len(suprduprs)} suprDUPr results for pattern {pattern}.")
-    else:
-        with open(suprduprs[0]) as f:
-            data = [l.strip().split() for l in f.readlines()]
-            assert data[0][0] == "NUM_READS" and data[0][1] == "READS_WITH_DUP", "suprDUPr file headers " + suprduprs[0]
-            if float(data[1][0]) == 0: return float('NaN')
-            return float(data[1][1])
+    with open(suprdupr_path) as f:
+        data = [l.strip().split() for l in f.readlines()]
+        assert data[0][0] == "NUM_READS" and data[0][1] == "READS_WITH_DUP", f"suprDUPr file headers {suprdupr_path}"
+        if float(data[1][0]) == 0: return float('NaN')
+        return float(data[1][1])
 
 
-def get_suprDUPr_duplicates(demultiplex_stats, project_name_prefix, suprdupr_dir):
+def get_suprDUPr_duplicates(demultiplex_stats, suprdupr_dir):
     """
     Return a Series of duplicate counts for the samples given in demultiplex_stats.
     """
     if 'suprDUPr_duplicates' in demultiplex_stats.columns:
         raise ValueError("The specified DataFrame already contains suprDUPr_duplicates.")
     return demultiplex_stats.apply(
-        lambda row: get_sample_suprDUPr(suprdupr_dir, row.Lane, project_name_prefix + row.Sample_Project, row.SampleID),
+        lambda row: get_sample_suprDUPr(suprdupr_dir, row.Lane, row.OriginalSampleID),
         axis=1
     )
 

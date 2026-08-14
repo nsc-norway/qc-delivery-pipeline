@@ -38,6 +38,12 @@ def parse_args(argv=None):
         default=0,
         help="Seed for reproducible random sequences (default: 0).",
     )
+    parser.add_argument(
+        "--duplicate-percentage",
+        type=float,
+        default=0,
+        help="Percentage of retained reads whose sequence duplicates an earlier read (default: 0).",
+    )
     destination = parser.add_mutually_exclusive_group(required=True)
     destination.add_argument(
         "--in-place",
@@ -52,6 +58,8 @@ def parse_args(argv=None):
     args = parser.parse_args(argv)
     if args.max_reads < 0:
         parser.error("--max-reads must be zero or greater")
+    if not 0 <= args.duplicate_percentage <= 100:
+        parser.error("--duplicate-percentage must be between 0 and 100")
     return args
 
 
@@ -104,29 +112,59 @@ def validate_record(record, fastq_path, record_number):
         )
 
 
-def anonymize_fastq(source, destination, max_reads, seed):
+def anonymize_fastq(source, destination, max_reads, seed, duplicate_percentage=0):
     randomizer = randomizer_for(source, seed)
-    destination.parent.mkdir(parents=True, exist_ok=True)
+    records = []
     with gzip.open(source, "rt", encoding="ascii", newline="") as input_file:
-        with open(destination, "wb") as raw_output:
-            with gzip.GzipFile(fileobj=raw_output, mode="wb", mtime=0) as gzip_output:
-                with io.TextIOWrapper(gzip_output, encoding="ascii", newline="") as output_file:
-                    for record_number in range(1, max_reads + 1):
-                        record = [input_file.readline() for _ in range(4)]
-                        if not any(record):
-                            return record_number - 1
-                        if not all(record):
-                            raise ValueError(
-                                f"{source}: incomplete record {record_number} at end of file"
-                            )
-                        record = [line.rstrip("\r\n") for line in record]
-                        validate_record(record, source, record_number)
-                        header, sequence, separator, quality = record
-                        output_file.write(header + "\n")
-                        output_file.write(random_sequence(len(sequence), randomizer) + "\n")
-                        output_file.write(separator + "\n")
-                        output_file.write(quality + "\n")
-    return max_reads
+        for record_number in range(1, max_reads + 1):
+            record = [input_file.readline() for _ in range(4)]
+            if not any(record):
+                break
+            if not all(record):
+                raise ValueError(
+                    f"{source}: incomplete record {record_number} at end of file"
+                )
+            record = [line.rstrip("\r\n") for line in record]
+            validate_record(record, source, record_number)
+            records.append(record)
+
+    anonymized_sequences = [
+        random_sequence(len(record[1]), randomizer) for record in records
+    ]
+    duplicate_count = int(len(records) * duplicate_percentage / 100 + 0.5)
+    indices_by_length = {}
+    for index, record in enumerate(records):
+        indices_by_length.setdefault(len(record[1]), []).append(index)
+    eligible_indices = [
+        index for indices in indices_by_length.values() if len(indices) > 1 for index in indices
+    ]
+    if duplicate_count > len(eligible_indices):
+        raise ValueError(
+            f"{source}: cannot duplicate {duplicate_count} reads because too few reads share a sequence length"
+        )
+
+    duplicate_indices = set(randomizer.sample(eligible_indices, duplicate_count))
+    for indices in indices_by_length.values():
+        selected_indices = [index for index in indices if index in duplicate_indices]
+        if not selected_indices:
+            continue
+        source_indices = [index for index in indices if index not in duplicate_indices]
+        source_index = randomizer.choice(source_indices or selected_indices)
+        duplicate_sequence = anonymized_sequences[source_index]
+        for index in selected_indices:
+            anonymized_sequences[index] = duplicate_sequence
+
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with open(destination, "wb") as raw_output:
+        with gzip.GzipFile(fileobj=raw_output, mode="wb", mtime=0) as gzip_output:
+            with io.TextIOWrapper(gzip_output, encoding="ascii", newline="") as output_file:
+                for record, anonymized_sequence in zip(records, anonymized_sequences):
+                    header, sequence, separator, quality = record
+                    output_file.write(header + "\n")
+                    output_file.write(anonymized_sequence + "\n")
+                    output_file.write(separator + "\n")
+                    output_file.write(quality + "\n")
+    return len(records)
 
 
 def make_temporary_path(destination):
@@ -151,7 +189,13 @@ def main(argv=None):
         destination = source if args.in_place else output_path(source, args.inputs, args.output_dir)
         temporary_path = make_temporary_path(destination)
         try:
-            read_count = anonymize_fastq(source, temporary_path, args.max_reads, args.seed)
+            read_count = anonymize_fastq(
+                source,
+                temporary_path,
+                args.max_reads,
+                args.seed,
+                args.duplicate_percentage,
+            )
             temporary_path.replace(destination)
         except (OSError, UnicodeError, ValueError) as error:
             temporary_path.unlink(missing_ok=True)

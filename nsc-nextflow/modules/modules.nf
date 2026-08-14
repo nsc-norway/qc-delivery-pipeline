@@ -41,11 +41,11 @@ process SUPRDUPR {
     tuple val(meta), path(fastq)
 
     output:
-    path "${meta.sample_id}.suprDUPr.txt"
+    path "${meta.sample_id}_L00${meta.lane}.suprDUPr.txt"
 
     script:
     """
-    suprDUPr -r $fastq > ${meta.sample_id}.suprDUPr.txt
+    suprDUPr -r $fastq > ${meta.sample_id}_L00${meta.lane}.suprDUPr.txt
     """
 }
 
@@ -111,8 +111,8 @@ process PUBLISH_REPORTS {
     input:
     val(run_id)
     val(analysis_id)
-    path("Reports-input")
-    path("Demux-input")
+    path("Reports-input/*")
+    path("Demux-input/*")
     
     output:
     path "Demux"
@@ -120,8 +120,7 @@ process PUBLISH_REPORTS {
     script:
     """
     mkdir -p Demux
-    cp -r Demux-input/* Demux/
-    cp -r Reports-input/* Demux/
+    cp -r Demux-input/* Reports-input/* Demux/
     """
 }
 
