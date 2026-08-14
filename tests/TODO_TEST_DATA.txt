@@ -10,6 +10,3 @@ No NscSapioInfo.yaml file at all
 No-guid names
 
 
-Sample_Project and no-guid names?... (Have it, but not supported by pipeline - N20260715_SH01006_0020_ASC2245414-SC3.c2)
-
-
