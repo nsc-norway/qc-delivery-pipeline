@@ -15,6 +15,7 @@ include {
     MD5SUM_FASTQ;
     MULTIQC;
     PROJECT_CREDENTIALS;
+    PUBLISH_REPORTS;
     SUPRDUPR;
     TAR_FOLDER;
     DECOMPRESS_ORA;
@@ -209,7 +210,12 @@ workflow QC_DELIVERY_PIPELINE {
     // Get demultiplexing stats, publish them in the outdir
     reports_files = channel.fromPath("${bclConvertFastqDir}/Reports/*", checkIfExists: true)
     demux_files = channel.fromPath("${params.analysisDir}/Data/Demux/*")
-    //DEMUX_STATS(demux_stats_files)
+    PUBLISH_REPORTS(
+        runId,
+        analysisId,
+        reports_files,
+        demux_files
+    )
 
     // Pick the first file named Demultiplex_Stats.csv from the reports or demux files channels
     // (the file may exist in either one or both)
@@ -244,6 +250,8 @@ workflow QC_DELIVERY_PIPELINE {
     multiqc = multiqc_ch
     nird_delivery = TAR_FOLDER.out.TAR_FOLDER_out
     linked_delivery = LINK_FOLDER.out
+    project_emails = EMAIL_PROJECT.out.EMAIL_PROJECT_out
+    run_summary_email = EMAIL_SUMMARY_RUN.out.EMAIL_SUMMARY_RUN_out
 
 }
 

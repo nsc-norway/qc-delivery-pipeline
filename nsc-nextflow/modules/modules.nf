@@ -104,6 +104,27 @@ process PROJECT_CREDENTIALS {
     """
 }
 
+process PUBLISH_REPORTS {
+    tag "${run_id}/${analysis_id}"
+    publishDir { "${params.outdir}/${run_id}/QualityControl_${analysis_id}" }, mode: 'link', overwrite: true, saveAs: { filename -> filename.tokenize('/').last() }
+
+    input:
+    val(run_id)
+    val(analysis_id)
+    path("Reports-input")
+    path("Demux-input")
+    
+    output:
+    path "Demux"
+
+    script:
+    """
+    mkdir -p Demux
+    cp -r Demux-input/* Demux/
+    cp -r Reports-input/* Demux/
+    """
+}
+
 
 process TAR_FOLDER {
     tag "${meta.project_name}"
