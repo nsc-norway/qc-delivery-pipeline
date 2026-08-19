@@ -23,6 +23,15 @@ nextflow run nsc-nextflow/main.nf \
   TODO -- update
 ```
 
+### Download Singularity / Apptainer images
+
+The Nextflow pipeline process containers can be prefetched into a local cache
+directory with:
+
+```
+scripts/download-singularity-images.sh
+```
+
 ### Input / output parameter spec
 
 Input:
@@ -54,7 +63,7 @@ Automation worker requires exported environment variables for configuration:
 
 ```
 set -a            # Automatically export all subsequent variables
-source .env       # Read and execute the file in the current shell
+source nsc.env    # Read and execute the file in the current shell
 set +a            # Turn off the automatic export feature
 scripts/nsc-automation-cron.sh
 ```
@@ -64,12 +73,12 @@ scripts/nsc-automation-cron.sh
 
 ```
 set -a            # Automatically export all subsequent variables
-source .env       # Read and execute the file in the current shell
+source nsc.env    # Read and execute the file in the current shell
 set +a            # Turn off the automatic export feature
 scripts/nsc-automation-cron.sh
 ```
 
-The scripts are configured using environment variables. An example is given in .env.example. The 
+The scripts are configured using environment variables. An example is given in example.env. The 
 nextflow pipeline should not read environment variables, and is instead configured explicitly using
 parameters (see above).
 
@@ -188,5 +197,4 @@ Nextflow pipeline for data QC, file copying, report generation and data delivery
 Dockerfiles for tools that are contained in this repo. The docker images are built through Github Actions.
 
 For external tools there are instead references to public Docker images.
-
 
