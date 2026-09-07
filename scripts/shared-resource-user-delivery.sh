@@ -29,12 +29,23 @@ mkdir -p "$DESTINATION_DIR"/SAV/InterOp
 # filsluse operates, it will be removed even if it's already transferred, so we just go ahead anyway.
 mkdir -p "$DESTINATION_DIR"/Analysis_"$ANALYSIS_ID/fastq"
 
-# Create md5sum in memory, to keep the copying operations fast
-MD5SUM_DATA=$( md5sum "$ANALYSIS_DIR"/Data/BCLConvert/fastq/*.fastq.gz )
+FASTQ_DESTINATION_DIR="$DESTINATION_DIR/Analysis_${ANALYSIS_ID}/fastq"
+MD5SUM_FILE="$FASTQ_DESTINATION_DIR/md5sum.txt"
+: > "$MD5SUM_FILE"
 
-echo "$MD5SUM_DATA" > "$DESTINATION_DIR/Analysis_${ANALYSIS_ID}/fastq/md5sum.txt"
-cp -r "$ANALYSIS_DIR/Data/BCLConvert/fastq/"*.fastq.gz "$DESTINATION_DIR/Analysis_${ANALYSIS_ID}/fastq/"
+for fastq_file in "$ANALYSIS_DIR"/Data/BCLConvert/fastq/*.fastq.gz; do
+    fastq_filename=$(basename "$fastq_file")
+    if [[ "$fastq_filename" =~ ^(.+)_[[:xdigit:]]{8}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{4}-[[:xdigit:]]{12}(_S[0-9]+_L[0-9]+_R[12]_[0-9]+\.fastq\.gz)$ ]]; then
+        fastq_filename="${BASH_REMATCH[1]}${BASH_REMATCH[2]}"
+    fi
+
+    destination_fastq="$FASTQ_DESTINATION_DIR/$fastq_filename"
+    checksum=$(md5sum "$fastq_file")
+    printf '%s  %s\n' "${checksum%% *}" "$destination_fastq" >> "$MD5SUM_FILE"
+    cp "$fastq_file" "$destination_fastq"
+done
+
 cp -r "$ANALYSIS_DIR/Data/BCLConvert/fastq/Reports" "$DESTINATION_DIR/Analysis_${ANALYSIS_ID}/"
 cp -r "$ANALYSIS_DIR/Data/Demux" "$DESTINATION_DIR/Analysis_${ANALYSIS_ID}/"
-cp -r "$RUN_DIR/"{RunInfo.xml,RunParameters.xml} "$DESTINATION_DIR/SAV"
-cp -r "$RUN_DIR/InterOp/"*.bin "$DESTINATION_DIR/SAV/InterOp/"
+cp "$RUN_DIR/"{RunInfo.xml,RunParameters.xml} "$DESTINATION_DIR/SAV"
+cp "$RUN_DIR/InterOp/"*.bin "$DESTINATION_DIR/SAV/InterOp/"

@@ -148,3 +148,31 @@ assert_calls_match() {
     expected_calls=$(printf 'python3\tsapio-run-extractor.py\t%s\t--output-yaml-file\t%s\npipeline-runner.sh\t%s' "${run_dir}/RunInfo.xml" "${run_dir}/NscSapioInfo.yaml" "$analysis")
     assert_calls_match "$expected_calls"
 }
+
+@test "delivers IMM or MIK FASTQs without Sample_ID UUID suffixes" {
+    delivery_script="${repo_root}/scripts/shared-resource-user-delivery.sh"
+    delivery_run_dir="${BATS_TEST_TMPDIR}/delivery-run"
+    delivery_analysis_dir="${delivery_run_dir}/Analysis/42"
+    source_fastq_dir="${delivery_analysis_dir}/Data/BCLConvert/fastq"
+    delivery_root="${BATS_TEST_TMPDIR}/delivered"
+
+    mkdir -p "${source_fastq_dir}/Reports" "${delivery_analysis_dir}/Data/Demux" "${delivery_run_dir}/InterOp"
+    touch "${source_fastq_dir}/Reports/SampleSheet.csv" "${delivery_analysis_dir}/Data/Demux/metrics.csv"
+    touch "${delivery_run_dir}/RunInfo.xml" "${delivery_run_dir}/RunParameters.xml" "${delivery_run_dir}/InterOp/metrics.bin"
+    printf 'R1 data\n' > "${source_fastq_dir}/26-1094-1D_fa8781b0-ff92-4c21-afa9-20d7ae946df8_S3_L001_R1_001.fastq.gz"
+    printf 'R2 data\n' > "${source_fastq_dir}/26-1094-1D_fa8781b0-ff92-4c21-afa9-20d7ae946df8_S3_L002_R2_001.fastq.gz"
+    printf 'plain data\n' > "${source_fastq_dir}/sample-without-uuid_S4_L001_R1_001.fastq.gz"
+
+    run bash "$delivery_script" "$delivery_run_dir" "$delivery_analysis_dir" "$delivery_root"
+
+    [ "$status" -eq 0 ]
+    delivered_fastq_dir="${delivery_root}/delivery-run/Analysis_42/fastq"
+    [ -f "${delivered_fastq_dir}/26-1094-1D_S3_L001_R1_001.fastq.gz" ]
+    [ -f "${delivered_fastq_dir}/26-1094-1D_S3_L002_R2_001.fastq.gz" ]
+    [ -f "${delivered_fastq_dir}/sample-without-uuid_S4_L001_R1_001.fastq.gz" ]
+    [ ! -e "${delivered_fastq_dir}/26-1094-1D_fa8781b0-ff92-4c21-afa9-20d7ae946df8_S3_L001_R1_001.fastq.gz" ]
+    run grep -q 'fa8781b0-ff92-4c21-afa9-20d7ae946df8' "${delivered_fastq_dir}/md5sum.txt"
+    [ "$status" -eq 1 ]
+    run md5sum --check "${delivered_fastq_dir}/md5sum.txt"
+    [ "$status" -eq 0 ]
+}
