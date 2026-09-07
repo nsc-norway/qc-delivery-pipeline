@@ -2,29 +2,43 @@
 
 setup() {
     repo_root=$(cd "$(dirname "$BATS_TEST_FILENAME")/../.." && pwd)
-    cron_script="${repo_root}/scripts/nsc-automation-cron.sh"
+    script_dir="${BATS_TEST_TMPDIR}/scripts"
+    cron_script="${script_dir}/nsc-automation-cron.sh"
     run_root="${BATS_TEST_TMPDIR}/runs"
     mock_bin="${BATS_TEST_TMPDIR}/bin"
     call_log="${BATS_TEST_TMPDIR}/calls.log"
     mik_delivery_root="${BATS_TEST_TMPDIR}/mik-delivery"
     imm_delivery_root="${BATS_TEST_TMPDIR}/imm-delivery"
+    nsc_delivery_root="${BATS_TEST_TMPDIR}/nsc-delivery"
+    nsc_demultiplexed_root="${BATS_TEST_TMPDIR}/nsc-demultiplexed"
+    environment_file="${BATS_TEST_TMPDIR}/environment"
 
-    mkdir -p "$run_root" "$mock_bin" "$mik_delivery_root" "$imm_delivery_root"
+    mkdir -p "$script_dir" "$run_root" "$mock_bin" "$mik_delivery_root" "$imm_delivery_root" \
+        "$nsc_delivery_root" "$nsc_demultiplexed_root"
+    cp "${repo_root}/scripts/nsc-automation-cron.sh" "$cron_script"
+    chmod +x "$cron_script"
+    cat > "$environment_file" <<EOF
+MIK_DELIVERY_DIR=${mik_delivery_root}
+IMM_DELIVERY_DIR=${imm_delivery_root}
+NSC_DELIVERY_DIR=${nsc_delivery_root}
+NSC_DEMULTIPLEXED_DIR=${nsc_demultiplexed_root}
+RUN_FOLDER_ROOT=${run_root}
+EOF
     : > "$call_log"
     export CALL_LOG="$call_log"
     export MIK_DELIVERY_ROOT="$mik_delivery_root"
     export IMM_DELIVERY_ROOT="$imm_delivery_root"
-    export PATH="${mock_bin}:${PATH}"
+    export PATH="${mock_bin}:${script_dir}:${PATH}"
 
-    create_command_mock pipeline-runner.sh
-    create_command_mock shared-resource-user-delivery.sh
+    create_command_mock "${script_dir}/get-pipeline-command.sh"
+    create_command_mock "${script_dir}/shared-resource-user-delivery.sh"
     create_sapio_mock
 }
 
 create_command_mock() {
-    local command_name="$1"
+    local command_path="$1"
 
-    cat > "${mock_bin}/${command_name}" <<'EOF'
+    cat > "$command_path" <<'EOF'
 #!/usr/bin/env bash
 printf '%s' "${0##*/}" >> "$CALL_LOG"
 for argument in "$@"; do
@@ -32,10 +46,11 @@ for argument in "$@"; do
 done
 printf '\n' >> "$CALL_LOG"
 EOF
-    chmod +x "${mock_bin}/${command_name}"
+    chmod +x "$command_path"
 }
 
 create_sapio_mock() {
+    touch "${script_dir}/sapio-run-extractor.py"
     cat > "${mock_bin}/python3" <<'EOF'
 #!/usr/bin/env bash
 arguments=("$@")
@@ -111,15 +126,17 @@ assert_calls_match() {
     fi
 }
 
-@test "runs the pipeline runner for completed analyses and skips incomplete analyses" {
+@test "generates and runs the pipeline command for completed analyses and skips incomplete analyses" {
     copy_analysis=$(create_analysis "copy-run" "3" "copy")
     fastq_analysis=$(create_analysis "fastq-run" "c2" "fastq")
     incomplete_analysis=$(create_analysis "incomplete-run" "4" "none")
 
-    run bash "$cron_script" "$run_root"
+    run nsc-automation-cron.sh "$environment_file"
 
     [ "$status" -eq 0 ]
-    expected_calls=$(printf 'pipeline-runner.sh\t%s\npipeline-runner.sh\t%s' "$copy_analysis" "$fastq_analysis")
+    expected_calls=$(printf 'get-pipeline-command.sh\t%s\t%s\nget-pipeline-command.sh\t%s\t%s' \
+        "${run_root}/copy-run" "$copy_analysis" \
+        "${run_root}/fastq-run" "$fastq_analysis")
     assert_calls_match "$expected_calls"
     [ ! -e "${incomplete_analysis}nsc_automation_log.txt" ]
 }
@@ -128,7 +145,7 @@ assert_calls_match() {
     mik_analysis=$(create_analysis "mik-run" "3" "copy" "MIK")
     imm_analysis=$(create_analysis "imm-run" "c1" "fastq" "IMM")
 
-    run bash "$cron_script" "$run_root"
+    run nsc-automation-cron.sh "$environment_file"
 
     [ "$status" -eq 0 ]
     expected_calls=$(printf 'shared-resource-user-delivery.sh\t%s\t%s\t%s\nshared-resource-user-delivery.sh\t%s\t%s\t%s' \
@@ -141,12 +158,24 @@ assert_calls_match() {
     analysis=$(create_analysis "missing-sapio-run" "3" "copy" "missing")
     run_dir="${run_root}/missing-sapio-run"
 
-    run bash "$cron_script" "$run_root"
+    run nsc-automation-cron.sh "$environment_file"
 
     [ "$status" -eq 0 ]
     [ -f "${run_dir}/NscSapioInfo.yaml" ]
-    expected_calls=$(printf 'python3\tsapio-run-extractor.py\t%s\t--output-yaml-file\t%s\npipeline-runner.sh\t%s' "${run_dir}/RunInfo.xml" "${run_dir}/NscSapioInfo.yaml" "$analysis")
+    expected_calls=$(printf 'python3\t%s\t%s\t--output-yaml-file\t%s\nget-pipeline-command.sh\t%s\t%s' \
+        "${script_dir}/sapio-run-extractor.py" "${run_dir}/RunInfo.xml" \
+        "${run_dir}/NscSapioInfo.yaml" "$run_dir" "$analysis")
     assert_calls_match "$expected_calls"
+}
+
+@test "generates a pipeline command with an absolute pipeline path" {
+    analysis=$(create_analysis "pipeline-path-run" "3" "copy")
+
+    cd "$BATS_TEST_TMPDIR"
+    run "${repo_root}/scripts/get-pipeline-command.sh" "${run_root}/pipeline-path-run" "$analysis"
+
+    [ "$status" -eq 0 ]
+    [[ "$output" == "nextflow run ${repo_root}/nsc-nextflow/main.nf "* ]]
 }
 
 @test "delivers IMM or MIK FASTQs without Sample_ID UUID suffixes" {

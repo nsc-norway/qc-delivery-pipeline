@@ -2,36 +2,49 @@
 
 # Cron job for automatisk pipeline execution.
 
-# The called script sapio-run-extractor.py requires environment variables to be set for the Sapio API. See script source for details.
+# The script takes an environment file as its argument.
 
-
-# Required environment variables:
+# Required environment variables for running this cron job:
 # Sapio credentials
-# MIK_DELIVERY_ROOT
-# IMM_DELIVERY_ROOT
+# MIK_DELIVERY_DIR
+# IMM_DELIVERY_DIR
+# NSC_DELIVERY_DIR
+# NSC_DEMULTIPLEXED_DIR
+# RUN_FOLDER_ROOT
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-
-if [ "$1" == "" ]; then
-    echo "Usage: $0 RUN_FOLDER_ROOT"
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 ENV_FILE"
     exit 1
 fi
 
-if [ ! -d "$MIK_DELIVERY_ROOT" ] || [ ! -d "$IMM_DELIVERY_ROOT" ]; then
-    echo "Error: Delivery destinations must be specified and exist: MIK_DELIVERY_ROOT, IMM_DELIVERY_ROOT"
+# Export all environment variables so they can be used by subprocesses
+set -a
+source "$1"
+set +a
+
+
+if [ ! -d "$MIK_DELIVERY_DIR" ] || [ ! -d "$IMM_DELIVERY_DIR" ] || \
+   [ ! -d "$NSC_DELIVERY_DIR" ] || [ ! -d "$NSC_DEMULTIPLEXED_DIR" ] || \
+   [ ! -d "$RUN_FOLDER_ROOT" ]; then
+    echo "Error: Delivery destinations and run folder root must be specified and exist:"
+    echo "MIK_DELIVERY_DIR, IMM_DELIVERY_DIR, NSC_DELIVERY_DIR,"
+    echo "NSC_DEMULTIPLEXED_DIR, RUN_FOLDER_ROOT"
     exit 1
 fi
 
 # List analysis folders
 shopt -s nullglob
-for analysis in "$1"/*/Analysis/*/
+for analysis in "$RUN_FOLDER_ROOT"/*/Analysis/*/
 do
     run_folder=$(cd "$analysis/../.." && pwd)
-    log_file="$analysis/nsc_automation_log.txt"
-    if [ -f "$log_file" ]; then
+    log_file="$analysis/NSC/automation_log.txt"
+    if [ -e "$analysis/NSC" ]; then
         # Skip analysies that are already processed
         continue
     fi
+    mkdir "$analysis/NSC"
     # Determine if demultiplexing is complete
     complete=false
     if [ -f "$analysis/CopyComplete.txt" ]; then
@@ -45,7 +58,7 @@ do
         echo "Processing analysis" > "$log_file"
         if [ ! -f "$run_folder/NscSapioInfo.yaml" ]; then
             echo "Extracting run information from Sapio into NscSapioInfo.yaml..." >> "$log_file"
-            python3 sapio-run-extractor.py \
+            python3 "$SCRIPT_DIR/sapio-run-extractor.py" \
                 "$run_folder/RunInfo.xml" \
                 --output-yaml-file "$run_folder/NscSapioInfo.yaml" >> "$log_file" 2>&1
             echo "" >> "$log_file"
@@ -57,13 +70,14 @@ do
 
         if [ $IS_MIK -eq 0 ]; then
             echo "Analysis is from MIK department" >> "$log_file"
-            shared-resource-user-delivery.sh "$run_folder" "$analysis" "$MIK_DELIVERY_ROOT" >> "$log_file" 2>&1
+            "$SCRIPT_DIR/shared-resource-user-delivery.sh" "$run_folder" "$analysis" "$MIK_DELIVERY_DIR" >> "$log_file" 2>&1
         elif [ $IS_IMM -eq 0 ]; then
             echo "Analysis is from IMM department" >> "$log_file"
-            shared-resource-user-delivery.sh "$run_folder" "$analysis" "$IMM_DELIVERY_ROOT" >> "$log_file" 2>&1
+            "$SCRIPT_DIR/shared-resource-user-delivery.sh" "$run_folder" "$analysis" "$IMM_DELIVERY_DIR" >> "$log_file" 2>&1
         else
             echo "Running the nextflow pipeline..." >> "$log_file"
-            pipeline-runner.sh "$analysis" >> "$log_file" 2>&1
+            "$SCRIPT_DIR/get-pipeline-command.sh" "$run_folder" "$analysis" > "$analysis/NSC/pipeline_command.sh" 2> "$log_file"
+            bash "$analysis/NSC/pipeline_command.sh" >> "$log_file" 2>&1
         fi
     fi
 done

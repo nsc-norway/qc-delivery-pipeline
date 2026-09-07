@@ -58,32 +58,15 @@ Creates:
 Scans a run folder location for unprocessed runs, looks up LIMS information and starts an appropriate
 pipeline based on the project type.
 
-Automation worker requires exported environment variables for configuration:
-
-
-```
-set -a            # Automatically export all subsequent variables
-source nsc.env    # Read and execute the file in the current shell
-set +a            # Turn off the automatic export feature
-scripts/nsc-automation-cron.sh
-```
-
-
-
+The automation worker takes an environment file as a command-line argument:
 
 ```
-set -a            # Automatically export all subsequent variables
-source nsc.env    # Read and execute the file in the current shell
-set +a            # Turn off the automatic export feature
-scripts/nsc-automation-cron.sh
+scripts/nsc-automation-cron.sh example.env
 ```
 
 The scripts are configured using environment variables. An example is given in example.env. The 
 nextflow pipeline should not read environment variables, and is instead configured explicitly using
-parameters (see above).
-
-
-TODO - describe running this or refer to deployment docs
+parameters (see above). The parameters for the nextflow pipeline are set by the automation scripts.
 
 
 
