@@ -15,7 +15,7 @@ run_id=$(basename "$RUN_FOLDER")
 
 echo nextflow run "$PIPELINE_PATH" \
   --runFolder "$RUN_FOLDER" \
-  --bclConvertFastqDir "$ANALYSIS_DIR/" \
+  --analysisDir "$ANALYSIS_DIR" \
   --outdir "$NSC_DEMULTIPLEXED_DIR/$run_id" \
   --deliveryDir "$NSC_DELIVERY_DIR" \
   -resume

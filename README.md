@@ -19,8 +19,6 @@ nextflow run nsc-nextflow/main.nf \
   --outdir output/outdir \
   --deliveryDir output/delivery \
   -resume
-
-  TODO -- update
 ```
 
 ### Download Singularity / Apptainer images
@@ -36,21 +34,14 @@ scripts/download-singularity-images.sh
 
 Input:
 
-* runFolder example: 
-* analysisBclConvertFolers 
+* runFolder 
+* analysisDir 
 
 
 Output:
 
 * outdir: base root.
-
-Example:
-
-...
-
-Creates:
-
-...
+* deliveryDir
 
 
 ### Scheduled automation worker
