@@ -44,7 +44,6 @@ do
         # Skip analysies that are already processed
         continue
     fi
-    mkdir "$analysis/NSC"
     # Determine if demultiplexing is complete
     complete=false
     if [ -f "$analysis/CopyComplete.txt" ]; then
@@ -55,6 +54,7 @@ do
 
     # Process completed run
     if [ "$complete" = true ]; then
+        mkdir "$analysis/NSC"
         echo "Processing analysis" > "$log_file"
         if [ ! -f "$run_folder/NscSapioInfo.yaml" ]; then
             echo "Extracting run information from Sapio into NscSapioInfo.yaml..." >> "$log_file"
