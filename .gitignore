@@ -5,4 +5,4 @@ containers/
 .nextflow*
 work/
 output/
-singularity-images/*.sif
+singularity-images/*.img
