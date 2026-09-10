@@ -13,7 +13,8 @@ fi
 
 run_id=$(basename "$RUN_FOLDER")
 
-echo nextflow run "$PIPELINE_PATH" \
+echo $NEXTFLOW run "$PIPELINE_PATH" \
+  -profile "$NEXTFLOW_PROFILE" \
   --runFolder "$RUN_FOLDER" \
   --analysisDir "$ANALYSIS_DIR" \
   --outdir "$NSC_DEMULTIPLEXED_DIR/$run_id" \
