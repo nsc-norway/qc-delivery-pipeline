@@ -8,6 +8,8 @@ from urllib.error import HTTPError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
+import yaml
+
 # Sapio Run Extractor
 # usage: python sapio-run-extractor.py runinfo_path [--output-yaml-path OUTPUT] [--sapio-api-token TOKEN]
 
@@ -183,8 +185,7 @@ def main(
         sapio_password,
         runinfo_path,
     )
-    json.dump(sapio_details, output_yaml_file, indent=2, ensure_ascii=False)
-    output_yaml_file.write("\n")
+    yaml.safe_dump(sapio_details, output_yaml_file, allow_unicode=True, sort_keys=False)
 
 
 def parse_args(argv=None):

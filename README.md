@@ -66,10 +66,13 @@ parameters (see above). The parameters for the nextflow pipeline are set by the 
 
 ### Pipeline
 
-The Nextflow-based pipeline requires a local **Java and Nextflow** on the path.
+The Nextflow-based pipeline requires a local **Java and Nextflow**. The path to nextflow is
+configurable via the environment file.
 
 * Java >= 17
 * Nextflow 26.04.6
+* Python 3
+* PyYAML is assumed to be installed (for sapio-run-extractor.py)
 
 For local development and manual tests, create the project environment from the
 repository root:
