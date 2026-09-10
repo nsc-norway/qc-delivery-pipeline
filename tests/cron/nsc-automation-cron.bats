@@ -23,6 +23,8 @@ IMM_DELIVERY_DIR=${imm_delivery_root}
 NSC_DELIVERY_DIR=${nsc_delivery_root}
 NSC_DEMULTIPLEXED_DIR=${nsc_demultiplexed_root}
 RUN_FOLDER_ROOT=${run_root}
+NEXTFLOW=nextflow-custom
+NEXTFLOW_PROFILE="profile-custom"
 EOF
     : > "$call_log"
     export CALL_LOG="$call_log"
@@ -168,14 +170,16 @@ assert_calls_match() {
     assert_calls_match "$expected_calls"
 }
 
-@test "generates a pipeline command with an absolute pipeline path" {
+@test "generates a pipeline command using the configured Nextflow command and profile" {
     analysis=$(create_analysis "pipeline-path-run" "3" "copy")
 
     cd "$BATS_TEST_TMPDIR"
-    run "${repo_root}/scripts/get-pipeline-command.sh" "${run_root}/pipeline-path-run" "$analysis"
+    run env NEXTFLOW=nextflow-custom NEXTFLOW_PROFILE=profile-custom \
+        NSC_DEMULTIPLEXED_DIR="$nsc_demultiplexed_root" NSC_DELIVERY_DIR="$nsc_delivery_root" \
+        "${repo_root}/scripts/get-pipeline-command.sh" "${run_root}/pipeline-path-run" "$analysis"
 
     [ "$status" -eq 0 ]
-    [[ "$output" == "nextflow run ${repo_root}/nsc-nextflow/main.nf "* ]]
+    [[ "$output" == "nextflow-custom run ${repo_root}/nsc-nextflow/main.nf -profile profile-custom "* ]]
 }
 
 @test "delivers IMM or MIK FASTQs without Sample_ID UUID suffixes" {
