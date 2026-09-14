@@ -24,7 +24,7 @@ DESTINATION_DIR="$DESTINATION_ROOT/$(basename "$RUN_DIR")"
 ANALYSIS_ID=$(basename "$ANALYSIS_DIR")
 
 # Create destination run dir and InterOp dir if they don't already exist
-mkdir -p "$DESTINATION_DIR"/SAV/InterOp
+mkdir -p "$DESTINATION_DIR"/InterOp
 # Create analysis-level fastq destination. This should not be reused, but due to how the destination
 # filsluse operates, it will be removed even if it's already transferred, so we just go ahead anyway.
 mkdir -p "$DESTINATION_DIR"/Analysis_"$ANALYSIS_ID/fastq"
@@ -47,5 +47,5 @@ done
 
 cp -r "$ANALYSIS_DIR/Data/BCLConvert/fastq/Reports" "$DESTINATION_DIR/Analysis_${ANALYSIS_ID}/"
 cp -r "$ANALYSIS_DIR/Data/Demux" "$DESTINATION_DIR/Analysis_${ANALYSIS_ID}/"
-cp "$RUN_DIR/"{RunInfo.xml,RunParameters.xml} "$DESTINATION_DIR/SAV"
-cp "$RUN_DIR/InterOp/"*.bin "$DESTINATION_DIR/SAV/InterOp/"
+cp "$RUN_DIR/"{RunInfo.xml,RunParameters.xml} "$DESTINATION_DIR"
+cp "$RUN_DIR/InterOp/"*.bin "$DESTINATION_DIR/InterOp/"
