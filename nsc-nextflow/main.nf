@@ -20,6 +20,7 @@ include {
     TAR_FOLDER;
     DECOMPRESS_ORA;
     RENAME_AND_SAVE_FASTQS;
+    GET_BCL_CONVERT_VERSION;
 } from './modules/modules.nf'
 
 include {
@@ -222,12 +223,16 @@ workflow QC_DELIVERY_PIPELINE {
         .filter { file -> file.name == 'Demultiplex_Stats.csv' }
         .first()
 
+    GET_BCL_CONVERT_VERSION("${bclConvertFastqDir}/Logs/Info.log")
+
     EMAIL_PROJECT(
         PROJECT_CREDENTIALS.out.PROJECT_CREDENTIALS_out,
         file(params.runFolder),
         analysisId,
         demultiplex_stats,
-        sapioRunFile
+        sapioRunFile,
+        GET_BCL_CONVERT_VERSION.out.GET_BCL_CONVERT_VERSION_out,
+        params.pipelineVersion
     )
     // MAKE_SENSITIVE_DATA_LOG_FILE(projectDirName, JSON_GENERATOR.out.JSON_GENERATOR_out, params.runFolder)
 
@@ -237,7 +242,9 @@ workflow QC_DELIVERY_PIPELINE {
         analysisId,
         demultiplex_stats,
         suprdupr_ch.toList(),
-        sapioRunFile
+        sapioRunFile,
+        GET_BCL_CONVERT_VERSION.out.GET_BCL_CONVERT_VERSION_out,
+        params.pipelineVersion
         )
 
 

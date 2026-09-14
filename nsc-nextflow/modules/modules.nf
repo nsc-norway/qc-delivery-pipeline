@@ -106,7 +106,7 @@ process PROJECT_CREDENTIALS {
 
 process PUBLISH_REPORTS {
     tag "${run_id}/${analysis_id}"
-    publishDir { "${params.outdir}/${run_id}/QualityControl_${analysis_id}" }, mode: 'link', overwrite: true, saveAs: { filename -> filename.tokenize('/').last() }
+    publishDir { "${params.outdir}/${run_id}/QualityControl_${analysis_id}" }, mode: 'copy', overwrite: true, saveAs: { filename -> filename.tokenize('/').last() }
 
     input:
     val(run_id)
@@ -194,6 +194,8 @@ process EMAIL_PROJECT {
     val analysisId
     path "Demultiplex_Stats.csv"
     path sapioRunFile
+    val bclConvertVersion
+    val pipelineVersion
 
     output:
     path "Delivery/*", emit: EMAIL_PROJECT_out
@@ -204,10 +206,10 @@ process EMAIL_PROJECT {
     make-emails.py \
             --run-dir=$runFolder \
             --demultiplex-stats=Demultiplex_Stats.csv \
-            --bclconvert-version='TODO' \
-            --pipeline-version='TODO' \
+            --bclconvert-version='${bclConvertVersion}' \
+            --pipeline-version='${pipelineVersion}' \
             --output-email-dir=Delivery \
-            --create-project-email=${meta.project_name} \
+            --create-project-email-for="${meta.project_name}" \
             --nird-username="$username" \
             --nird-password-file=password.txt $sapioRunFileOptional
     """
@@ -224,6 +226,8 @@ process EMAIL_SUMMARY_RUN {
     path "Demultiplex_Stats.csv"
     path "suprDUPr/*"
     path sapioRunFile
+    val bclConvertVersion
+    val pipelineVersion
 
     output:
     path "Delivery/*", emit: EMAIL_SUMMARY_RUN_out
@@ -235,8 +239,8 @@ process EMAIL_SUMMARY_RUN {
             --run-dir=${runFolder} \
             --demultiplex-stats=Demultiplex_Stats.csv \
             --suprdupr-dir=suprDUPr \
-            --bclconvert-version='TODO' \
-            --pipeline-version='TODO' \
+            --bclconvert-version='${bclConvertVersion}' \
+            --pipeline-version='${pipelineVersion}' \
             --output-email-dir=Delivery \
             --create-summary \
             $sapioRunFileOptional
@@ -292,9 +296,8 @@ process RENAME_AND_SAVE_FASTQS {
     script:
     newName = getNewFastqName(fastq.getName(), meta.sample_id, meta.sample_name)
     """
-    if [ "${fastq}" != "$newName" ]; then
-        mv "$fastq" "$newName"
-    fi
+    mv "$fastq" "fastq_tmp"
+    cp -l "fastq_tmp" "$newName"
     """
 }
 
@@ -317,3 +320,26 @@ process MAKE_SENSITIVE_DATA_LOG_FILE {
     """
 }
 */
+
+process GET_BCL_CONVERT_VERSION {
+    
+    cpus 1
+    memory 1.GB
+
+    input:
+    path("Info.log")
+
+    output:
+    eval 'cat bclconvert_version.txt', emit: GET_BCL_CONVERT_VERSION_out
+
+    script:
+    // Match: 2026-07-29T09:25:04Z thread 969464 bcl-convert Version 4.3.6
+    // and if not, match: 2026-07-29T09:25:04Z thread 969464   SoftwareVersion = 4.4.12
+    """
+    version=\$(sed -nE 's/.*bcl-convert Version[[:space:]]+([0-9]+(\\.[0-9]+)+).*/\\1/p' Info.log | head -n 1)
+    if [ -z "\$version" ]; then
+        version=\$(sed -nE 's/.*SoftwareVersion[[:space:]]*=[[:space:]]*([0-9]+(\\.[0-9]+)+).*/\\1/p' Info.log | head -n 1)
+    fi
+    printf '%s\n' "\${version:-UNKNOWN}" > bclconvert_version.txt
+    """
+}

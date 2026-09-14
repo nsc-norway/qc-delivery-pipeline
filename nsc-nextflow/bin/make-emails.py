@@ -37,7 +37,7 @@ def main():
 
     parser.add_argument('--create-summary', action='store_true', help="Enable HTML summary email creation.")
 
-    parser.add_argument('--create-project-email', type=str, help="Create project email for the specified project.")
+    parser.add_argument('--create-project-email-for', type=str, help="Create project email for the specified project.")
 
     parser.add_argument('--nird-username', type=str, help="NIRD username for the project.")
 
@@ -134,8 +134,8 @@ def main():
         automation_email_files.append(automation_txt_filename)
     
     # Make project emails
-    if args.create_project_email:
-        project_data = get_project_data(args.create_project_email, sapio_data['projects'], demultiplex_stats, run_parameters.run_id)
+    if args.create_project_email_for:
+        project_data = get_project_data(args.create_project_email_for, sapio_data['projects'], demultiplex_stats, run_parameters.run_id)
         if args.nird_username:
             project_data['nird_username'] = args.nird_username
         if args.nird_password_file:

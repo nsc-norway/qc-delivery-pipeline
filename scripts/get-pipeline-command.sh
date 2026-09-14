@@ -27,6 +27,6 @@ echo $NEXTFLOW run "$PIPELINE_PATH" \
   -profile "$NEXTFLOW_PROFILE" \
   --runFolder "$RUN_FOLDER" \
   --analysisDir "$ANALYSIS_DIR" \
-  --outdir "$NSC_DEMULTIPLEXED_DIR/$run_id" \
+  --outdir "$NSC_DEMULTIPLEXED_DIR" \
   --deliveryDir "$NSC_DELIVERY_DIR" \
   -resume
