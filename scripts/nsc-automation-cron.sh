@@ -67,17 +67,19 @@ do
         IS_MIK=$?
         grep -q '^  department: IMM' "$run_folder/NscSapioInfo.yaml"
         IS_IMM=$?
+        grep -q '^  department: NSC' "$run_folder/NscSapioInfo.yaml"
+        IS_NSC=$?
 
-        if [ $IS_MIK -eq 0 ]; then
+        if [ $IS_NSC -eq 0 ]; then
+            echo "Running the nextflow pipeline..." >> "$log_file"
+            "$SCRIPT_DIR/get-pipeline-command.sh" "$run_folder" "$analysis" > "$analysis/NSC/pipeline_command.sh" 2> "$log_file"
+            bash "$analysis/NSC/pipeline_command.sh" >> "$log_file" 2>&1
+        elif [ $IS_MIK -eq 0 ]; then
             echo "Analysis is from MIK department" >> "$log_file"
             "$SCRIPT_DIR/shared-resource-user-delivery.sh" "$run_folder" "$analysis" "$MIK_DELIVERY_DIR" >> "$log_file" 2>&1
         elif [ $IS_IMM -eq 0 ]; then
             echo "Analysis is from IMM department" >> "$log_file"
             "$SCRIPT_DIR/shared-resource-user-delivery.sh" "$run_folder" "$analysis" "$IMM_DELIVERY_DIR" >> "$log_file" 2>&1
-        else
-            echo "Running the nextflow pipeline..." >> "$log_file"
-            "$SCRIPT_DIR/get-pipeline-command.sh" "$run_folder" "$analysis" > "$analysis/NSC/pipeline_command.sh" 2> "$log_file"
-            bash "$analysis/NSC/pipeline_command.sh" >> "$log_file" 2>&1
         fi
     fi
 done
