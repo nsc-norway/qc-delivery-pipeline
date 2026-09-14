@@ -13,6 +13,16 @@ fi
 
 run_id=$(basename "$RUN_FOLDER")
 
+echo '#!/bin/bash'
+echo "#SBATCH --job-name=NSC${run_id}"
+echo '#SBATCH --output='"$ANALYSIS_DIR"'/NSC/pipeline_output.log'
+echo '#SBATCH --time=3-0'
+echo '#SBATCH --cpus-per-task=2'
+echo '#SBATCH --mem=8G'
+echo '#SBATCH --qos=high'
+
+echo 'cd "'"$ANALYSIS_DIR"'/NSC"'
+
 echo $NEXTFLOW run "$PIPELINE_PATH" \
   -profile "$NEXTFLOW_PROFILE" \
   --runFolder "$RUN_FOLDER" \
@@ -20,4 +30,3 @@ echo $NEXTFLOW run "$PIPELINE_PATH" \
   --outdir "$NSC_DEMULTIPLEXED_DIR/$run_id" \
   --deliveryDir "$NSC_DELIVERY_DIR" \
   -resume
-

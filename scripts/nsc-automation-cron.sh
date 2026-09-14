@@ -11,6 +11,7 @@
 # NSC_DELIVERY_DIR
 # NSC_DEMULTIPLEXED_DIR
 # RUN_FOLDER_ROOT
+# PASSWORD_TOOL
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -31,6 +32,11 @@ if [ ! -d "$MIK_DELIVERY_DIR" ] || [ ! -d "$IMM_DELIVERY_DIR" ] || \
     echo "Error: Delivery destinations and run folder root must be specified and exist:"
     echo "MIK_DELIVERY_DIR, IMM_DELIVERY_DIR, NSC_DELIVERY_DIR,"
     echo "NSC_DEMULTIPLEXED_DIR, RUN_FOLDER_ROOT"
+    exit 1
+fi
+
+if [ ! -f "$PASSWORD_TOOL" ]; then
+    echo "Error: PASSWORD_TOOL must be specified and exist."
     exit 1
 fi
 
@@ -73,7 +79,7 @@ do
         if [ $IS_NSC -eq 0 ]; then
             echo "Running the nextflow pipeline..." >> "$log_file"
             "$SCRIPT_DIR/get-pipeline-command.sh" "$run_folder" "$analysis" > "$analysis/NSC/pipeline_command.sh" 2> "$log_file"
-            bash "$analysis/NSC/pipeline_command.sh" >> "$log_file" 2>&1
+            sbatch "$analysis/NSC/pipeline_command.sh" >> "$log_file" 2>&1
         elif [ $IS_MIK -eq 0 ]; then
             echo "Analysis is from MIK department" >> "$log_file"
             "$SCRIPT_DIR/shared-resource-user-delivery.sh" "$run_folder" "$analysis" "$MIK_DELIVERY_DIR" >> "$log_file" 2>&1
