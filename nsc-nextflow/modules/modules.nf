@@ -134,8 +134,9 @@ process PUBLISH_SAV_FILES {
 
     script:
     """
-    mkdir SAV_FILES
-    cp -rl $run/RunInfo.xml $run/RunParameters.xml $run/InterOp .
+    cp -l $run/RunInfo.xml $run/RunParameters.xml .
+    mkdir InterOp
+    cp -l $run/InterOp/*.bin InterOp/
     """
 }
 
