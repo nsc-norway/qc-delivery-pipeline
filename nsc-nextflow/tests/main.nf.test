@@ -96,6 +96,19 @@ nextflow_workflow {
                         java.nio.file.Paths.get(output.toString()).getFileName().toString()
                     }.sort()
                 }
+                // Read the text content of every file in a channel, keyed by file name, so that changes to
+                // generated email/report content (not just file names) are detected by the snapshot.
+                // Some processes emit a list of paths per task (e.g. "path 'Delivery/*'"), so every entry
+                // in that list must be read, not just the last one.
+                def channelFileContents = { channel ->
+                    channel.collectMany { entry ->
+                        def outputs = entry instanceof List ? entry : [entry]
+                        outputs.collect { output ->
+                            def filePath = java.nio.file.Paths.get(output.toString())
+                            [(filePath.getFileName().toString()): new String(java.nio.file.Files.readAllBytes(filePath))]
+                        }
+                    }.collectEntries { it }.sort()
+                }
 
                 assert snapshot([
                     published: relativeFileNames(resultsDir.resolve("outdir")),
@@ -108,7 +121,9 @@ nextflow_workflow {
                     nirdDelivery: channelFileNames(workflow.out.nird_delivery),
                     linkedDelivery: channelFileNames(workflow.out.linked_delivery),
                     projectEmails: channelFileNames(workflow.out.project_emails),
-                    runSummaryEmail: channelFileNames(workflow.out.run_summary_email)
+                    runSummaryEmail: channelFileNames(workflow.out.run_summary_email),
+                    projectEmailContents: channelFileContents(workflow.out.project_emails),
+                    runSummaryEmailContents: channelFileContents(workflow.out.run_summary_email)
                 ]).match("${fixture.name} output files")
             }
         }

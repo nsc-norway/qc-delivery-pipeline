@@ -5,7 +5,7 @@ Samples/Libraries submitted under {{ project_data['ProjectName'] }} to NSC, Ulle
 
 ------ Data collection ------{% if project_data['DeliveryMethod'] == "NeLS project" %}
 The data files have been transferred to your NeLS project, and stored in the directory {{ project_data['dir_name'] }}. Please wait for a confirmation from the Elixir help desk before you access the data.
-{% elif project_data['DeliveryMethod'] == "Norstore" %}
+{% elif project_data['DeliveryMethod'] == "NIRD" %}
 You can download the data and all quality control reports using the following information:
 
 https://hts-nonsecure.web.sigma2.no/{{ project_data['dir_name'] }}/
@@ -24,7 +24,7 @@ You can pick up the data in a portable hard drive (please notice the size of the
 NOTE: UNKNOWN Delivery method
 {% endif %}
 We will keep a copy of the data for THREE MONTHS after the run date, and will then DELETE ALL OUR COPIES without further notice.
-{% if project_data['DeliveryMethod'] == "Norstore" %}The download link will stop working when we delete the data.{% endif %}
+{% if project_data['DeliveryMethod'] == "NIRD" %}The download link will stop working when we delete the data.{% endif %}
 
 ------ Data output ------
 Here is an overview of your samples and the number of fragments that were sequenced:

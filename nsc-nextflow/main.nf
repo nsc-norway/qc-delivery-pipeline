@@ -16,6 +16,7 @@ include {
     MULTIQC;
     PROJECT_CREDENTIALS;
     PUBLISH_REPORTS;
+    PUBLISH_SAV_FILES;
     SUPRDUPR;
     TAR_FOLDER;
     DECOMPRESS_ORA;
@@ -215,6 +216,10 @@ workflow QC_DELIVERY_PIPELINE {
         runId,
         analysisId,
         reports_files.mix(demux_files).unique { file -> file.name }.collect(),
+    )
+    PUBLISH_SAV_FILES(
+        runId,
+        file(params.runFolder)
     )
 
     // Pick the first file named Demultiplex_Stats.csv from the reports or demux files channels

@@ -33,7 +33,7 @@ def main():
     parser.add_argument('--pipeline-version', default="dev", help="Provide the NSC QC pipeline version as a string.")
 
     parser.add_argument('--output-email-dir', default=".", help="Output directory for email automation file and email "
-                                        "content files (in subdir email_content, which will be created).")
+                                        "content files.")
 
     parser.add_argument('--create-summary', action='store_true', help="Enable HTML summary email creation.")
 
@@ -129,7 +129,7 @@ def main():
             of.write("|".join([
                 "html", '"nsc-ous-data-delivery@sequencing.uio.no" <nsc-ous-data-delivery@sequencing.uio.no>', "", "", 
                 f"Summary for run {run_parameters.run_id}",
-                f"email_content/{summary_file_name}", ""
+                f"{summary_file_name}", ""
             ]) + "\n")
         automation_email_files.append(automation_txt_filename)
     

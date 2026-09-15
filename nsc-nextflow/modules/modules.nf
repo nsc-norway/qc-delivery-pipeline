@@ -122,6 +122,24 @@ process PUBLISH_REPORTS {
 }
 
 
+process PUBLISH_SAV_FILES {
+    publishDir { "${params.outdir}/${run_id}" }, mode: 'link', overwrite: true
+
+    input:
+    val run_id
+    path run
+    
+    output:
+    path "{RunInfo.xml,RunParameters.xml,InterOp}"
+
+    script:
+    """
+    mkdir SAV_FILES
+    cp -rl $run/RunInfo.xml $run/RunParameters.xml $run/InterOp .
+    """
+}
+
+
 process TAR_FOLDER {
     tag "${meta.project_name}"
     container "ghcr.io/nsc-norway/qc-delivery-pipeline-tools:1.0.0"
@@ -146,7 +164,7 @@ process TAR_FOLDER {
     mv "tar/${delivery_dir}.tar" "${delivery_dir}/"
 
     # Compute md5sum for the tar file
-    md5sum "${delivery_dir}/${delivery_dir}.tar" > "${delivery_dir}/${delivery_dir}.tar.md5"
+    (cd "${delivery_dir}" && md5sum "${delivery_dir}.tar" > "${delivery_dir}.tar.md5" )
 
     # Create .htaccess
 cat <<EOL > "${delivery_dir}/.htaccess"
