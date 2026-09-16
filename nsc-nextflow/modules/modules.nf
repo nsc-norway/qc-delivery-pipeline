@@ -191,13 +191,15 @@ process LINK_FOLDER {
     publishDir { "${params.deliveryDir}" }, mode:'link', overwrite: true
 
     input:
-    tuple val(meta), path("${meta.project_dir_name}/*")
+    tuple val(meta), path("input-dir/*")
 
     output:
     path "${meta.project_dir_name}"
 
     script:
     """
+    mkdir ${meta.project_dir_name}
+    cp -l input-dir/* ${meta.project_dir_name}/
     """
 }
 
