@@ -45,7 +45,6 @@
                     "20260804_LH00770_0246_A22JJTLLT1/260804_LH00770.A.Project_Testcase-test3-2026-08-04/4-A_S18_L002_R1_001.fastq.gz",
                     "20260804_LH00770_0246_A22JJTLLT1/260804_LH00770.A.Project_Testcase-test3-2026-08-04/4-A_S18_L002_R2_001.fastq.gz",
                     "20260804_LH00770_0246_A22JJTLLT1/260804_LH00770.A.Project_Testcase-test3-2026-08-04/md5sum.txt",
-                    "20260804_LH00770_0246_A22JJTLLT1/InterOp/.DS_Store",
                     "20260804_LH00770_0246_A22JJTLLT1/InterOp/ExtendedTileMetricsOut.bin",
                     "20260804_LH00770_0246_A22JJTLLT1/InterOp/QMetricsOut.bin",
                     "20260804_LH00770_0246_A22JJTLLT1/InterOp/TileMetricsOut.bin",
@@ -192,7 +191,7 @@
                 }
             }
         ],
-        "timestamp": "2026-09-15T16:48:56.424884",
+        "timestamp": "2026-09-16T17:02:23.889879",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
@@ -1756,7 +1755,6 @@
                     "20260804_LH00770_0246_A22JJTLLT1/260804_LH00770.A.Project_Testcase-test3-2026-08-04/4-A_S18_L002_R2_001.fastq.gz",
                     "20260804_LH00770_0246_A22JJTLLT1/260804_LH00770.A.Project_Testcase-test3-2026-08-04/md5sum.txt",
                     "20260804_LH00770_0246_A22JJTLLT1/260804_LH00770.A.Project_Testcase-test3-2026-08-04/multiqc_report.html",
-                    "20260804_LH00770_0246_A22JJTLLT1/InterOp/.DS_Store",
                     "20260804_LH00770_0246_A22JJTLLT1/InterOp/ExtendedTileMetricsOut.bin",
                     "20260804_LH00770_0246_A22JJTLLT1/InterOp/QMetricsOut.bin",
                     "20260804_LH00770_0246_A22JJTLLT1/InterOp/TileMetricsOut.bin",
@@ -2068,7 +2066,7 @@
                 }
             }
         ],
-        "timestamp": "2026-09-15T16:48:20.731155",
+        "timestamp": "2026-09-16T17:01:52.365172",
         "meta": {
             "nf-test": "0.9.5",
             "nextflow": "26.04.6"
