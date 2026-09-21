@@ -1,8 +1,8 @@
 #!/bin/bash
 
 ROOT=/boston/runScratch
-MIK_PATH=/boston-pre/runScratch/OUS-filsluse/UL-AMG-MiSeq/MIK/Til_Sentrallagring/pre
-IMM_PATH=/boston-pre/runScratch/OUS-filsluse/UL-AMG-MiSeq/IMM/Til_Sentrallagring/pre
+MIK_PATH=/boston/runScratch/OUS-filsluse/UL-AMG-MiSeq/MIK/Til_Sentrallagring/prod
+IMM_PATH=/boston/runScratch/OUS-filsluse/UL-AMG-MiSeq/IMM/Til_Sentrallagring/prod
 
 # Create a file with a timestamp for comparison, for 5 minute old files.
 touch -d '-5 minutes' /tmp/miseq-run-copier.limit
@@ -43,7 +43,7 @@ do
             continue
         fi
         DATASET_NAME="${RUN_ID:0:13}.Project_${PROJECT}"
-        DEST="$DEST_ROOT/$DATASET_NAME"
+        DEST="$DEST_ROOT/Sapio_MiSeq/$DATASET_NAME"
         mkdir -p $DEST/InterOp
         rsync -rD $RUN_DIR/InterOp/*.bin $DEST/InterOp/
         rsync -rD $RUN_DIR/{RunParameters.xml,RunInfo.xml,SampleSheet.csv} $DEST/
