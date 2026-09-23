@@ -4,7 +4,7 @@
  * Lane column (NoLaneSplitting) are assigned lane 1.
  *
  * @param sheetFile       Path to SampleSheet.csv
- * @return                A Channel emitting tuple( lane, sampleName, projectName )
+ * @return                A Channel emitting tuple( lane, projectName, sampleName )
  */
 def parseBclConvertData( sheetFile ) {
     def rows         = []
@@ -50,7 +50,7 @@ def parseBclConvertData( sheetFile ) {
             // 4) data rows
             else if( ! t.replaceAll(',', '').isEmpty() ) {
                 def vals = t.split(',')
-                def lane = idxLane >= 0 ? vals[idxLane].toInteger() : 1
+                def lane = idxLane >= 0 ? vals[idxLane].toInteger() : null
                 def sampleId = vals[idxId]
                 def projectName = null
                 if( useProjectColumn ) {
@@ -152,6 +152,7 @@ def groupByProject( files_ch ) {
                             run_id: metas[0].run_id,
                             project_name: projectName,
                             project_dir_name: metas[0].project_dir_name,
+                            no_lane_splitting: metas[0].no_lane_splitting,
                         ], fastqs] }
 }
 

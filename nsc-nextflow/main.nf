@@ -76,13 +76,14 @@ workflow QC_DELIVERY_PIPELINE {
                 run_id: runId,
                 analysis_id: analysisId,
                 id: sampleKey,
-                lane: lane,
+                lane: lane == null ? 1 : lane,
                 project_name: projectName,
                 sample_project_column_value: sampleProjectColumnValue,
                 project_dir_name: projectDirName,
                 sample_id: sampleId,
                 sample_name: sampleName,
-                guid: guid
+                guid: guid,
+                no_lane_splitting: lane == null
             ]
         }
 
@@ -180,7 +181,8 @@ workflow QC_DELIVERY_PIPELINE {
     // DATA DELIVERY
 
     // Generate username and password - used by NIRD delivery and email script
-    PROJECT_CREDENTIALS(groupByProject(files_ch).map { meta, _files -> meta })
+    projects_meta_ch = groupByProject(files_ch).map { meta, _files -> meta }
+    PROJECT_CREDENTIALS(projects_meta_ch)
 
     def TAR_DELIVERY_TYPES = ['NIRD']
     def LINK_DELIVERY_TYPES = ['NeLS project', 'User HDD', 'New HDD', 'TSD project']
@@ -241,6 +243,7 @@ workflow QC_DELIVERY_PIPELINE {
     )
     // MAKE_SENSITIVE_DATA_LOG_FILE(projectDirName, JSON_GENERATOR.out.JSON_GENERATOR_out, params.runFolder)
 
+
     // Run-level process
     EMAIL_SUMMARY_RUN(
         file(params.runFolder),
@@ -249,8 +252,9 @@ workflow QC_DELIVERY_PIPELINE {
         suprdupr_ch.toList(),
         sapioRunFile,
         GET_BCL_CONVERT_VERSION.out.GET_BCL_CONVERT_VERSION_out,
-        params.pipelineVersion
-        )
+        params.pipelineVersion,
+        projects_meta_ch.map { meta -> meta.no_lane_splitting }.first()
+    )
 
 
     emit: // Emit channels for testing

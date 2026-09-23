@@ -223,6 +223,7 @@ process EMAIL_PROJECT {
 
     script:
     def sapioRunFileOptional = sapioRunFile.exists() ? "${sapioRunFile}" : ""
+    def noLaneSplitting = meta.no_lane_splitting ? "--no-lane-splitting" : ""
     """
     make-emails.py \
             --run-dir=$runFolder \
@@ -232,7 +233,7 @@ process EMAIL_PROJECT {
             --output-email-dir=Delivery \
             --create-project-email-for="${meta.project_name}" \
             --nird-username="$username" \
-            --nird-password-file=password.txt $sapioRunFileOptional
+            --nird-password-file=password.txt $sapioRunFileOptional $noLaneSplitting
     """
 }
 
@@ -249,12 +250,14 @@ process EMAIL_SUMMARY_RUN {
     path sapioRunFile
     val bclConvertVersion
     val pipelineVersion
+    val noLaneSplitting
 
     output:
     path "Delivery/*", emit: EMAIL_SUMMARY_RUN_out
 
     script:
     def sapioRunFileOptional = sapioRunFile.exists() ? "${sapioRunFile}" : ""
+    def noLaneSplittingArg = noLaneSplitting ? "--no-lane-splitting" : ""
     """
     make-emails.py \
             --run-dir=${runFolder} \
@@ -263,7 +266,7 @@ process EMAIL_SUMMARY_RUN {
             --bclconvert-version='${bclConvertVersion}' \
             --pipeline-version='${pipelineVersion}' \
             --output-email-dir=Delivery \
-            --create-summary \
+            --create-summary $noLaneSplittingArg \
             $sapioRunFileOptional
     """
 }

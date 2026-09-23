@@ -7,6 +7,7 @@ import re
 import stat
 import logging
 from math import ceil
+from statistics import mean
 from pathlib import Path
 import argparse
 from xml.etree.ElementTree import ElementTree
@@ -43,6 +44,8 @@ def main():
 
     parser.add_argument('--nird-password-file', type=open, help="File containing NIRD password for the project.")
 
+    parser.add_argument('--no-lane-splitting', action='store_true', help="Collapse all reads and summary metrics into one lane (MiSeq i100).")
+
     parser.add_argument('sapio_file', type=open, nargs='?', help="Input YAML file with project Sapio LIMS information.")
     
 
@@ -69,10 +72,9 @@ def main():
     # Add duplicate count column if duplicate metrics are available. The downstream processes will
     # check for the existence of the column.
     if args.suprdupr_dir:
-        non_undetermined = demultiplex_stats[demultiplex_stats['SampleID'] != "Undetermined"]
         # Pushing data back to the original DataFrame should work, because the merging is done on the
         # index.
-        demultiplex_stats['suprDUPr_duplicate_count'] = get_suprDUPr_duplicates(non_undetermined, Path(args.suprdupr_dir))
+        demultiplex_stats['suprDUPr_duplicate_count'] = get_suprDUPr_duplicates(demultiplex_stats, Path(args.suprdupr_dir))
 
     if args.sapio_file:
         sapio_data = yaml.safe_load(args.sapio_file)
@@ -108,12 +110,12 @@ def main():
 
         # Get project information
         project_datas = [
-            get_project_data(project, sapio_data['projects'], demultiplex_stats, run_parameters.run_id)
+            get_project_data(project, sapio_data['projects'], demultiplex_stats, run_parameters.run_id, args.no_lane_splitting)
             for project in projects
         ]
 
         # Lane-specific information from InterOp and from sample metrics
-        lane_table_headers, lane_table_classes, lane_table_data = get_lane_summary_data(run_dir, demultiplex_stats, undetermined_stats)
+        lane_table_headers, lane_table_classes, lane_table_data = get_lane_summary_data(run_dir, demultiplex_stats, undetermined_stats, args.no_lane_splitting)
         
         summary_file_name = ("Summary_for_" + run_parameters.run_id + ".html")
         summary_content_path = output_email_dir / summary_file_name
@@ -135,7 +137,7 @@ def main():
     
     # Make project emails
     if args.create_project_email_for:
-        project_data = get_project_data(args.create_project_email_for, sapio_data['projects'], demultiplex_stats, run_parameters.run_id)
+        project_data = get_project_data(args.create_project_email_for, sapio_data['projects'], demultiplex_stats, run_parameters.run_id, args.no_lane_splitting)
         if args.nird_username:
             project_data['nird_username'] = args.nird_username
         if args.nird_password_file:
@@ -249,7 +251,7 @@ def get_suprDUPr_duplicates(demultiplex_stats, suprdupr_dir):
     )
 
 
-def get_lane_summary_data(run_dir, demultiplex_stats, undetermined_stats):
+def get_lane_summary_data(run_dir, demultiplex_stats, undetermined_stats, no_lane_splitting):
     """Get the summary table with lane metrics.
 
     run_dir             should be a directory containing the necessary files to use the
@@ -304,21 +306,30 @@ def get_lane_summary_data(run_dir, demultiplex_stats, undetermined_stats):
             ("Quality", "text")
     ]))
     data = []
-    for lane_number in demultiplex_stats['Lane'].unique():
+    if no_lane_splitting:
+        display_lane_numbers = [1]
+    else:
+        display_lane_numbers = demultiplex_stats['Lane'].unique()
+    for lane_number in display_lane_numbers:
         if lane_number > lane_count:
             logging.error(f"Error: Lane {lane_number} is not present in InterOp data.")
             continue
 
+        # Get InterOp metrics for this lane (per read1, read2, ...)
+        if no_lane_splitting:
+            lane_indices = list(range(lane_count))
+        else:
+            lane_indices = [int(lane_number - 1)]
+        read_1_interop = summary.at(0)
+
+
         # Filter demultiplexing stats for this lane. The data frame already excludes undetermined,
         # by the inner join when merging with sample sheet.
-        lane_demultiplex_stats = demultiplex_stats[demultiplex_stats.Lane==lane_number]
+        lane_demultiplex_stats = demultiplex_stats[demultiplex_stats.Lane.isin([lane+1 for lane in lane_indices])]
+        lane_undetermined_stats = undetermined_stats[undetermined_stats.Lane.isin([lane+1 for lane in lane_indices])]
 
         # Compute the total number of reads in the lane, used for several data below.
         total_sample_reads = lane_demultiplex_stats['# Reads'].sum()
-
-        # Get InterOp metrics for this lane (per read1, read2, ...)
-        lane_index = int(lane_number - 1)
-        read_1_interop = summary.at(0).at(lane_index)
 
         # Lane
         row_data = [str(lane_number)]
@@ -329,16 +340,16 @@ def get_lane_summary_data(run_dir, demultiplex_stats, undetermined_stats):
 
         # PF cluster no
         # (PF related metrics are always the same for read1, read2, ...)
-        pf_reads = read_1_interop.reads_pf()
+        pf_reads = sum(read_1_interop.at(lane).reads_pf() for lane in lane_indices)
         # Verify read count is equal in demultiplexing and InterOp.
-        total_reads = total_sample_reads + undetermined_stats.loc[undetermined_stats.Lane==lane_number, '# Reads'].sum()
+        total_reads = total_sample_reads + lane_undetermined_stats['# Reads'].sum()
         if pf_reads != total_reads:
             raise RuntimeError("Demultiplex_Stats reads is different from the PF clusters in InterOp for lane "
                                f"{lane_number}: {total_reads} != {pf_reads}.")
         row_data.append(f"{pf_reads:,}")
 
         # PF ratio
-        row_data.append(f"{read_1_interop.percent_pf().mean():.1f} %")
+        row_data.append(f"{mean(read_1_interop.at(lane).percent_pf().mean() for lane in lane_indices):.1f} %")
 
         # PF yield
         #yield_sum = sum(summary.at(read).at(lane_index).yield_g() for read in range(read_count))
@@ -354,19 +365,17 @@ def get_lane_summary_data(run_dir, demultiplex_stats, undetermined_stats):
             row_data.append("-")
 
         # Undetermined
-        undetermined_sample = undetermined_stats.loc[undetermined_stats.Lane==lane_number, '% Reads']
+        undetermined_sample = lane_undetermined_stats['% Reads']
         if undetermined_sample.empty:
             undetermined_ratio = 0 # Used below for informative clusters
             row_data.append("-")
-        elif len(undetermined_sample) == 1:
-            undetermined_ratio = undetermined_sample.iloc[0] # Used below for informative clusters
-            row_data.append(f"{100 * undetermined_ratio:.2f} %")
         else:
-            raise RuntimeError(f"Multiple undetermined samples found in lane {lane_number}.")
+            undetermined_ratio = undetermined_sample.iloc[0].mean() # Used below for informative clusters
+            row_data.append(f"{100 * undetermined_ratio:.2f} %")
 
         # AlignedPhiX
         for read in nonindex_reads:
-            aligned_phix = summary.at(read).at(lane_index).percent_aligned().mean()
+            aligned_phix = mean(summary.at(read).at(lane).percent_aligned().mean() for lane in lane_indices)
             row_data.append(f"{aligned_phix:.2f} %")
 
         # Q30% needs to be computed as a total for all the data reads. There doesn't seem to be an easy way
@@ -379,32 +388,37 @@ def get_lane_summary_data(run_dir, demultiplex_stats, undetermined_stats):
         for read in nonindex_reads:
             read_cycles = summary.at(read).read().useable_cycles()
             cycle_count += read_cycles
-            cycle_weighted_q30ratio_sum += (read_cycles * summary.at(read).at(lane_index).percent_gt_q30() / 100)
+            cycle_weighted_q30ratio_sum += (read_cycles * mean(summary.at(read).at(lane).percent_gt_q30() for lane in lane_indices) / 100)
         q30pct = 100 * cycle_weighted_q30ratio_sum / max(cycle_count, 1)
         row_data.append(f"{q30pct:.2f} %")
 
         # Occupied
-        # Same for all read passes, so we use read 1
-        row_data.append(f"{read_1_interop.percent_occupied().median():.2f} %")
+        # Same for all read passes, so we use read 1. The script has always used median for this. For multiple
+        # lanes, we take the mean of the medians.
+        row_data.append(f"{mean(read_1_interop.at(lane).percent_occupied().median() for lane in lane_indices):.2f} %")
 
         # Informative
         if 'suprDUPr_duplicate_count' in lane_demultiplex_stats.columns:
-            informative_clusters_pct = (1 - undetermined_ratio) * (1 - dup_ratio) * read_1_interop.percent_pf().mean()
+            informative_clusters_pct = (1 - undetermined_ratio) * (1 - dup_ratio) * mean(read_1_interop.at(lane).percent_pf().mean() for lane in lane_indices)
             row_data.append(f"{informative_clusters_pct:.2f} %")
         else:
             row_data.append("-")
 
+        # Group by sample ID, so all indexes on the same lane are summed, and all samples on multiple lanes with
+        # no_lane_splitting are summed
+        sample_sum_read_counts = lane_demultiplex_stats.groupby('SampleID')['# Reads'].sum()
+
         # For relative read count stats, we first compute the mean reads per sample in the lane
-        mean_reads = lane_demultiplex_stats['# Reads'].mean()
+        mean_reads = sample_sum_read_counts.mean()
         # Take max of 1, to avoid divide by zero in case of pretty bad lanes / high undetermined
         divisor_mean_reads = max(1, mean_reads)
 
         # MaxReadsSam
-        max_reads = lane_demultiplex_stats['# Reads'].max()
+        max_reads = sample_sum_read_counts.max()
         row_data.append("%+3.1f%%" % ((max_reads - mean_reads) * 100.0 / divisor_mean_reads))
 
         # MinReadsSam
-        min_reads = lane_demultiplex_stats['# Reads'].min()
+        min_reads = sample_sum_read_counts.min()
         row_data.append("%+3.1f%%" % ((min_reads - mean_reads) * 100.0 / divisor_mean_reads))
 
         # Quality
@@ -451,9 +465,15 @@ class RunParameters:
         # is unusual. We use the ConsumableInfo value, because it's exactly the normal
         # user-facing name 25B etc.
         for consumable_info in rp_tree.findall("ConsumableInfo/ConsumableInfo"):
+
             if consumable_info.find("Type").text == "FlowCell":
                 self.run_mode_field = "Flow Cell Type"
                 self.run_mode_value = consumable_info.find("Name").text
+                break
+            if consumable_info.find("Type").text == "DryCartridge":
+                self.run_mode_field = "Flow Cell Type"
+                self.run_mode_value = consumable_info.find("Mode").text
+                break
 
         # Cycles
         self.cycles = []
@@ -463,7 +483,7 @@ class RunParameters:
             self.cycles.append((read_name[0] + read_name[-1], read.attrib['Cycles']))
 
 
-def get_project_data(project_name, sapio_projects, demultiplex_stats, run_id):
+def get_project_data(project_name, sapio_projects, demultiplex_stats, run_id, no_lane_splitting):
     """Load information about a project into a dict object.
     
     Project details from LIMS are added if available in the sapio_projects dict. The ProjectName is used to
@@ -502,17 +522,27 @@ def get_project_data(project_name, sapio_projects, demultiplex_stats, run_id):
     assert all(c.isalnum() or c in '-_.' for c in result['dir_name']), "Project directory should only contain safe characters."
     
     sample_list = demultiplex_stats[demultiplex_stats.Sample_Project==result['ProjectName']].copy()
+
+    # Sum the number of fragments if no lane splitting is requested
+    if no_lane_splitting:
+        # ensure that only the known / used columns are included in the aggregation
+        sample_list = sample_list[['SampleID', '# Reads', 'Lane']]
+        sample_list = sample_list.groupby('SampleID', as_index=False).agg({
+            '# Reads': 'sum',
+            'Lane': 'first'
+        })
+
     mean_frags = sample_list['# Reads'].mean()
     sample_list['RelativeDifference'] = (sample_list['# Reads'] - mean_frags) / mean_frags
     
     # Add Sample_Lane display name
-    sample_list['SampleDisplayName'] = (sample_list['SampleID'] + "_L") + sample_list['Lane'].astype(str).str.zfill(3)
+    if no_lane_splitting:
+        sample_list['SampleDisplayName'] = sample_list['SampleID']
+    else:
+        sample_list['SampleDisplayName'] = (sample_list['SampleID'] + "_L") + sample_list['Lane'].astype(str).str.zfill(3)
 
-    result['sample_fragments_table'] = [
-        (row.SampleDisplayName, row['# Reads'], row.RelativeDifference)
-        for _, row in sample_list.iterrows()
-    ]
 
+    result['sample_fragments_table'] = sample_list[['SampleDisplayName', '# Reads', 'RelativeDifference']].values.tolist()
     result['number_of_samples'] = sample_list.SampleID.nunique()
 
     return result
