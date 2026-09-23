@@ -1,0 +1,236 @@
+run:
+  flowcell_id: BXB58910-1828
+projects:
+- record_id: 8000000
+  department: NSC
+  fields:
+    CreatedBy: testuser
+    RelatedRecord113: NSC
+    Leader: testuser
+    RelatedRecord112: null
+    ProjectName: Anmarkrud-DNA26-2026-08-26
+    RelatedRecord3: null
+    ProjectId: '10000'
+    DateCreated: 1785413681325
+    RelatedRecord114: null
+    EndDate: null
+    StartDate: 1785413681325
+    IsSharedResourceProject: false
+    InheritRolesFromParent: true
+    DataRecordName: 10000 Anmarkrud-DNA26-2026-08-26
+    Classification: Research
+    ProjectType: Sequencing (Short Read)
+    ProjectDesc: ''
+    VeloxLastModifiedDate: 1785413681325
+    VeloxLastModifiedBy: testuser
+    RecordId: 8000000
+    SDMSSubdirectory: ''
+  evaluation_form:
+    Storagelocation: -20 Pre-PCR
+    PhiX: '10'
+    ProjectEvaluationFormName: Project Evaluation Form - Anmarkrud-DNA26-2026-08-26
+    I1: 8
+    DateCreated: 1785413681688
+    Kittype: 50M, 300bp PE (600 cycles)
+    I2: 8
+    Datefordatadelivery: null
+    RelatedRecord218: 10000 Anmarkrud-DNA26-2026-08-26
+    Comparableprojects: ''
+    VeloxLastModifiedBy: testuser
+    Totalnumbertubesreceived: '1'
+    RecordId: 8000001
+    InvoiceNumber: ''
+    R1: 300
+    R2: 300
+    cDate: null
+    CreatedBy: testuser
+    Sampletype: ''
+    RUNID: ''
+    QCprosedyre: '<p class="MsoNoSpacing"><strong style="mso-bidi-font-weight: normal;"><span
+      lang="EN-US" style="font-size: 14.0pt; mso-ansi-language: EN-US;">Procedure
+      (ThruPLEX library prep, manual)</span></strong></p>
+
+      <p class="MsoNoSpacing"><span lang="EN-US" style="mso-ansi-language: EN-US;">&nbsp;</span></p>
+
+      <p class="MsoNoSpacing"><strong style="mso-bidi-font-weight: normal;"><span
+      style="font-size: 12.0pt; mso-ansi-language: NO-BOK;">General Notes:</span></strong></p>
+
+      <p class="MsoNoSpacing" style="margin-left: 36.0pt; text-indent: -18.0pt; mso-list:
+      l1 level1 lfo1;"><!-- [if !supportLists]--><span style="mso-ascii-font-family:
+      Calibri; mso-fareast-font-family: Calibri; mso-hansi-font-family: Calibri; mso-bidi-font-family:
+      Calibri; mso-ansi-language: NO-BOK;"><span style="mso-list: Ignore;">-<span
+      style="font: 7.0pt ''Times New Roman'';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </span></span></span><!--[endif]--><span style="mso-ansi-language: NO-BOK;">Kunden
+      har levert et amplikon som skal preppes med ThruPLEX prep. </span></p>
+
+      <p class="MsoNoSpacing" style="margin-left: 36.0pt; text-indent: -18.0pt; mso-list:
+      l1 level1 lfo1;"><!-- [if !supportLists]--><span style="font-size: 12.0pt; mso-ascii-font-family:
+      Calibri; mso-fareast-font-family: Calibri; mso-hansi-font-family: Calibri; mso-bidi-font-family:
+      Calibri; mso-ansi-language: NO-BOK;"><span style="mso-list: Ignore;">-<span
+      style="font: 7.0pt ''Times New Roman'';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </span></span></span><!--[endif]--><span style="font-size: 12.0pt; mso-ansi-language:
+      NO-BOK;">Amplikonet har st&oslash;rrelse p&aring; ca 400 bp (to topper), og
+      trenger ikke sonikeres. </span></p>
+
+      <p class="MsoNoSpacing"><strong style="mso-bidi-font-weight: normal;"><span
+      lang="EN-GB" style="font-size: 12.0pt;">Prep:</span></strong></p>
+
+      <p class="MsoNoSpacing"><span lang="EN-GB" style="font-size: 12.0pt;">&nbsp;</span></p>
+
+      <p class="MsoNoSpacing" style="margin-left: 36.0pt; text-indent: -18.0pt; mso-list:
+      l0 level1 lfo2;"><!-- [if !supportLists]--><span style="font-size: 12.0pt; mso-bidi-font-family:
+      Calibri; mso-bidi-theme-font: minor-latin; mso-ansi-language: NO-BOK;"><span
+      style="mso-list: Ignore;">1.<span style="font: 7.0pt ''Times New Roman'';">&nbsp;&nbsp;&nbsp;&nbsp;
+      </span></span></span><!--[endif]--><span style="font-size: 12.0pt; mso-ansi-language:
+      NO-BOK;">Verifiser konsentrasjoner p&aring; Qubit. Bruk v&aring;re Qubit verdier
+      videre. Kontakt MD/RA hvis konsentrasjonene avviker mye fra det kunden har oppgitt.</span></p>
+
+      <p class="MsoNoSpacing" style="margin-left: 36.0pt; text-indent: -18.0pt; mso-list:
+      l0 level1 lfo2;"><!-- [if !supportLists]--><span lang="EN-GB" style="font-size:
+      12.0pt; mso-bidi-font-family: Calibri; mso-bidi-theme-font: minor-latin;"><span
+      style="mso-list: Ignore;">2.<span style="font: 7.0pt ''Times New Roman'';">&nbsp;&nbsp;&nbsp;&nbsp;
+      </span></span></span><!--[endif]--><strong style="mso-bidi-font-weight: normal;"><span
+      lang="EN-GB" style="font-size: 12.0pt;">ThruPLEX</span></strong><span lang="EN-GB"
+      style="font-size: 12.0pt;">:</span></p>
+
+      <p class="MsoNoSpacing" style="margin-left: 36.0pt; text-indent: -18.0pt; mso-list:
+      l1 level1 lfo1;"><!-- [if !supportLists]--><span lang="EN-GB" style="font-size:
+      12.0pt; mso-ascii-font-family: Calibri; mso-fareast-font-family: Calibri; mso-hansi-font-family:
+      Calibri; mso-bidi-font-family: Calibri;"><span style="mso-list: Ignore;">-<span
+      style="font: 7.0pt ''Times New Roman'';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </span></span></span><!--[endif]--><span style="font-size: 12.0pt; mso-ansi-language:
+      NO-BOK;">Input</span><span lang="EN-GB" style="font-size: 12.0pt;">: 50 ng</span></p>
+
+      <p class="MsoNoSpacing" style="margin-left: 36.0pt; text-indent: -18.0pt; mso-list:
+      l1 level1 lfo1;"><!-- [if !supportLists]--><span style="font-size: 12.0pt; mso-ascii-font-family:
+      Calibri; mso-fareast-font-family: Calibri; mso-hansi-font-family: Calibri; mso-bidi-font-family:
+      Calibri; mso-ansi-language: NO-BOK;"><span style="mso-list: Ignore;">-<span
+      style="font: 7.0pt ''Times New Roman'';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </span></span></span><!--[endif]--><span style="font-size: 12.0pt; mso-ansi-language:
+      NO-BOK;">Inkluder negativ kontroll (10 ul dH2O).</span></p>
+
+      <p class="MsoNoSpacing" style="margin-left: 36.0pt; text-indent: -18.0pt; mso-list:
+      l0 level1 lfo2;"><!-- [if !supportLists]--><span lang="EN-GB" style="font-size:
+      12.0pt; mso-bidi-font-family: Calibri; mso-bidi-theme-font: minor-latin;"><span
+      style="mso-list: Ignore;">3.<span style="font: 7.0pt ''Times New Roman'';">&nbsp;&nbsp;&nbsp;&nbsp;
+      </span></span></span><!--[endif]--><span lang="EN-GB" style="font-size: 12.0pt;">PCR
+      &ldquo;Library Amplification Step&rdquo;:</span></p>
+
+      <p class="MsoNoSpacing" style="margin-left: 36.0pt; text-indent: -18.0pt; mso-list:
+      l1 level1 lfo1;"><!-- [if !supportLists]--><span lang="EN-US" style="font-size:
+      12.0pt; mso-ascii-font-family: Calibri; mso-fareast-font-family: Calibri; mso-hansi-font-family:
+      Calibri; mso-bidi-font-family: Calibri; mso-ansi-language: EN-US;"><span style="mso-list:
+      Ignore;">-<span style="font: 7.0pt ''Times New Roman'';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </span></span></span><!--[endif]--><span lang="EN-GB" style="font-size: 12.0pt;">Steg
+      4: 4 cycles</span></p>
+
+      <p class="MsoNoSpacing" style="margin-left: 36.0pt; text-indent: -18.0pt; mso-list:
+      l1 level1 lfo1;"><!-- [if !supportLists]--><span lang="EN-US" style="font-size:
+      12.0pt; mso-ascii-font-family: Calibri; mso-fareast-font-family: Calibri; mso-hansi-font-family:
+      Calibri; mso-bidi-font-family: Calibri; mso-ansi-language: EN-US;"><span style="mso-list:
+      Ignore;">-<span style="font: 7.0pt ''Times New Roman'';">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </span></span></span><!--[endif]--><span lang="EN-GB" style="font-size: 12.0pt;">Steg
+      5: <strong>6</strong> cycles (tot 10 cycles)</span></p>
+
+      <p class="MsoNoSpacing" style="margin-left: 36.0pt; text-indent: -18.0pt; mso-list:
+      l0 level1 lfo2;"><!-- [if !supportLists]--><span lang="EN-US" style="font-size:
+      12.0pt; mso-bidi-font-family: Calibri; mso-bidi-theme-font: minor-latin; mso-ansi-language:
+      EN-US;"><span style="mso-list: Ignore;">4.<span style="font: 7.0pt ''Times New
+      Roman'';">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span><!--[endif]--><span
+      lang="EN-US" style="font-size: 12.0pt; mso-ansi-language: EN-US;">Bruk 1:1 AMPure
+      bead cleanup etter PCR</span></p>
+
+      <p class="MsoNoSpacing"><span lang="EN-US" style="font-size: 12.0pt; mso-ansi-language:
+      EN-US;">&nbsp;</span></p>
+
+      <p class="MsoNoSpacing"><strong style="mso-bidi-font-weight: normal;"><span
+      style="font-size: 12.0pt; mso-ansi-language: NO-BOK;">QC: </span></strong></p>
+
+      <p class="MsoNoSpacing"><strong style="mso-bidi-font-weight: normal;"><span
+      style="font-size: 12.0pt; mso-ansi-language: NO-BOK;">&nbsp;</span></strong></p>
+
+      <p class="MsoNoSpacing" style="margin-left: 36.0pt; text-indent: -18.0pt; mso-list:
+      l0 level1 lfo2;"><!-- [if !supportLists]--><span style="font-size: 12.0pt; mso-bidi-font-family:
+      Calibri; mso-bidi-theme-font: minor-latin; mso-ansi-language: NO-BOK;"><span
+      style="mso-list: Ignore;">5.<span style="font: 7.0pt ''Times New Roman'';">&nbsp;&nbsp;&nbsp;&nbsp;
+      </span></span></span><!--[endif]--><span style="font-size: 12.0pt; mso-ansi-language:
+      NO-BOK;">Kj&oslash;r p&aring; Tapestation </span></p>
+
+      <p class="MsoNoSpacing" style="margin-left: 36.0pt; text-indent: -18.0pt; mso-list:
+      l0 level1 lfo2;"><!-- [if !supportLists]--><span style="font-size: 12.0pt; mso-bidi-font-family:
+      Calibri; mso-bidi-theme-font: minor-latin; mso-ansi-language: NO-BOK;"><span
+      style="mso-list: Ignore;">6.<span style="font: 7.0pt ''Times New Roman'';">&nbsp;&nbsp;&nbsp;&nbsp;
+      </span></span></span><!--[endif]--><span style="font-size: 12.0pt; mso-ansi-language:
+      NO-BOK;">Fortynn til 10 nM om n&oslash;dvendig</span></p>
+
+      <p class="MsoNoSpacing" style="margin-left: 36.0pt; text-indent: -18.0pt; mso-list:
+      l0 level1 lfo2;"><!-- [if !supportLists]--><span style="font-size: 12.0pt; mso-bidi-font-family:
+      Calibri; mso-bidi-theme-font: minor-latin; mso-ansi-language: NO-BOK;"><span
+      style="mso-list: Ignore;">7.<span style="font: 7.0pt ''Times New Roman'';">&nbsp;&nbsp;&nbsp;&nbsp;
+      </span></span></span><!--[endif]--><span style="font-size: 12.0pt; mso-ansi-language:
+      NO-BOK;">M&aring;l p&aring; qPCR</span></p>
+
+      <p class="MsoNoSpacing" style="margin-left: 36.0pt; text-indent: -18.0pt; mso-list:
+      l0 level1 lfo2;"><!-- [if !supportLists]--><em style="mso-bidi-font-style: normal;"><span
+      style="font-size: 12.0pt; mso-bidi-font-family: Calibri; mso-bidi-theme-font:
+      minor-latin; mso-ansi-language: NO-BOK;"><span style="mso-list: Ignore;">8.<span
+      style="font: 7.0pt ''Times New Roman'';">&nbsp;&nbsp;&nbsp;&nbsp; </span></span></span></em><!--[endif]--><span
+      style="font-size: 12.0pt; mso-ansi-language: NO-BOK;">M&aring;l konsentrasjon
+      og bestem loading p&aring; Qubit<em style="mso-bidi-font-style: normal;"> Gi
+      beskjed om QC ser merkelig ut, har hatt problmer med disse f&oslash;r.</em></span></p>
+
+      <p class="MsoNoSpacing"><em style="mso-bidi-font-style: normal;"><span style="font-size:
+      12.0pt; mso-ansi-language: NO-BOK;">&nbsp;</span></em></p>
+
+      <p class="MsoNoSpacing"><strong style="mso-bidi-font-weight: normal;"><span
+      style="font-size: 12.0pt; mso-ansi-language: NO-BOK;">Pr&oslash;ve m&aring;lt
+      med Qubit</span></strong><span style="font-size: 12.0pt; mso-ansi-language:
+      NO-BOK;">: <strong style="mso-bidi-font-weight: normal;">&hellip;&hellip;&hellip;&hellip;&hellip;
+      nM</strong></span></p>'
+    Invoicesent: false
+    DataRecordName: Project Evaluation Form - Anmarkrud-DNA26-2026-08-26 8000001
+    Datesamplesreceived: 1785362400000
+    TotalPrice: null
+    ProjectType: Sequencing (Short Read)
+    FinalsamplenM: ''
+    Instrument: MiSeq
+    VeloxLastModifiedDate: 1785413681898
+    MVA: true
+    Lanes: '1'
+    SampleType2: DNA
+    ClusterDensity: 100.0
+  submission_form:
+    ContactTelephone: '+47 900 00 101'
+    Kontostreng: ''
+    NeLSProjectId: ''
+    DateCreated: 1785413681511
+    UploadToTSDProject: false
+    RelatedRecord218: 10000 Anmarkrud-DNA26-2026-08-26
+    ContactPerson: Tora Test
+    BillingAddress: Testveien 1, 0001 Oslo, Norway
+    UploadToNeLS: false
+    Funded: false
+    BillingContactPerson: Tora Test
+    VeloxLastModifiedBy: testuser
+    UploadPassword: false
+    RecordId: 8000002
+    ContactAddress: ''
+    TSDProjectId: ''
+    DeliveryMethod: NIRD
+    PurchaseOrderNumber: TEST-PO-1001
+    CreatedBy: testuser
+    ReferenceGenome: NA
+    BillingTelephone: '+47 900 00 101'
+    BillingInstitution: Example Research Institute
+    ProjectSensitivity: Non-sensitive
+    REKNumber: NA
+    ContactInstitution: Example Research Institute
+    BillingPostcode: '0001'
+    DataRecordName: ProjectSubmissionForm 8000002
+    BioinformaticServices: false
+    ProjectType: Short Read
+    VeloxLastModifiedDate: 1785413681520
+    ContactEmail: tora.test@example.org
+    InstitutionVATNumber: NO999999999MVA
+    BillingEmail: tora.test@example.org
+samples: []

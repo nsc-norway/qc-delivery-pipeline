@@ -189,6 +189,13 @@ nextflow_workflow {
             analysisDir: "Analysis/3",
             resultsDir: "20260804-3",
             params: [enableFastQC: false]
+        ],
+        [
+            name: "MiSeq.20260918.1.50M",
+            runId: "20260918_SH01006_0026_ASC2257218-SC3",
+            analysisDir: "Analysis/1",
+            resultsDir: "20260918-1-50m-flowcell",
+            params: [:]
         ]
     ].each(fixtureTest)
 }

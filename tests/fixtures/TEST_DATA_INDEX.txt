@@ -20,3 +20,7 @@ c2: offboard demultiplexing with plain Sample_ID (no project and GUID), with Sam
 
 4: Sapio sample sheet onboard demultiplexing
 
+20260918_SH01006_0026_ASC2257218-SC3: MiSeq i100 run
+
+1: Sapio sample sheet onboard demultiplexing; larger run for no-lane-splitting development
+

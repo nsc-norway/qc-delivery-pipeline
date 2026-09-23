@@ -1,0 +1,5 @@
+Lane,SampleID,Index,# Reads,# Perfect Index Reads,# One Mismatch Index Reads,# Two Mismatch Index Reads,% Reads,% Perfect Index Reads,% One Mismatch Index Reads,% Two Mismatch Index Reads
+1,Anmarkrud-DNA26-2026-08-26_1-eDNA-summer_8227faca-061f-4e74-9b89-01d6fa618b98,CGGAACTG-TCGTAGTG,28505562,28356247,149315,0,0.9072,0.9948,0.0052,0.0000
+1,Undetermined,,2917046,2917046,0,0,0.0928,1.0000,0.0000,0.0000
+2,Anmarkrud-DNA26-2026-08-26_1-eDNA-summer_8227faca-061f-4e74-9b89-01d6fa618b98,CGGAACTG-TCGTAGTG,28325902,28172518,153384,0,0.9052,0.9946,0.0054,0.0000
+2,Undetermined,,2967363,2967363,0,0,0.0948,1.0000,0.0000,0.0000
