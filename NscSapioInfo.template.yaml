@@ -1,0 +1,33 @@
+# Template NscSapioInfo.yaml for manual use when sapio-run-extractor.py cannot
+# reach Sapio LIMS (e.g. LIMS outage, run not registered yet, ad-hoc test run).
+#
+# Copy this file to <run_folder>/NscSapioInfo.yaml and edit the placeholder
+# values below. Only the fields marked REQUIRED are read by make-emails.py and
+# the Nextflow pipeline (main.nf); everything else is passed through unused but
+# kept here because it mirrors the real Sapio export format.
+#
+# One entry under "projects" is needed per project present in the run's
+# SampleSheet (Sample_Project / project part of Sample_ID). "fields.ProjectName"
+# must match that project name exactly, since it is used to:
+#  - route email/summary generation (make-emails.py get_project_data)
+#  - look up the delivery method for hard-link/tar delivery (main.nf)
+#
+# record_id and department are not used by the scripts and can be left as-is
+# or removed.
+
+run:
+  flowcell_id: REPLACE_WITH_FLOWCELL_ID  # not read by the scripts, kept for parity with the Sapio export
+
+projects:
+- record_id: 0
+  department: NSC
+  fields:
+    ProjectName: REPLACE_WITH_PROJECT_NAME  # REQUIRED: must match the project name in the SampleSheet
+    Classification: Research                # REQUIRED-ish: set to "Diagnostics" to suppress the project email
+  evaluation_form: {}
+  submission_form:
+    ContactPerson: REPLACE_WITH_CONTACT_PERSON      # REQUIRED: used in the project email greeting and summary table
+    ContactEmail: replace-with-contact@example.org   # REQUIRED: recipient address for the project email
+    DeliveryMethod: User HDD  # REQUIRED: one of "NeLS project", "NIRD", "User HDD", "New HDD", "TSD project"
+
+samples: []

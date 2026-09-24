@@ -149,6 +149,9 @@ Primary entry point for automatic job execution.
 #### Helper scripts
 
 * scripts/anonymize-fastq.py
+* NscSapioInfo.template.yaml - template `NscSapioInfo.yaml` to fill in
+  manually and place in a run folder when `sapio-run-extractor.py` cannot be
+  used (e.g. Sapio is unreachable).
 
 
 ### miseq-delivery-simple.sh
