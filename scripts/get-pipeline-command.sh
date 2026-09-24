@@ -29,4 +29,5 @@ echo $NEXTFLOW run "$PIPELINE_PATH" \
   --analysisDir "$ANALYSIS_DIR" \
   --outdir "$NSC_DEMULTIPLEXED_DIR" \
   --deliveryDir "$NSC_DELIVERY_DIR" \
+  --passwordTool "$PASSWORD_TOOL" \
   -resume
