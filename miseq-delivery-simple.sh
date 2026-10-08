@@ -20,17 +20,17 @@ do
     then
         continue
     fi
-    touch "$RUN_DIR/NSC_MiSeq_Delivery_Flag.txt"
     if [ "$complete_xml" -ot "/tmp/miseq-run-copier.limit" ]
     then
+        touch "$RUN_DIR/NSC_MiSeq_Delivery_Flag.txt"
         # Find run owner - MIK or IMM
-        if EXPNAME=$( grep -o '^Experiment Name,[0-9_-]*MIK-' $RUN_DIR/SampleSheet.csv )
+        if EXPNAME=$( grep '^Experiment Name,[0-9_-]*MIK-.*' $RUN_DIR/SampleSheet.csv )
         then
             DEST_ROOT="$MIK_PATH"
-        elif EXPNAME=$( grep -o '^Experiment Name,[0-9_-]*OUSMIK-' $RUN_DIR/SampleSheet.csv )
+        elif EXPNAME=$( grep '^Experiment Name,[0-9_-]*OUSMIK-.*' $RUN_DIR/SampleSheet.csv )
         then
             DEST_ROOT="$MIK_PATH"
-        elif EXPNAME=$( grep '^Experiment Name,[0-9_-]*TI-' $RUN_DIR/SampleSheet.csv )
+        elif EXPNAME=$( grep '^Experiment Name,[0-9_-]*TI-.*' $RUN_DIR/SampleSheet.csv )
         then
             DEST_ROOT="$IMM_PATH"
         else
