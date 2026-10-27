@@ -85,7 +85,7 @@ projects:
     ContactInstitution: Example Research Institute
     BillingPostcode: '0001'
     DataRecordName: ProjectSubmissionForm 7799818
-    BioinformaticServices: false
+    BioinformaticServices: true
     ProjectType: Short Read
     VeloxLastModifiedDate: 1785485835202
     ContactEmail: tora.test@example.org

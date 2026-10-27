@@ -115,7 +115,7 @@ def main():
         ]
 
         # Lane-specific information from InterOp and from sample metrics
-        lane_table_headers, lane_table_classes, lane_table_data = get_lane_summary_data(run_dir, demultiplex_stats, undetermined_stats, args.no_lane_splitting)
+        lane_table_headers, lane_table_classes, lane_table_data = get_lane_summary_data(run_dir, demultiplex_stats, undetermined_stats, args.no_lane_splitting, project_datas)
         
         summary_file_name = ("Summary_for_" + run_parameters.run_id + ".html")
         summary_content_path = output_email_dir / summary_file_name
@@ -251,13 +251,14 @@ def get_suprDUPr_duplicates(demultiplex_stats, suprdupr_dir):
     )
 
 
-def get_lane_summary_data(run_dir, demultiplex_stats, undetermined_stats, no_lane_splitting):
+def get_lane_summary_data(run_dir, demultiplex_stats, undetermined_stats, no_lane_splitting, project_datas):
     """Get the summary table with lane metrics.
 
     run_dir             should be a directory containing the necessary files to use the
                         interop library (InterOp/).
     demultiplex_stats   pandas DataFrame of Demultiplex_Stats.csv file, optionally 
                         containing duplicate counts (suprDUPr_duplicates).
+    project_datas       Project details including submission form fields from Sapio.
     
     Returns a tuple representing the lane metrics table:
         (HEADERS, CLASSES, [LANE_1_DATA, LANE_2_DATA, ...])
@@ -303,8 +304,13 @@ def get_lane_summary_data(run_dir, demultiplex_stats, undetermined_stats, no_lan
             ("Informative", "number"),
             ("MaxReadsSam", "number"),
             ("MinReadsSam", "number"),
+            ("Bioinf", "center"),
             ("Quality", "text")
     ]))
+    bioinformatic_projects = {
+        project['ProjectName'] for project in project_datas
+        if project.get('BioinformaticServices') is True
+    }
     data = []
     if no_lane_splitting:
         display_lane_numbers = [1]
@@ -335,8 +341,8 @@ def get_lane_summary_data(run_dir, demultiplex_stats, undetermined_stats, no_lan
         row_data = [str(lane_number)]
 
         # Project
-        lane_proejcts = lane_demultiplex_stats.Sample_Project.unique()
-        row_data.append(",".join(lane_proejcts))
+        lane_projects = lane_demultiplex_stats.Sample_Project.unique()
+        row_data.append(",".join(lane_projects))
 
         # PF cluster no
         # (PF related metrics are always the same for read1, read2, ...)
@@ -420,6 +426,9 @@ def get_lane_summary_data(run_dir, demultiplex_stats, undetermined_stats, no_lan
         # MinReadsSam
         min_reads = sample_sum_read_counts.min()
         row_data.append("%+3.1f%%" % ((min_reads - mean_reads) * 100.0 / divisor_mean_reads))
+
+        # Bioinformatic services requested by any project on this lane
+        row_data.append("YES" if any(project in bioinformatic_projects for project in lane_projects) else "")
 
         # Quality
         row_data.append("ok")
