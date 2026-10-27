@@ -21,7 +21,8 @@ include {
     TAR_FOLDER;
     DECOMPRESS_ORA;
     RENAME_AND_SAVE_FASTQS;
-    GET_BCL_CONVERT_VERSION;
+    GET_BCL_CONVERT_VERSION_FROM_LOG;
+    GET_BCL_CONVERT_VERSION_FROM_SUMMARY;
 } from './modules/modules.nf'
 
 include {
@@ -230,7 +231,13 @@ workflow QC_DELIVERY_PIPELINE {
         .filter { file -> file.name == 'Demultiplex_Stats.csv' }
         .first()
 
-    GET_BCL_CONVERT_VERSION("${bclConvertFastqDir}/Logs/Info.log")
+    // Try to get version from two alternative sources.
+    // Produce a string with a comma-separated list of versions, or an empty string if none are found.
+    GET_BCL_CONVERT_VERSION_FROM_LOG(channel.fromPath("${bclConvertFastqDir}/Logs/Info.log"))
+    GET_BCL_CONVERT_VERSION_FROM_SUMMARY(channel.fromPath("${params.analysisDir}/Data/summary/*/highlevel_summary.json"))
+    bclConvertVersion = GET_BCL_CONVERT_VERSION_FROM_LOG.out.GET_BCL_CONVERT_VERSION_FROM_LOG_out.mix(
+                                            GET_BCL_CONVERT_VERSION_FROM_SUMMARY.out.GET_BCL_CONVERT_VERSION_FROM_SUMMARY_out
+                                        ).unique().collect().map { versionList -> versionList.join(", ") }
 
     EMAIL_PROJECT(
         PROJECT_CREDENTIALS.out.PROJECT_CREDENTIALS_out,
@@ -238,7 +245,7 @@ workflow QC_DELIVERY_PIPELINE {
         analysisId,
         demultiplex_stats,
         sapioRunFile,
-        GET_BCL_CONVERT_VERSION.out.GET_BCL_CONVERT_VERSION_out,
+        bclConvertVersion,
         params.pipelineVersion
     )
     // MAKE_SENSITIVE_DATA_LOG_FILE(projectDirName, JSON_GENERATOR.out.JSON_GENERATOR_out, params.runFolder)
@@ -251,7 +258,7 @@ workflow QC_DELIVERY_PIPELINE {
         demultiplex_stats,
         suprdupr_ch.toList(),
         sapioRunFile,
-        GET_BCL_CONVERT_VERSION.out.GET_BCL_CONVERT_VERSION_out,
+        bclConvertVersion,
         params.pipelineVersion,
         projects_meta_ch.map { meta -> meta.no_lane_splitting }.first()
     )

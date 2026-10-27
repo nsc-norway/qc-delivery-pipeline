@@ -345,7 +345,7 @@ process MAKE_SENSITIVE_DATA_LOG_FILE {
 }
 */
 
-process GET_BCL_CONVERT_VERSION {
+process GET_BCL_CONVERT_VERSION_FROM_LOG {
     
     cpus 1
     memory 1.GB
@@ -354,7 +354,7 @@ process GET_BCL_CONVERT_VERSION {
     path("Info.log")
 
     output:
-    eval 'cat bclconvert_version.txt', emit: GET_BCL_CONVERT_VERSION_out
+    eval 'cat bclconvert_version.txt', emit: GET_BCL_CONVERT_VERSION_FROM_LOG_out
 
     script:
     // Match: 2026-07-29T09:25:04Z thread 969464 bcl-convert Version 4.3.6
@@ -365,5 +365,22 @@ process GET_BCL_CONVERT_VERSION {
         version=\$(sed -nE 's/.*SoftwareVersion[[:space:]]*=[[:space:]]*([0-9]+(\\.[0-9]+)+).*/\\1/p' Info.log | head -n 1)
     fi
     printf '%s\n' "\${version:-UNKNOWN}" > bclconvert_version.txt
+    """
+}
+
+process GET_BCL_CONVERT_VERSION_FROM_SUMMARY {
+    
+    cpus 1
+    memory 1.GB
+
+    input:
+    path("highlevel_summary.json")
+
+    output:
+    eval 'cat bclconvert_version.txt', emit: GET_BCL_CONVERT_VERSION_FROM_SUMMARY_out
+    
+    script:
+    """
+    jq -r '.BclConvertVersion // "UNKNOWN"' highlevel_summary.json > bclconvert_version.txt
     """
 }
