@@ -233,11 +233,20 @@ workflow QC_DELIVERY_PIPELINE {
 
     // Try to get version from two alternative sources.
     // Produce a string with a comma-separated list of versions, or an empty string if none are found.
-    GET_BCL_CONVERT_VERSION_FROM_LOG(channel.fromPath("${bclConvertFastqDir}/Logs/Info.log"))
+
+    // Method 1 is the BCL Convert info log. Use a glob to ensure that no channel element is returned if
+    // the file does not exist.
+    GET_BCL_CONVERT_VERSION_FROM_LOG(
+        channel.fromPath("${bclConvertFastqDir}/Logs/Info.log*")
+    )
+    // Method 2: Read the onboard analysis summary JSON.
     GET_BCL_CONVERT_VERSION_FROM_SUMMARY(channel.fromPath("${params.analysisDir}/Data/summary/*/highlevel_summary.json"))
     bclConvertVersion = GET_BCL_CONVERT_VERSION_FROM_LOG.out.GET_BCL_CONVERT_VERSION_FROM_LOG_out.mix(
                                             GET_BCL_CONVERT_VERSION_FROM_SUMMARY.out.GET_BCL_CONVERT_VERSION_FROM_SUMMARY_out
-                                        ).unique().collect().map { versionList -> versionList.join(", ") }
+                                        )
+        .unique()
+        .toList()
+        .map { versionList -> versionList.join(", ") }
 
     EMAIL_PROJECT(
         PROJECT_CREDENTIALS.out.PROJECT_CREDENTIALS_out,

@@ -86,6 +86,14 @@ The pipeline's environment is not containerized due to the complexity of job sub
 Docker must be installed and its daemon running for pipeline runs and the
 Nextflow test suite.
 
+On Apple Silicon Macs, the repository's Docker images require `linux/amd64`
+emulation. Start Docker Desktop and set the platform in the terminal used to run
+the pipeline or tests:
+
+```bash
+export DOCKER_DEFAULT_PLATFORM=linux/amd64
+```
+
 
 ### Scripts
 
@@ -104,6 +112,7 @@ CI. Use the project Conda environment before running them.
 Run the end-to-end Nextflow test from `nsc-nextflow/`:
 
 ```
+conda activate qc-delivery-pipeline
 cd nsc-nextflow
 nf-test test
 ```

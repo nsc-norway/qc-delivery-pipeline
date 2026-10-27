@@ -1,0 +1,12 @@
+{
+    "run_id": "20260730_Test-Libs6-2026-06-22",
+    "software_version": "4.4.6",
+    "workflows": [
+        {
+            "workflow": "BCLConvert",
+            "num_samples_completed": 22,
+            "num_samples_failed": 0,
+            "num_samples_total": 22
+        }
+    ]
+}

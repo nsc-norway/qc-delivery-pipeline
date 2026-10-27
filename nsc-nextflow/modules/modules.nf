@@ -364,7 +364,7 @@ process GET_BCL_CONVERT_VERSION_FROM_LOG {
     if [ -z "\$version" ]; then
         version=\$(sed -nE 's/.*SoftwareVersion[[:space:]]*=[[:space:]]*([0-9]+(\\.[0-9]+)+).*/\\1/p' Info.log | head -n 1)
     fi
-    printf '%s\n' "\${version:-UNKNOWN}" > bclconvert_version.txt
+    printf '%s\n' "\$version" > bclconvert_version.txt
     """
 }
 
@@ -381,6 +381,6 @@ process GET_BCL_CONVERT_VERSION_FROM_SUMMARY {
     
     script:
     """
-    jq -r '.BclConvertVersion // "UNKNOWN"' highlevel_summary.json > bclconvert_version.txt
+    jq -r '.software_version' highlevel_summary.json > bclconvert_version.txt
     """
 }
