@@ -205,11 +205,11 @@ workflow QC_DELIVERY_PIPELINE {
             .map { _delivery_method, meta, files -> [meta, files] }
     )
 
-    // Throw an error if there are any projects with unsupported delivery methods
+    // Throw a warning if there are any projects with unsupported delivery methods
     delivery_files_project_grouped_ch
         .filter { delivery_method, _meta, _files -> !(delivery_method in TAR_DELIVERY_TYPES + LINK_DELIVERY_TYPES) }
         .map { delivery_method, _meta, _files ->
-            error("Unsupported delivery method '${delivery_method}' for project '${_meta.project_name}'")
+            log.warn("Unsupported delivery method '${delivery_method}' for project '${_meta.project_name}'")
         }
 
     // Get demultiplexing stats, publish them in the outdir
