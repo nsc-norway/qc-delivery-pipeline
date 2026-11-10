@@ -1,0 +1,70 @@
+{
+  "run_folder_roots": [
+    "/boston/nsc/runs"
+  ],
+  "payload_defaults": {
+    "slurm": {
+      "job_name": "nsc-demux"
+    }
+  },
+  "slurm_submit": {
+    "paalmbj": {
+      "host": "tregul",
+      "identity_file": "/home/paalmbj/.ssh/id_rsa",
+      "known_hosts_file": "/home/paalmbj/.ssh/known_hosts"
+    }
+  },
+  "compute_defaults": {
+    "CPU": {
+      "choices": {
+        "slurm.partition": {
+          "label": "SLURM partition",
+          "default": "main",
+          "choices": ["main", "long"],
+          "allow_custom": true,
+          "help": "Select the queue used for CPU demultiplexing jobs."
+        },
+        "slurm.time_limit": {
+          "label": "SLURM time limit",
+          "default": "24:00:00",
+          "choices": ["12:00:00", "24:00:00", "48:00:00"],
+          "allow_custom": true,
+          "help": "Choose the wall-clock limit submitted with the CPU job."
+        },
+        "slurm.memory": {
+          "label": "SLURM memory",
+          "default": "128G",
+          "choices": ["64G", "128G", "256G"],
+          "allow_custom": true,
+          "help": "Set the memory request for the CPU demultiplexing job."
+        },
+        "slurm.cpus_per_task": {
+          "label": "SLURM CPUs per task",
+          "default": 64,
+          "choices": [32, 64, 96],
+          "allow_custom": true,
+          "help": "Select the number of CPU cores reserved for the job."
+        },
+        "cpu.container_image": {
+          "label": "BCLConvert container image",
+          "default": "/data/common/tools/bclconvert/bclconvert-4.6.2.sif",
+          "choices": ["/data/common/tools/bclconvert/bclconvert-4.6.2.sif"],
+          "allow_custom": true,
+          "help": "Container image used for CPU-based BCLConvert runs."
+        }
+      },
+      "payload_defaults": {
+        "bclconvert": {
+          "software_version": "4.6.2",
+          "fastq_compression_format": "gzip",
+          "generate_fastqc_metrics": false,
+          "override_cycles": null
+        },
+        "cpu": {
+          "bind_paths": ["/boston/nsc"],
+          "log_folder": "/boston/nsc/scripts/demux-runner-logs"
+        }
+      }
+    }
+  }
+}
