@@ -4,7 +4,7 @@ Samples/Libraries submitted under {{ project_data['ProjectName'] }} to NSC, Ulle
 
 
 ------ Data collection ------{% if project_data['DeliveryMethod'] == "NeLS project" %}
-The data files have been transferred to your NeLS project, and stored in the directory {{ project_data['dir_name'] }}. Please wait for a confirmation from the Elixir help desk before you access the data.
+The data files have been transferred to your NeLS project{% if project_data['NeLSProjectId'] %} {{ project_data['NeLSProjectId'] }}{% endif %}, and stored in the directory {{ project_data['dir_name'] }}. Please wait for a confirmation from the Elixir help desk before you access the data.
 {% elif project_data['DeliveryMethod'] == "NIRD" %}
 You can download the data and all quality control reports using the following information:
 
@@ -17,7 +17,7 @@ You can pick up the data in a portable hard drive (please notice the size of the
 {% elif project_data['DeliveryMethod'] == "New HDD" %}
 The data have been transferred to a new hard drive and are ready for pick-up.
 {% elif project_data['DeliveryMethod'] == "TSD project" %}
-The dataset has been imported into TSD in a directory {{ project_data['dir_name'] }}.
+The dataset has been imported into TSD project {{ project_data['TSDProjectId'] }} in a directory {{ project_data['dir_name'] }}.
 {% else %}
 You can pick up the data in a portable hard drive (please notice the size of the data  is approximately {{ "%.0f" % size if size else "XXXX" }} GB).
 

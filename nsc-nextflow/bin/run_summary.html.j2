@@ -95,6 +95,11 @@ td.text {
     <tr><td>Contact person</td><td>{{ project_data['ContactPerson'] }}</td></tr>
     <tr><td>Contact email</td><td>{{ project_data['ContactEmail'] }}</td></tr>
     <tr><td>Delivery method</td><td>{{ project_data['DeliveryMethod'] }}</td></tr>
+    {% if project_data['DeliveryMethod'] == "NeLS project" -%}
+    <tr><td>NeLS project ID</td><td>{{ project_data.get('NeLSProjectId') or '' }}</td></tr>
+    {% elif project_data['DeliveryMethod'] == "TSD project" -%}
+    <tr><td>TSD project ID</td><td>{{ project_data.get('TSDProjectId') or '' }}</td></tr>
+    {% endif -%}
     <tr><td>Directory name</td><td>{{ project_data['dir_name'] }}</td></tr>
 </table>
 <table>
